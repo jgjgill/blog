@@ -1,3 +1,4 @@
+import Layout from 'components/Layout'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import * as React from 'react'
 import { Content } from 'types/content'
@@ -10,7 +11,7 @@ interface Props {
 
 const IndexPage = ({ data }: PageProps<Props>) => {
   return (
-    <div>
+    <Layout>
       {data.allMdx.nodes.map((node) => (
         <div key={node.id}>
           <div>{node.frontmatter.date}</div>
@@ -19,7 +20,7 @@ const IndexPage = ({ data }: PageProps<Props>) => {
           <div>{node.excerpt}</div>
         </div>
       ))}
-    </div>
+    </Layout>
   )
 }
 
