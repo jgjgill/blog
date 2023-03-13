@@ -1,4 +1,4 @@
-import { PageProps, ReactLink } from 'gatsby'
+import { HeadFC, Link, PageProps } from 'gatsby'
 import React from 'react'
 
 const pageStyles = {
