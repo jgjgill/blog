@@ -1,8 +1,12 @@
 export type ThemeColors = (typeof COLORS)[keyof typeof COLORS]
 
 export const COLORS = {
-  PURPLE: '#c471f5',
-  PINK: '#fa71cd',
+  PURPLE300: '#d8b4fe',
+  PURPLE500: '#c471f5',
+  PURPLE700: '#7e22ce',
+  FUCHSIA300: '#f0abfc',
+  FUCHSIA500: '#d946ef',
+  FUCHSIA700: '#a21caf',
   WHITE: '#ffffff',
   BLACK: '#000000',
 } as const
@@ -10,10 +14,14 @@ export const COLORS = {
 export const theme = {
   colors: {
     primary: {
-      base: COLORS.PURPLE,
+      light: COLORS.PURPLE300,
+      base: COLORS.PURPLE500,
+      dark: COLORS.PURPLE700,
     },
     secondary: {
-      base: COLORS.PINK,
+      light: COLORS.FUCHSIA300,
+      base: COLORS.FUCHSIA500,
+      dark: COLORS.FUCHSIA700,
     },
     black: COLORS.BLACK,
     white: COLORS.WHITE,
