@@ -15,7 +15,16 @@ const config: GatsbyConfig = {
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
     'gatsby-plugin-offline',
-    'gatsby-plugin-mdx',
+    {
+      resolve: 'gatsby-plugin-mdx',
+      options: {
+        gatsbyRemarkPlugins: [
+          {
+            resolve: 'gatsby-remark-prismjs',
+          },
+        ],
+      },
+    },
     {
       resolve: `gatsby-plugin-manifest`,
       options: {

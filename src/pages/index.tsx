@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
+import Link from 'components/@shared/Link'
 import Layout from 'components/Layout'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
@@ -28,6 +29,10 @@ const IndexPage = ({ data }: PageProps<Props>) => {
               <p>{node.frontmatter.slug}</p>
               <p>{node.excerpt}</p>
               <time>{node.frontmatter.date}</time>
+              <Link
+                text={node.frontmatter.title}
+                path={`/blog/${node.frontmatter.slug}`}
+              />
             </li>
           </ul>
         ))}
