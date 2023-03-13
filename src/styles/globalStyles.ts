@@ -22,10 +22,9 @@ export const globalStyles = css`
     margin: 0;
   }
 
-  /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-  ul[role='list'],
-  ol[role='list'] {
-    list-style: none;
+  ul,
+  ol {
+    list-style-type: none;
   }
 
   /* Set core root defaults */
@@ -40,9 +39,8 @@ export const globalStyles = css`
     line-height: 1.5;
   }
 
-  /* A elements that don't have a class get default styles */
-  a:not([class]) {
-    text-decoration-skip-ink: auto;
+  a {
+    text-decoration: none;
   }
 
   /* Make images easier to work with */

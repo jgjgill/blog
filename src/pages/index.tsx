@@ -1,3 +1,5 @@
+import styled from '@emotion/styled'
+import App from 'App'
 import Layout from 'components/Layout'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import * as React from 'react'
@@ -11,16 +13,26 @@ interface Props {
 
 const IndexPage = ({ data }: PageProps<Props>) => {
   return (
-    <Layout>
-      {data.allMdx.nodes.map((node) => (
-        <div key={node.id}>
-          <div>{node.frontmatter.date}</div>
-          <div>{node.frontmatter.title}</div>
-          <div>{node.frontmatter.slug}</div>
-          <div>{node.excerpt}</div>
-        </div>
-      ))}
-    </Layout>
+    <App>
+      <Layout>
+        <CategoryList>
+          <CategoryItem>All</CategoryItem>
+          <CategoryItem>Development</CategoryItem>
+          <CategoryItem>Essay</CategoryItem>
+        </CategoryList>
+
+        {data.allMdx.nodes.map((node) => (
+          <ul key={node.id}>
+            <li>
+              <h3>{node.frontmatter.title}</h3>
+              <p>{node.frontmatter.slug}</p>
+              <p>{node.excerpt}</p>
+              <time>{node.frontmatter.date}</time>
+            </li>
+          </ul>
+        ))}
+      </Layout>
+    </App>
   )
 }
 
@@ -34,12 +46,24 @@ export const query = graphql`
           slug
         }
         id
-        excerpt
+        excerpt(pruneLength: 10)
       }
     }
   }
 `
 
-export const Head: HeadFC = () => <title>jgjgill</title>
+export const Head: HeadFC = () => (
+  <>
+    <title>jgjgill</title>
+    <meta name="description" content="blog" />
+  </>
+)
 
 export default IndexPage
+
+const CategoryList = styled.ul`
+  display: flex;
+  justify-content: space-around;
+`
+
+const CategoryItem = styled.li``

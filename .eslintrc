@@ -51,6 +51,8 @@
       }
     ],
     "react/no-array-index-key": "error",
-    "react/button-has-type": "error"
+    "react/button-has-type": "error",
+    "react/no-unknown-property": ["error", { "ignore": ["css"] }],
+    "@typescript-eslint/no-empty-interface": "off"
   }
 }
