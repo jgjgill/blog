@@ -1,6 +1,6 @@
 import { Seo } from 'components'
 import { graphql } from 'gatsby'
-import * as React from 'react'
+import React from 'react'
 
 const BlogPost = () => {
   return (

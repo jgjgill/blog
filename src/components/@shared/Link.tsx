@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { Link as GatsbyLink } from 'gatsby'
-import * as React from 'react'
+import React from 'react'
 
 interface Props {
   path: string

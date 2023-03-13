@@ -9,3 +9,15 @@ slug: "간단하게 SEO 높이기!"
 ```jsx
 const temp = 123
 ```
+
+
+```jsx
+// 서버에서 보내는 값
+parseResponse({ Name: 'Foo', Id: 1234, Rank: 7 });
+
+// 클라이언트에서 받는 값
+<script
+  type="application/javascript"
+  src="http://server.example.com/Users/1234?callback=parseResponse"
+></script>;
+```

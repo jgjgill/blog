@@ -2,7 +2,7 @@ import styled from '@emotion/styled'
 import App from 'App'
 import Layout from 'components/Layout'
 import { graphql, HeadFC, PageProps } from 'gatsby'
-import * as React from 'react'
+import React from 'react'
 import { Content } from 'types/content'
 
 interface Props {
@@ -46,7 +46,7 @@ export const query = graphql`
           slug
         }
         id
-        excerpt(pruneLength: 10)
+        excerpt
       }
     }
   }

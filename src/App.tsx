@@ -1,5 +1,5 @@
 import { Global, ThemeProvider } from '@emotion/react'
-import * as React from 'react'
+import React from 'react'
 import { globalStyles } from 'styles/globalStyles'
 import { theme } from 'styles/theme'
 import { StrictPropsWithChildren } from 'types/custom'

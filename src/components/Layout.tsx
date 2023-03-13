@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
-import * as React from 'react'
+import React from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 import Link from './@shared/Link'
