@@ -11,7 +11,7 @@ const BlogPost = ({ data, children }: any) => {
   return (
     <App>
       <Layout>
-        <MDXProvider>{children}</MDXProvider>
+        <MDXProvider components={{}}>{children}</MDXProvider>
 
         <Comment />
       </Layout>

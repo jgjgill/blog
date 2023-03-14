@@ -6,6 +6,7 @@ export const globalStyles = css`
   *::before,
   *::after {
     box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif;
   }
 
   /* Remove default margin */

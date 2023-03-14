@@ -21,6 +21,7 @@ const Comment = () => {
       'data-input-position': 'bottom',
       'data-theme': 'preferred_color_scheme',
       'data-lang': 'ko',
+      'data-loading': 'lazy',
     }).forEach(([key, value]) => {
       script.setAttribute(key, value)
     })

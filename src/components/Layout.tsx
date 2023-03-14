@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
 import * as React from 'react'
@@ -10,12 +9,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
   return (
     <Container>
       <Header>
-        <div
-          css={css`
-            width: 768px;
-            margin: 0 auto;
-          `}
-        >
+        <div>
           <StyledLink to={PATH.HOME}>jgjgill</StyledLink>
         </div>
       </Header>
@@ -40,11 +34,16 @@ const Header = styled.header`
   top: 0px;
   backdrop-filter: saturate(200%) blur(1ex);
   background: linear-gradient(to top, #d8b4fe 0%, #f0abfc 100%);
+
+  div {
+    width: 768px;
+    margin: 0 auto;
+  }
 `
 const Main = styled.main`
   max-width: 768px;
   margin: 0 auto;
-  padding: 0 10px;
+  padding: 20px;
 `
 const StyledLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
