@@ -16,7 +16,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
             margin: 0 auto;
           `}
         >
-          <Link path={PATH.HOME} text="jgjgill" fontSize="xxl" />
+          <StyledLink to={PATH.HOME}>jgjgill</StyledLink>
         </div>
       </Header>
 
@@ -44,4 +44,9 @@ const Header = styled.header`
 const Main = styled.main`
   max-width: 768px;
   margin: 0 auto;
+  padding: 0 10px;
+`
+const StyledLink = styled(Link)`
+  font-size: ${({ theme }) => theme.fontSize.xxl};
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
 `

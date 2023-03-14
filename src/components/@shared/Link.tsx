@@ -1,28 +1,22 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Link as GatsbyLink } from 'gatsby'
 import React from 'react'
+import { StrictPropsWithChildren } from 'types/custom'
 
-interface Props {
-  path: string
-  text: string
-  fontSize?: string
+interface LinkProps {
+  to: string
 }
 
-const Link = ({ path, text, fontSize = 'base' }: Props) => {
+const Link = ({ to, children, ...props }: StrictPropsWithChildren<LinkProps>) => {
   return (
-    <StyledLink to={path} fontSize={fontSize}>
-      {text}
+    <StyledLink to={to} {...props}>
+      {children}
     </StyledLink>
   )
 }
 
 export default Link
 
-const StyledLink = styled<any>(GatsbyLink)`
-  ${({ theme, fontSize }) => css`
-    font-size: ${theme.fontSize[fontSize]};
-    font-weight: ${theme.fontWeight.bold};
-    color: ${theme.colors.primary.dark};
-  `}
+const StyledLink = styled(GatsbyLink)<Omit<LinkProps, 'text'>>`
+  color: ${({ theme }) => theme.colors.primary.dark};
 `

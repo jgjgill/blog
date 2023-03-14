@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import App from 'App'
 import Link from 'components/@shared/Link'
 import Layout from 'components/Layout'
+import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
@@ -29,10 +30,10 @@ const IndexPage = ({ data }: PageProps<Props>) => {
               <p>{node.frontmatter.slug}</p>
               <p>{node.excerpt}</p>
               <time>{node.frontmatter.date}</time>
-              <Link
-                text={node.frontmatter.title}
-                path={`/blog/${node.frontmatter.slug}`}
-              />
+
+              <Link to={`${PATH.BLOG}${node.frontmatter.slug}`}>
+                {node.frontmatter.title}
+              </Link>
             </li>
           </ul>
         ))}
