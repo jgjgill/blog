@@ -14,7 +14,6 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
           <StyledLink to={PATH.HOME}>jgjgill</StyledLink>
         </Flex>
       </Header>
-
       <Main>{children}</Main>
     </Container>
   )
@@ -23,18 +22,26 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
 export default Layout
 
 const Container = styled.div`
-  min-height: 100vh;
+  height: 100vh;
+  width: 100%;
 `
 
 const Header = styled.header`
   display: flex;
+  align-items: center;
   position: sticky;
   height: 60px;
   top: 0px;
-  padding: 0 40px;
   backdrop-filter: saturate(200%) blur(1ex);
   background: linear-gradient(to top, #d8b4fe 0%, #f0abfc 100%);
   width: 100%;
+  padding: 20px;
+  z-index: 1;
+
+  div {
+    width: 768px;
+    margin: 0 auto;
+  }
 `
 const StyledLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
@@ -42,5 +49,9 @@ const StyledLink = styled(Link)`
 `
 
 const Main = styled.main`
-  padding: 20px 40px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  padding: 20px;
+  max-width: 768px;
 `

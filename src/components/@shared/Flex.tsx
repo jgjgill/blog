@@ -39,6 +39,7 @@ const Flex = ({
 const StyledFlex = styled.div<FlexProps>`
   display: flex;
   flex-direction: ${({ flexDirection }) => flexDirection};
+  justify-content: ${({ justifyContent }) => justifyContent};
   align-items: ${({ alignItems }) => alignItems};
   gap: ${({ gap }) => `${gap}px`};
 `
