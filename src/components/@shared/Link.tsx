@@ -18,5 +18,5 @@ const Link = ({ to, children, ...props }: StrictPropsWithChildren<LinkProps>) =>
 export default Link
 
 const StyledLink = styled(GatsbyLink)<Omit<LinkProps, 'text'>>`
-  color: ${({ theme }) => theme.colors.primary.dark};
+  color: ${({ theme }) => theme.colors.black};
 `

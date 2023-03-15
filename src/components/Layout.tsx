@@ -11,7 +11,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
     <Container>
       <Header>
         <Flex justifyContent="flex-start" alignItems="center">
-          <StyledLink to={PATH.HOME}>jgjgill</StyledLink>
+          <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
         </Flex>
       </Header>
       <Main>{children}</Main>
@@ -43,9 +43,10 @@ const Header = styled.header`
     margin: 0 auto;
   }
 `
-const StyledLink = styled(Link)`
+const HomeLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
+  color: ${({ theme }) => theme.colors.primary.dark};
 `
 
 const Main = styled.main`

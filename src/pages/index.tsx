@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Seo } from 'components'
-import Link from 'components/@shared/Link'
+import Flex from 'components/@shared/Flex'
 import Layout from 'components/Layout'
-import { PATH } from 'constants/path'
+import Post from 'components/Post'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
@@ -18,26 +18,19 @@ const IndexPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <CategoryList>
-          <CategoryItem>All</CategoryItem>
-          <CategoryItem>Development</CategoryItem>
-          <CategoryItem>Essay</CategoryItem>
-        </CategoryList>
+        <Flex flexDirection="column" gap={20}>
+          <CategoryList>
+            <CategoryItem>All</CategoryItem>
+            <CategoryItem>Development</CategoryItem>
+            <CategoryItem>Essay</CategoryItem>
+          </CategoryList>
 
-        {data.allMdx.nodes.map((node) => (
-          <ul key={node.id}>
-            <li>
-              <h3>{node.frontmatter.title}</h3>
-              <p>{node.frontmatter.slug}</p>
-              <p>{node.excerpt}</p>
-              <time>{node.frontmatter.date}</time>
-
-              <Link to={`${PATH.BLOG}${node.frontmatter.slug}`}>
-                {node.frontmatter.title}
-              </Link>
-            </li>
-          </ul>
-        ))}
+          <PostList>
+            {data.allMdx.nodes.map((node) => (
+              <Post key={node.id} node={node} />
+            ))}
+          </PostList>
+        </Flex>
       </Layout>
     </App>
   )
@@ -66,6 +59,13 @@ export default IndexPage
 const CategoryList = styled.ul`
   display: flex;
   justify-content: space-around;
+  width: 100%;
 `
 
 const CategoryItem = styled.li``
+
+const PostList = styled.section`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`
