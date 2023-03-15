@@ -14,7 +14,6 @@ const config: GatsbyConfig = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
-    'gatsby-plugin-offline',
     {
       resolve: 'gatsby-plugin-mdx',
       options: {
@@ -31,10 +30,20 @@ const config: GatsbyConfig = {
         name: `jgjgill-blog`,
         short_name: `jgjgill-blog`,
         start_url: `/`,
-        background_color: `#f7f0eb`,
-        theme_color: `#a2466c`,
+        background_color: `#f0abfc`,
+        theme_color: `#c471f5`,
         display: `standalone`,
         icon: 'src/images/icon.png',
+        cache_busting_mode: 'none',
+      },
+    },
+    // manifest.webmanifest 캐시 생성을 위해 manifest 플러그인 이후에 위치
+    {
+      resolve: 'gatsby-plugin-offline',
+      options: {
+        workboxConfig: {
+          globPatterns: ['src/images/favicon-path*'],
+        },
       },
     },
     {

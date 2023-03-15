@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
+import { Seo } from 'components'
 import Link from 'components/@shared/Link'
 import Layout from 'components/Layout'
 import { PATH } from 'constants/path'
@@ -58,12 +59,7 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC = () => (
-  <>
-    <title>jgjgill</title>
-    <meta name="description" content="blog" />
-  </>
-)
+export const Head: HeadFC = () => <Seo />
 
 export default IndexPage
 
