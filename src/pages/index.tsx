@@ -23,6 +23,7 @@ const IndexPage = ({ data }: PageProps<Props>) => {
             <CategoryItem>All</CategoryItem>
             <CategoryItem>Development</CategoryItem>
             <CategoryItem>Essay</CategoryItem>
+            <CategoryItem>Reading</CategoryItem>
           </CategoryList>
 
           <PostList>
