@@ -22,7 +22,7 @@ const CategoryTemplate = ({ data }: PageProps<Props>) => {
           <Category />
 
           <PostList>
-            {data.allMdx.nodes.map((node: any) => (
+            {data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />
             ))}
           </PostList>

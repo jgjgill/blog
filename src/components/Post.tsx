@@ -27,6 +27,7 @@ export default Post
 
 const Container = styled.article`
   border-radius: 20px;
+  width: 100%;
 
   &:hover {
     transition: 0.3s;
