@@ -1,11 +1,10 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Seo } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
 import Layout from 'components/Layout'
 import Post from 'components/Post'
-import { graphql, HeadFC, PageProps } from 'gatsby'
+import { graphql, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -15,7 +14,7 @@ interface Props {
   }
 }
 
-const IndexPage = ({ data }: PageProps<Props>) => {
+const CategoryTemplate = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
@@ -23,7 +22,7 @@ const IndexPage = ({ data }: PageProps<Props>) => {
           <Category />
 
           <PostList>
-            {data.allMdx.nodes.map((node) => (
+            {data.allMdx.nodes.map((node: any) => (
               <Post key={node.id} node={node} />
             ))}
           </PostList>
@@ -33,9 +32,14 @@ const IndexPage = ({ data }: PageProps<Props>) => {
   )
 }
 
+export default CategoryTemplate
+
 export const query = graphql`
-  query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
+  query ($category: String) {
+    allMdx(
+      sort: { frontmatter: { date: DESC } }
+      filter: { frontmatter: { category: { in: [$category] } } }
+    ) {
       nodes {
         frontmatter {
           date(formatString: "MMMM DD, YYYY")
@@ -49,10 +53,6 @@ export const query = graphql`
     }
   }
 `
-
-export const Head: HeadFC = () => <Seo />
-
-export default IndexPage
 
 const PostList = styled.section`
   display: flex;

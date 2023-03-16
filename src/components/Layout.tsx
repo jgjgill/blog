@@ -14,6 +14,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
         </Flex>
       </Header>
+
       <Main>{children}</Main>
     </Container>
   )
