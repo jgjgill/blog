@@ -10,10 +10,10 @@ const Author = () => {
         <i>Go High</i>
       </Flex>
       <Flex gap={20}>
-        <Link to="https://github.com/">Github</Link>
-        <Link to="https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/">
+        <a href="https://github.com/">Github</a>
+        <a href="https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/">
           LinkedIn
-        </Link>
+        </a>
       </Flex>
     </Container>
   )

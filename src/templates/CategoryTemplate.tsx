@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
+import { Author } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
 import Layout from 'components/Layout'
@@ -14,12 +15,16 @@ interface Props {
   }
 }
 
-const CategoryTemplate = ({ data }: PageProps<Props>) => {
+const CategoryTemplate = ({
+  data,
+  pageContext,
+}: PageProps<Props, { category: string }>) => {
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
-          <Category />
+          <Author />
+          <Category selectedCategory={pageContext.category} />
 
           <PostList>
             {data.allMdx.nodes.map((node) => (
@@ -36,6 +41,11 @@ export default CategoryTemplate
 
 export const query = graphql`
   query ($category: String) {
+    site {
+      siteMetadata {
+        title
+      }
+    }
     allMdx(
       sort: { frontmatter: { date: DESC } }
       filter: { frontmatter: { category: { in: [$category] } } }

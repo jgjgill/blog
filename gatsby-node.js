@@ -5,7 +5,7 @@ exports.createPages = async ({ actions, graphql }) => {
   const categoryTemplate = path.resolve('src/templates/CategoryTemplate.tsx')
   const result = await graphql(`
     {
-      allMdx(limit: 2000) {
+      allMdx {
         group(field: { frontmatter: { category: SELECT } }) {
           fieldValue
         }

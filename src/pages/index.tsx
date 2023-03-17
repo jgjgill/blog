@@ -18,7 +18,7 @@ const IndexPage = ({ data }: PageProps<Props>) => {
       <Layout>
         <Flex flexDirection="column" gap={20}>
           <Author />
-          <Category />
+          <Category selectedCategory="all" />
           <PostList>
             {data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />
