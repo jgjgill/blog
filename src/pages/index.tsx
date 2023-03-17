@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Category, Layout, Post, Seo } from 'components'
+import { Author, Category, Layout, Post, Seo } from 'components'
 import { Flex } from 'components/@shared'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
@@ -17,8 +17,8 @@ const IndexPage = ({ data }: PageProps<Props>) => {
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
+          <Author />
           <Category />
-
           <PostList>
             {data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />

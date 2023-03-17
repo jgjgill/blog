@@ -1,3 +1,4 @@
+export { default as Author } from 'components/Author'
 export { default as Category } from 'components/Category'
 export { default as Comment } from 'components/Comment'
 export { default as Layout } from 'components/Layout'
