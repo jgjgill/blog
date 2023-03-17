@@ -55,6 +55,11 @@
     "react/no-unknown-property": ["error", { "ignore": ["css"] }],
     "@typescript-eslint/no-empty-interface": "off",
     "jsx-a11y/heading-has-content": "off",
-    "@typescript-eslint/no-var-requires": 0
+    "react/display-name": "off",
+    "@typescript-eslint/no-var-requires": 0,
+    "@typescript-eslint/ban-types": [
+      "error",
+      { "extendDefaults": true, "types": { "{}": false } }
+    ]
   }
 }

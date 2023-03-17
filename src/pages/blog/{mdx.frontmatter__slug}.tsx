@@ -5,12 +5,12 @@ import { Seo } from 'components'
 import Flex from 'components/@shared/Flex'
 import Comment from 'components/Comment'
 import Layout from 'components/Layout'
+import Mdx from 'components/Mdx'
 import { graphql } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
 
 const BlogPost = ({ data, children }: any) => {
-  console.log(data)
   const thumbnail = getImage(data.mdx.frontmatter.thumbnail)!
 
   return (
@@ -22,7 +22,19 @@ const BlogPost = ({ data, children }: any) => {
           <ThumbnailImage image={thumbnail} alt={data.mdx.frontmatter.thumbnail_alt} />
         </Flex>
 
-        <MDXProvider components={{}}>{children}</MDXProvider>
+        <MDXProvider
+          components={{
+            h1: Mdx.H1,
+            h2: Mdx.H2,
+            h3: Mdx.H3,
+            p: Mdx.P,
+            ul: Mdx.UL,
+            li: Mdx.LI,
+            Callout: Mdx.CALLOUT,
+          }}
+        >
+          {children}
+        </MDXProvider>
 
         <Comment />
       </Layout>
@@ -35,6 +47,7 @@ export const query = graphql`
     mdx(id: { eq: $id }) {
       frontmatter {
         title
+        date
         thumbnail_alt
         thumbnail {
           childImageSharp {
@@ -51,6 +64,8 @@ export const Head = () => <Seo />
 export default BlogPost
 
 const ThumbnailImage = styled(GatsbyImage)`
+  margin: 20px 0;
+
   width: 50%;
 
   @media (max-width: 480px) {

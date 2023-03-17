@@ -16,7 +16,6 @@ interface Props {
 }
 
 const NotFoundPage = ({ data }: PageProps<Props>) => {
-  console.log(data)
   return (
     <App>
       <Layout>

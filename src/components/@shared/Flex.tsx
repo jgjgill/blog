@@ -23,6 +23,7 @@ const Flex = ({
   alignItems = 'start',
   ...props
 }: StrictPropsWithChildren<FlexProps>) => {
+  // const Element = as || 'div'
   return (
     <StyledFlex
       gap={gap}
