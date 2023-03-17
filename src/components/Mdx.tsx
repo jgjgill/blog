@@ -8,9 +8,10 @@ const H1 = ({ ...props }) => <StyledH1 {...props} />
 const H2 = ({ ...props }) => <StyledH2 {...props} />
 const H3 = ({ ...props }) => <StyledH3 {...props} />
 const P = ({ ...props }) => <StyledP {...props} />
-const Callout = ({ ...props }) => <StyledCallout {...props} />
 const Ul = ({ ...props }) => <StyledUl {...props} />
 const Li = ({ ...props }) => <StyledLi {...props} />
+const Blockquote = ({ ...props }) => <StyledBlockquote {...props} />
+const Callout = ({ ...props }) => <StyledCallout {...props} />
 
 export default Mdx
 
@@ -18,9 +19,10 @@ Mdx.H1 = H1
 Mdx.H2 = H2
 Mdx.H3 = H3
 Mdx.P = P
-Mdx.CALLOUT = Callout
 Mdx.UL = Ul
 Mdx.LI = Li
+Mdx.BLOCKQUOTE = Blockquote
+Mdx.CALLOUT = Callout
 
 const StyledH1 = styled.h1`
   line-height: 2;
@@ -40,14 +42,6 @@ const StyledP = styled.p`
   line-height: 1.7;
 `
 
-const StyledCallout = styled.aside`
-  border-radius: 10px;
-  background-color: ${({ theme }) => theme.colors.primary.light};
-  padding: 10px;
-  font-weight: ${({ theme }) => theme.fontWeight.bold};
-  margin-bottom: 20px;
-`
-
 const StyledUl = styled.ul`
   padding: 10px;
 `
@@ -58,4 +52,17 @@ const StyledLi = styled.li`
     content: '-';
     padding-right: 5px;
   }
+`
+const StyledBlockquote = styled.blockquote`
+  border-left: 4px solid ${({ theme }) => theme.colors.secondary.base};
+  padding: 10px 10px 10px 20px;
+  background-color: ${({ theme }) => theme.colors.gray};
+`
+
+const StyledCallout = styled.aside`
+  border-radius: 10px;
+  background-color: ${({ theme }) => theme.colors.primary.light};
+  padding: 10px;
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
+  margin-bottom: 20px;
 `

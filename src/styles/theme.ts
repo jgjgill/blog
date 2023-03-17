@@ -9,6 +9,7 @@ export const COLORS = {
   FUCHSIA700: '#a21caf',
   WHITE: '#ffffff',
   BLACK: '#000000',
+  GRAY: '#F8F9FA',
 } as const
 
 export const theme = {
@@ -25,6 +26,7 @@ export const theme = {
     },
     black: COLORS.BLACK,
     white: COLORS.WHITE,
+    gray: COLORS.GRAY,
   },
   fontSize: {
     xs: '12px',

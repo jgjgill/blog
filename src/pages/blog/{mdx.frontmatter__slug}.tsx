@@ -30,6 +30,7 @@ const BlogPost = ({ data, children }: any) => {
             p: Mdx.P,
             ul: Mdx.UL,
             li: Mdx.LI,
+            blockquote: Mdx.BLOCKQUOTE,
             Callout: Mdx.CALLOUT,
           }}
         >
