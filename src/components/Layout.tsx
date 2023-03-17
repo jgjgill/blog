@@ -1,10 +1,8 @@
 import styled from '@emotion/styled'
+import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
 import * as React from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
-
-import Flex from './@shared/Flex'
-import Link from './@shared/Link'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
   return (

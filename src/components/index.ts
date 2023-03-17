@@ -1,1 +1,6 @@
+export { default as Category } from 'components/Category'
+export { default as Comment } from 'components/Comment'
+export { default as Layout } from 'components/Layout'
+export { default as Mdx } from 'components/Mdx'
+export { default as Post } from 'components/Post'
 export { default as Seo } from 'components/Seo'
