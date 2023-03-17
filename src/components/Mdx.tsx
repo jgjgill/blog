@@ -45,6 +45,7 @@ const StyledCallout = styled.aside`
   background-color: ${({ theme }) => theme.colors.primary.light};
   padding: 10px;
   font-weight: ${({ theme }) => theme.fontWeight.bold};
+  margin-bottom: 20px;
 `
 
 const StyledUl = styled.ul`
