@@ -62,7 +62,6 @@ let let, wat;
 
 ```jsx
 console.blub('hello')
-//      ~~~~
 // Error: Property 'blub' does not exist on type 'Console'
 ```
 
@@ -86,7 +85,6 @@ firstName = "Joan";
 ```tsx
 let lastName = "King";
 lastName = true;
-//~~~~~
 // Error: Type 'boolean' is not assignable to type 'string'.
 ```
 
@@ -108,7 +106,7 @@ lastName = true;
 
 변수에 타입스크립트가 읽어야 할 초깃값이 없는 경우도 있습니다. 이때 타입스크립트는 기본적으로 변수를 암묵적인 `any` 타입으로 간주합니다.
 
-초기 타입을 유추할 수 없는 변수를 `진화하는 any` 라고 부릅니다. 특정 타입을 강제하는 대신 새로운 값이 할당될 때마다 변수 타입에 대한 이해를 발전시키는 것입니다.
+초기 타입을 유추할 수 없는 변수를 **진화하는 any** 라고 부릅니다. 특정 타입을 강제하는 대신 새로운 값이 할당될 때마다 변수 타입에 대한 이해를 발전시키는 것입니다.
 
 ```tsx
 let rocker; // 타입: any
@@ -121,7 +119,6 @@ rocker = 19.58; // 타입: number
 rocker.toPrecision(1); // OK
 
 rocker.toUpperCase();
-//     ~~~~~~~~~~~
 // Error: 'toUpperCase' does not exist on type 'number'.
 ```
 
@@ -133,7 +130,6 @@ rocker.toUpperCase();
 let rocker: string;
 rocker = "Joan Jett";
 rocket = 19.58;
-//~~~
 // Error: Type 'number' is not assignable to type 'string'.
 ```
 
@@ -151,7 +147,6 @@ let firstName: string = "Tina" // 타입 시스템은 변경되지 않음
 
 ```tsx
 let firstName: string = 42;
-//  ~~~~~~~~~
 // Error: Type 'number' is not assignable to type 'string'.
 ```
 
@@ -168,7 +163,6 @@ let rapper = "Queen Latifah";
 rapper.length; // OK
 
 rapper.push("!");
-//     ~~~~
 // Error: Property 'push' does not exist on type 'string'.
 ```
 
@@ -182,18 +176,18 @@ ECMA스크립트 2015에서 파일 간에 가져오고 내보내는 구문을 �
 파일이 스크립트면 타입스크립트는 해당 파일을 전역 스코프로 간주합니다. 그래서 스크립트 파일에 선언된 변수는 다른 스크립트 파일에 선언된 변수와 동일한 이름을 가질 수 없습니다.
 
 ```tsx
+// a.ts
 const shared = "Cher";
-//    ~~~~~
 // Error: Cannot redeclare block-scoped variable 'shared'.
 ```
 
 ```tsx
+// b.ts
 const shared = "Cher";
-//    ~~~~~
 // Error: Cannot redeclare block-scoped variable 'shared'.
 ```
 
-`export` 또는 `import` 문 ㅇ벗이 파일을 모듈로 만들어야 한다면 파일의 아무 곳에나 `export{};` 를 추가해 강제로 모듈이 되도록 만들 수 있습니다.
+`export` 또는 `import` 문 없이 파일을 모듈로 만들어야 한다면 파일의 아무 곳에나 `export{};` 를 추가해 강제로 모듈이 되도록 만들 수 있습니다.
 
 ```tsx
 // a.ts and b.ts
