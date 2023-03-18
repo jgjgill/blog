@@ -11,19 +11,19 @@ interface Props {
 const Category = ({ selectedCategory }: Props) => {
   return (
     <List>
-      <Item to={`${PATH.HOME}`} active={selectedCategory === 'all'}>
+      <Item to={`${PATH.HOME}`} isactive={+(selectedCategory === 'all')}>
         All
       </Item>
       <Item
         to={`${PATH.CATEGORY}development`}
-        active={selectedCategory === 'development'}
+        isactive={+(selectedCategory === 'development')}
       >
         Development
       </Item>
-      <Item to={`${PATH.CATEGORY}essay`} active={selectedCategory === 'essay'}>
+      <Item to={`${PATH.CATEGORY}essay`} isactive={+(selectedCategory === 'essay')}>
         Essay
       </Item>
-      <Item to={`${PATH.CATEGORY}reading`} active={selectedCategory === 'reading'}>
+      <Item to={`${PATH.CATEGORY}reading`} isactive={+(selectedCategory === 'reading')}>
         Reading
       </Item>
     </List>
@@ -43,11 +43,11 @@ const List = styled.ul`
   border-bottom: 1px solid ${({ theme }) => theme.colors.secondary.base};
 `
 
-const Item = styled(Link)<{ active: boolean }>`
+const Item = styled(Link)<{ isactive: number }>`
   height: 100%;
   text-align: center;
   transition: 0.3s;
-  color: ${({ theme, active }) => active && theme.colors.secondary.dark};
+  color: ${({ theme, isactive }) => isactive && theme.colors.secondary.dark};
   &:hover {
     color: ${({ theme }) => theme.colors.secondary.dark};
   }
