@@ -3,13 +3,18 @@ import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
 import { Comment, Layout, Mdx, Seo } from 'components'
 import { Flex } from 'components/@shared'
-import { graphql } from 'gatsby'
+import { graphql, PageProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
+import { Blog } from 'types/content'
 
-const BlogPost = ({ data, children }: any) => {
-  const thumbnail = getImage(data.mdx.frontmatter.thumbnail)!
+interface Props {
+  mdx: Blog
+}
 
+const BlogPost = ({ data, children }: PageProps<Props>) => {
+  const thumbnail = getImage(data.mdx.frontmatter.thumbnail)
+  if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
   return (
     <App>
       <Layout>
