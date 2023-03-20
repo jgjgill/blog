@@ -5,11 +5,17 @@ import { StrictPropsWithChildren } from 'types/custom'
 
 interface LinkProps {
   to: string
+  className?: string
 }
 
-const Link = ({ to, children, ...props }: StrictPropsWithChildren<LinkProps>) => {
+const Link = ({
+  to,
+  className,
+  children,
+  ...props
+}: StrictPropsWithChildren<LinkProps>) => {
   return (
-    <StyledLink to={to} {...props}>
+    <StyledLink to={to} className={className} {...props}>
       {children}
     </StyledLink>
   )
