@@ -7,6 +7,7 @@ import { graphql, PageProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
 import { Blog } from 'types/content'
+import { readingTimeWithCount } from 'utils/reading-time'
 
 interface Props {
   mdx: Blog
@@ -14,12 +15,15 @@ interface Props {
 
 const BlogPost = ({ data, children }: PageProps<Props>) => {
   const thumbnail = getImage(data.mdx.frontmatter.thumbnail)
+  const ttt = readingTimeWithCount(data.mdx.body)
+  console.log(ttt.minutes)
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
   return (
     <App>
       <Layout>
         <h1>{data.mdx.frontmatter.title}</h1>
         <time>{data.mdx.frontmatter.date}</time>
+        <span>{ttt.minutes} min read</span>
         <Flex justifyContent="center">
           <ThumbnailImage image={thumbnail} alt={data.mdx.frontmatter.thumbnail_alt} />
         </Flex>
@@ -58,6 +62,7 @@ export const query = graphql`
           }
         }
       }
+      body
     }
   }
 `

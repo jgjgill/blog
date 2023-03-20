@@ -14,4 +14,5 @@ export interface Blog {
     thumbnail_alt: string
     thumbnail: ImageDataLike
   }
+  body: string
 }
