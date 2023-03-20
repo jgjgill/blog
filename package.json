@@ -27,6 +27,7 @@
     "gatsby-plugin-offline": "^6.7.0",
     "gatsby-plugin-root-import": "^2.0.9",
     "gatsby-plugin-sharp": "^5.7.0",
+    "gatsby-remark-autolink-headers": "^6.7.0",
     "gatsby-remark-prismjs": "^7.7.0",
     "gatsby-source-filesystem": "^5.7.0",
     "gatsby-transformer-remark": "^6.7.0",

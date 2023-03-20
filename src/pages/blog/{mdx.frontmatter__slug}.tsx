@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
-import { Comment, Layout, Mdx, Seo } from 'components'
+import { Comment, Layout, Mdx, Seo, Toc } from 'components'
 import { Flex } from 'components/@shared'
 import { graphql, PageProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
@@ -15,15 +15,18 @@ interface Props {
 
 const BlogPost = ({ data, children }: PageProps<Props>) => {
   const thumbnail = getImage(data.mdx.frontmatter.thumbnail)
-  const ttt = readingTimeWithCount(data.mdx.body)
-  console.log(ttt.minutes)
+  const readingTime = readingTimeWithCount(data.mdx.body)
+
+  console.log(data.mdx.tableOfContents)
+
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
   return (
     <App>
       <Layout>
         <h1>{data.mdx.frontmatter.title}</h1>
         <time>{data.mdx.frontmatter.date}</time>
-        <span>{ttt.minutes} min read</span>
+        <span>{readingTime.minutes} min read</span>
+        <Toc toc={data.mdx.tableOfContents} />
         <Flex justifyContent="center">
           <ThumbnailImage image={thumbnail} alt={data.mdx.frontmatter.thumbnail_alt} />
         </Flex>
@@ -63,6 +66,7 @@ export const query = graphql`
         }
       }
       body
+      tableOfContents
     }
   }
 `

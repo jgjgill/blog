@@ -19,6 +19,11 @@ const config: GatsbyConfig = {
       options: {
         gatsbyRemarkPlugins: [
           {
+            resolve: 'gatsby-remark-autolink-headers',
+          },
+          // gatsby-remark-autolink-headers: gatsby-remark-prismjs 앞에 위치
+          // https://github.com/gatsbyjs/gatsby/issues/5764
+          {
             resolve: 'gatsby-remark-prismjs',
           },
         ],
@@ -37,7 +42,7 @@ const config: GatsbyConfig = {
         cache_busting_mode: 'none',
       },
     },
-    // manifest.webmanifest 캐시 생성을 위해 manifest 플러그인 이후에 위치
+    // gatsby-plugin-offline: manifest.webmanifest 캐시 생성을 위해 manifest 플러그인 이후에 위치
     {
       resolve: 'gatsby-plugin-offline',
       options: {

@@ -15,4 +15,11 @@ export interface Blog {
     thumbnail: ImageDataLike
   }
   body: string
+  tableOfContents: { items?: TableItem[] }
+}
+
+export interface TableItem {
+  url: string
+  title: string
+  items?: TableItem[]
 }
