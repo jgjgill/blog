@@ -21,6 +21,7 @@
     "@mdx-js/react": "^2.3.0",
     "gatsby": "^5.7.0",
     "gatsby-plugin-emotion": "^8.7.0",
+    "gatsby-plugin-google-gtag": "^5.7.0",
     "gatsby-plugin-image": "^3.7.0",
     "gatsby-plugin-manifest": "^5.7.0",
     "gatsby-plugin-mdx": "^5.7.0",
