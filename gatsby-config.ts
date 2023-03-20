@@ -19,6 +19,65 @@ const config: GatsbyConfig = {
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
     {
+      resolve: 'gatsby-plugin-sitemap',
+      options: {
+        query: `
+          {
+            site {
+              siteMetadata {
+                siteUrl
+              }
+            }
+            allMdx(sort: {frontmatter: {date: DESC}}) {
+              group(field: {frontmatter: {category: SELECT}}) {
+                fieldValue
+              }
+              nodes {
+                frontmatter {
+                  slug
+                  date
+                }
+              }
+            }
+          }
+        `,
+        resolveSiteUrl: () => `https://jgjgill-blog.netlify.app/`,
+        resolvePages: ({
+          allMdx: { nodes, group },
+        }: {
+          allMdx: {
+            nodes: { frontmatter: { date: string; slug: string } }[]
+            group: { fieldValue: string }[]
+          }
+        }) => {
+          const posts = nodes.map((node) => ({
+            path: `/blog/${node.frontmatter.slug}`,
+            lastmod: node.frontmatter.date,
+          }))
+
+          const home = {
+            path: '/',
+            lastmod: posts[0].lastmod,
+          }
+
+          const categories = group.map((node) => ({
+            path: `/category/${node.fieldValue}`,
+            lastmod: posts[posts.length - 1].lastmod,
+          }))
+
+          return [...posts, ...categories, home]
+        },
+        serialize: ({ path, lastmod }: { path: string; lastmod: string }) => {
+          return {
+            url: path,
+            lastmod,
+            changefreq: 'daily',
+            priority: 0.7,
+          }
+        },
+      },
+    },
+    {
       resolve: 'gatsby-plugin-google-gtag',
       options: {
         trackingIds: [process.env.GA_TRACKING_ID],
