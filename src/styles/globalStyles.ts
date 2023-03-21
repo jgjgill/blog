@@ -1,6 +1,19 @@
 import { css } from '@emotion/react'
 
 export const globalStyles = css`
+  body {
+    --bg-color: #fff;
+    --bg-inline-color: #3a3a3a;
+    --text-color: #343434;
+    --link-color: #333;
+  }
+
+  body.dark {
+    --bg-color: #282828;
+    --text-color: #f1f1f1;
+    --link-color: #f1f1f1;
+  }
+
   /* Box sizing rules */
   *,
   *::before,
@@ -26,6 +39,7 @@ export const globalStyles = css`
     padding: 0;
   }
 
+  /* list options */
   ul,
   ol {
     list-style-type: none;
@@ -45,6 +59,7 @@ export const globalStyles = css`
 
   a {
     text-decoration: none;
+    /* color: red; */
   }
 
   /* Make images easier to work with */
@@ -60,5 +75,58 @@ export const globalStyles = css`
   textarea,
   select {
     font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
+  }
+
+  /* custom code */
+  body code.language-text {
+    padding: 0 5px;
+  }
+
+  /* dark mode */
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  body.dark {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  body.dark a {
+    color: var(--link-color);
+  }
+
+  a {
+    color: var(--link-color);
+  }
+
+  body.dark pre.language-tsx {
+    background-color: var(--bg-inline-color);
+  }
+
+  body.dark code.language-tsx {
+    text-shadow: none;
+    color: var(--text-color);
+  }
+
+  body.dark code.language-text {
+    background-color: var(--bg-inline-color);
+    color: var(--text-color);
+    text-shadow: none;
+  }
+
+  body.dark .token.operator {
+    background-color: transparent;
+  }
+
+  body.dark blockquote {
+    background-color: var(--bg-inline-color);
   }
 `

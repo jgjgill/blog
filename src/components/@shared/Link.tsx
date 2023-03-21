@@ -23,6 +23,4 @@ const Link = ({
 
 export default Link
 
-const StyledLink = styled(GatsbyLink)<Omit<LinkProps, 'text'>>`
-  color: ${({ theme }) => theme.colors.black};
-`
+const StyledLink = styled(GatsbyLink)<Omit<LinkProps, 'text'>>``

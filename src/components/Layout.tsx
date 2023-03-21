@@ -1,10 +1,29 @@
+import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
+  const [themeMode, setThemeMode] = useState(
+    localStorage.getItem('theme') === 'dark' ||
+      (!('theme' in localStorage) &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches)
+      ? 'dark'
+      : 'light',
+  )
+
+  useEffect(() => {
+    if (themeMode === 'dark') {
+      document.body.classList.add('dark')
+      localStorage.setItem('theme', 'dark')
+    } else {
+      document.body.classList.remove('dark')
+      localStorage.setItem('theme', 'light')
+    }
+  }, [themeMode])
+
   return (
     <Container>
       <Header>
@@ -13,7 +32,21 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
         </Flex>
       </Header>
 
-      <Main>{children}</Main>
+      <Main>
+        <button
+          type="button"
+          onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+          css={css`
+            margin-left: auto;
+            background-color: #c471f5;
+            padding: 5px 10px;
+            border-radius: 10px;
+          `}
+        >
+          Dark Mode
+        </button>
+        {children}
+      </Main>
     </Container>
   )
 }
@@ -45,7 +78,7 @@ const Header = styled.header`
 const HomeLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
-  color: ${({ theme }) => theme.colors.primary.dark};
+  color: ${({ theme }) => theme.colors.primary.dark} !important;
 `
 
 const Main = styled.main`

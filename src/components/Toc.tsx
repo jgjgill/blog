@@ -89,7 +89,7 @@ const Aside = styled.aside`
   }
 
   @media (max-width: 1400px) {
-    opacity: 0;
+    display: none;
   }
 `
 

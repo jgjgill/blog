@@ -26,12 +26,12 @@ const Post = ({ node }: Props) => {
 export default Post
 
 const Container = styled.article`
-  border-radius: 20px;
+  border-bottom: 1px solid transparent;
   width: 100%;
 
   &:hover {
     transition: 0.3s;
-    background-color: ${({ theme }) => theme.colors.primary.light};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.secondary.base};
   }
 `
 
