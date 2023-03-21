@@ -22,6 +22,14 @@ const config: GatsbyConfig = {
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
     {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: 'https://jgjgill-blog.netlify.app/',
+        sitemap: 'https://jgjgill-blog.netlify.app/sitemap-0.xml',
+        policy: [{ userAgent: '*', allow: '/' }],
+      },
+    },
+    {
       resolve: 'gatsby-plugin-sitemap',
       options: {
         query: `
