@@ -7,9 +7,10 @@ import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
   const [themeMode, setThemeMode] = useState(
-    localStorage.getItem('theme') === 'dark' ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches)
+    typeof window !== 'undefined' &&
+      (localStorage.getItem('theme') === 'dark' ||
+        (!('theme' in localStorage) &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches))
       ? 'dark'
       : 'light',
   )
@@ -17,10 +18,10 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
   useEffect(() => {
     if (themeMode === 'dark') {
       document.body.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
+      typeof window !== 'undefined' && localStorage.setItem('theme', 'dark')
     } else {
       document.body.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
+      typeof window !== 'undefined' && localStorage.setItem('theme', 'light')
     }
   }, [themeMode])
 
