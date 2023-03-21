@@ -3,6 +3,7 @@ import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
 import { Comment, Layout, Mdx, Seo, Toc } from 'components'
 import { Flex } from 'components/@shared'
+import { HeadProps } from 'gatsby'
 import { graphql, PageProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
@@ -16,8 +17,6 @@ interface Props {
 const BlogPost = ({ data, children }: PageProps<Props>) => {
   const thumbnail = getImage(data.mdx.frontmatter.thumbnail)
   const readingTime = readingTimeWithCount(data.mdx.body)
-
-  console.log(data.mdx.tableOfContents)
 
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
   return (
@@ -70,8 +69,22 @@ export const query = graphql`
     }
   }
 `
-
-export const Head = () => <Seo />
+// {
+//   location: { pathname: string }
+//   pageContext: { frontmatter: { title: string; description: string; keyword: string[] } }
+// }
+export const Head = ({
+  location,
+  pageContext,
+}: HeadProps<object, { frontmatter: { title: string; description: string } }>) => {
+  return (
+    <Seo
+      title={pageContext.frontmatter.title}
+      description={pageContext.frontmatter.description}
+      siteUrl={`https://jgjgill-blog.netlify.app${location.pathname}`}
+    />
+  )
+}
 
 export default BlogPost
 

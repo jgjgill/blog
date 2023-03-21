@@ -1,11 +1,11 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Author } from 'components'
+import { Author, Seo } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
 import Layout from 'components/Layout'
 import Post from 'components/Post'
-import { graphql, PageProps } from 'gatsby'
+import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -38,6 +38,8 @@ const CategoryTemplate = ({
 }
 
 export default CategoryTemplate
+
+export const Head: HeadFC = () => <Seo />
 
 export const query = graphql`
   query ($category: String) {

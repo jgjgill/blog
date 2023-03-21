@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Layout, Post } from 'components'
+import { Layout, Post, Seo } from 'components'
 import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
@@ -36,7 +36,7 @@ const NotFoundPage = ({ data }: PageProps<Props>) => {
 
 export default NotFoundPage
 
-export const Head: HeadFC = () => <title>Not found</title>
+export const Head: HeadFC = () => <Seo />
 
 export const query = graphql`
   query {

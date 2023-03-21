@@ -6,6 +6,9 @@ require('dotenv').config({
 
 const config: GatsbyConfig = {
   siteMetadata: {
+    title: 'jgjgill-blog',
+    description: 'frontend developer jgjgill blog',
+    author: 'jgjgill',
     siteUrl: `https://jgjgill-blog.netlify.app/`,
   },
   flags: {

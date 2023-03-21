@@ -32,7 +32,7 @@ const Category = ({ selectedCategory }: Props) => {
 
 export default Category
 
-const List = styled.ul`
+const List = styled.nav`
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
