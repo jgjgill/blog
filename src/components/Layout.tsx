@@ -27,9 +27,12 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
         if (typeof window === 'undefined') return
         const currentScrollY = window.scrollY
 
-        beforeScrollY.current < currentScrollY
-          ? setIsViewHeader(true)
-          : setIsViewHeader(false)
+        if (currentScrollY < 300) setIsViewHeader(true)
+        else {
+          beforeScrollY.current < currentScrollY
+            ? setIsViewHeader(false)
+            : setIsViewHeader(true)
+        }
 
         beforeScrollY.current = currentScrollY
       }, 300),
@@ -99,7 +102,8 @@ const Header = styled.header<{ $isViewHeader: boolean }>`
   padding: 20px;
   z-index: 1;
   transition: 1s;
-  transform: translateY(${({ $isViewHeader }) => ($isViewHeader ? '-80px' : '0')});
+  top: 0;
+  transform: translateY(${({ $isViewHeader }) => ($isViewHeader ? '0' : '-80px')});
 
   > div {
     width: 768px;
@@ -117,6 +121,7 @@ const Main = styled.main`
   flex-direction: column;
   margin: 0 auto;
   padding: 20px;
+  padding-top: 100px;
   max-width: 768px;
 `
 

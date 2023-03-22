@@ -25,6 +25,56 @@ const config: GatsbyConfig = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
+
+    {
+      resolve: 'gatsby-plugin-feed',
+      options: {
+        query: `
+      {
+        site {
+          siteMetadata {
+            title
+            description
+            siteUrl
+            site_url: siteUrl
+          }
+        }
+      }`,
+        feeds: [
+          {
+            serialize: ({ query: { site, allMdx } }: any) => {
+              return allMdx.nodes.map((node: any) => {
+                return Object.assign({}, node.frontmatter, {
+                  title: node.frontmatter.title,
+                  description: node.frontmatter.description,
+                  date: new Date(node.frontmatter.date),
+                  url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
+                  guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
+                  custom_elements: [{ 'content:encoded': node.body }],
+                })
+              })
+            },
+            query: `
+              {
+                allMdx(sort: {frontmatter: {date: DESC}}) {
+                  nodes {
+                    frontmatter {
+                      title
+                      date
+                      description
+                      slug
+                    }
+                    body
+                  }
+                }
+              }
+            `,
+            output: '/rss.xml',
+            title: "jgjgill's RSS Feed",
+          },
+        ],
+      },
+    },
     {
       resolve: 'gatsby-plugin-react-svg',
       options: { rule: { include: /\.inline\.svg$/ } },
