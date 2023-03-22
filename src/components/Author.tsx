@@ -10,10 +10,16 @@ const Author = () => {
         <span>Go High</span>
       </Flex>
       <Flex gap={20}>
-        <a href="https://github.com/">Github</a>
-        <a href="https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/">
+        <Link href="https://github.com/jgjgill" target="_blank" rel="noreferrer">
+          Github
+        </Link>
+        <Link
+          href="https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/"
+          target="_blank"
+          rel="noreferrer"
+        >
           LinkedIn
-        </a>
+        </Link>
       </Flex>
     </Container>
   )
@@ -26,4 +32,12 @@ const Container = styled.section`
   flex-direction: column;
   gap: 10px;
   padding: 20px;
+`
+
+const Link = styled.a`
+  transition: 0.3;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.secondary.dark};
+  }
 `
