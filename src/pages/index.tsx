@@ -2,13 +2,18 @@ import styled from '@emotion/styled'
 import App from 'App'
 import { Author, Category, Layout, Post, Seo } from 'components'
 import { Flex } from 'components/@shared'
-import { graphql, HeadFC, PageProps } from 'gatsby'
+import { graphql, HeadFC, PageProps, useStaticQuery } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
 
 interface Props {
   allMdx: {
     nodes: Content[]
+    totalCount: number
+    group: {
+      totalCount: number
+      fieldValue: string
+    }[]
   }
 }
 
@@ -18,7 +23,11 @@ const IndexPage = ({ data }: PageProps<Props>) => {
       <Layout>
         <Flex flexDirection="column" gap={20}>
           <Author />
-          <Category selectedCategory="all" />
+          <Category
+            selectedCategory="all"
+            totalCount={data.allMdx.totalCount}
+            group={data.allMdx.group}
+          />
           <PostList>
             {data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />
@@ -42,6 +51,11 @@ export const query = graphql`
         }
         id
         excerpt
+      }
+      totalCount
+      group(field: { frontmatter: { category: SELECT } }) {
+        totalCount
+        fieldValue
       }
     }
   }

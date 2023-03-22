@@ -6,26 +6,29 @@ import Link from './@shared/Link'
 
 interface Props {
   selectedCategory: string
+  totalCount: number
+  group: {
+    totalCount: number
+    fieldValue: string
+  }[]
 }
 
-const Category = ({ selectedCategory }: Props) => {
+const Category = ({ selectedCategory, totalCount, group }: Props) => {
   return (
     <List>
       <Item to={`${PATH.HOME}`} isactive={+(selectedCategory === 'all')}>
-        All
+        All ({totalCount})
       </Item>
-      <Item
-        to={`${PATH.CATEGORY}development`}
-        isactive={+(selectedCategory === 'development')}
-      >
-        Development
-      </Item>
-      <Item to={`${PATH.CATEGORY}essay`} isactive={+(selectedCategory === 'essay')}>
-        Essay
-      </Item>
-      <Item to={`${PATH.CATEGORY}reading`} isactive={+(selectedCategory === 'reading')}>
-        Reading
-      </Item>
+
+      {group.map((category) => (
+        <Item
+          key={category.fieldValue}
+          to={`${PATH.CATEGORY}${category.fieldValue}`}
+          isactive={+(selectedCategory === category.fieldValue)}
+        >
+          {category.fieldValue} ({category.totalCount})
+        </Item>
+      ))}
     </List>
   )
 }
