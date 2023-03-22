@@ -14,15 +14,14 @@ const Seo = ({ title = 'jgjgill', description = 'jgjgill-blog', siteUrl }: Props
       <meta name="keywords" content="development" />
       <meta name="author" content="jgjgill" />
       <meta property="og:type" content="website" />
-      <meta property="og:type" content="website" />
       <meta property="og:url" content={siteUrl} />
-      <meta property="og:title" content="jgjgill" />
-      <meta property="og:description" content="jgjgill-description" />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
       <meta property="og:site_name" content="jgjgill-blog" />
       <meta property="og:locale" content="ko_KR" />
       <meta
         property="og:image"
-        content="https://raw.githubusercontent.com/jgjgill/blog/main/src/images/test.png"
+        content="https://raw.githubusercontent.com/jgjgill/blog/main/src/images/icon.png"
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
