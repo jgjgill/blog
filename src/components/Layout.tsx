@@ -1,12 +1,14 @@
-import { css } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
+import Moon from 'images/moon.inline.svg'
+import Rss from 'images/rss.inline.svg'
+import Sun from 'images/sun.inline.svg'
 import React, { useEffect, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
-  const [themeMode, setThemeMode] = useState(
+  const [themeMode, setThemeMode] = useState<'dark' | 'light'>(
     typeof window !== 'undefined' &&
       (localStorage.getItem('theme') === 'dark' ||
         (!('theme' in localStorage) &&
@@ -28,26 +30,24 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
   return (
     <Container>
       <Header>
-        <Flex justifyContent="flex-start" alignItems="center">
+        <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
+
+          <div>
+            <ThemeToggleButton
+              onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+            >
+              {themeMode === 'light' && <Sun width={25} height={25} fill="#7e22ce" />}
+              {themeMode === 'dark' && <Moon width={25} height={25} fill="#7e22ce" />}
+            </ThemeToggleButton>
+            <Link to={PATH.RSS}>
+              <Rss width={25} height={25} fill="#7e22ce" />
+            </Link>
+          </div>
         </Flex>
       </Header>
 
-      <Main>
-        <button
-          type="button"
-          onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
-          css={css`
-            margin-left: auto;
-            background-color: #c471f5;
-            padding: 5px 10px;
-            border-radius: 10px;
-          `}
-        >
-          Dark Mode
-        </button>
-        {children}
-      </Main>
+      <Main>{children}</Main>
     </Container>
   )
 }
@@ -71,7 +71,7 @@ const Header = styled.header`
   padding: 20px;
   z-index: 1;
 
-  div {
+  > div {
     width: 768px;
     margin: 0 auto;
   }
@@ -88,4 +88,8 @@ const Main = styled.main`
   margin: 0 auto;
   padding: 20px;
   max-width: 768px;
+`
+
+const ThemeToggleButton = styled.button`
+  transition: 0.3s;
 `

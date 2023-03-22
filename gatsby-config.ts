@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { GatsbyConfig } from 'gatsby'
 
 require('dotenv').config({
@@ -24,6 +25,10 @@ const config: GatsbyConfig = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
+    {
+      resolve: 'gatsby-plugin-react-svg',
+      options: { rule: { include: /\.inline\.svg$/ } },
+    },
     {
       resolve: 'gatsby-plugin-robots-txt',
       options: {

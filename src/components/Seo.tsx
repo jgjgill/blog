@@ -21,7 +21,7 @@ const Seo = ({ title = 'jgjgill', description = 'jgjgill-blog', siteUrl }: Props
       <meta property="og:locale" content="ko_KR" />
       <meta
         property="og:image"
-        content="https://raw.githubusercontent.com/jgjgill/blog/main/src/images/icon.png"
+        content="https://raw.githubusercontent.com/jgjgill/blog/main/src/images/og-icon.png"
       />
       <meta property="og:image:width" content="1200" />
       <meta property="og:image:height" content="630" />
