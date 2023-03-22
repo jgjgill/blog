@@ -4,7 +4,7 @@ import { PATH } from 'constants/path'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
@@ -17,6 +17,20 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
       : 'light',
   )
 
+  const [isViewHeader, setIsViewHeader] = useState(true)
+  const beforeScrollY = useRef<number>(0)
+
+  const handleScroll = useCallback(() => {
+    if (typeof window === 'undefined') return
+    const currentScrollY = window.scrollY
+
+    beforeScrollY.current < currentScrollY
+      ? setIsViewHeader(true)
+      : setIsViewHeader(false)
+
+    beforeScrollY.current = currentScrollY
+  }, [])
+
   useEffect(() => {
     if (themeMode === 'dark') {
       document.body.classList.add('dark')
@@ -27,9 +41,19 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
     }
   }, [themeMode])
 
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    window.addEventListener('scroll', handleScroll)
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [handleScroll])
+
   return (
     <Container>
-      <Header>
+      <Header $isViewHeader={isViewHeader}>
         <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
 
@@ -59,17 +83,18 @@ const Container = styled.div`
   width: 100%;
 `
 
-const Header = styled.header`
+const Header = styled.header<{ $isViewHeader: boolean }>`
   display: flex;
   align-items: center;
-  position: sticky;
+  position: fixed;
   height: 60px;
-  top: 0px;
   backdrop-filter: saturate(200%) blur(1ex);
   background: linear-gradient(to top, #d8b4fe 0%, #f0abfc 100%);
   width: 100%;
   padding: 20px;
   z-index: 1;
+  transition: 0.3s;
+  transform: translateY(${({ $isViewHeader }) => ($isViewHeader ? '-80px' : '0')});
 
   > div {
     width: 768px;
