@@ -4,7 +4,8 @@ import { PATH } from 'constants/path'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import React, { useCallback, useEffect, useRef, useState } from 'react'
+import { throttle } from 'lodash'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
@@ -20,16 +21,20 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
   const [isViewHeader, setIsViewHeader] = useState(true)
   const beforeScrollY = useRef<number>(0)
 
-  const handleScroll = useCallback(() => {
-    if (typeof window === 'undefined') return
-    const currentScrollY = window.scrollY
+  const handleScroll = useMemo(
+    () =>
+      throttle(() => {
+        if (typeof window === 'undefined') return
+        const currentScrollY = window.scrollY
 
-    beforeScrollY.current < currentScrollY
-      ? setIsViewHeader(true)
-      : setIsViewHeader(false)
+        beforeScrollY.current < currentScrollY
+          ? setIsViewHeader(true)
+          : setIsViewHeader(false)
 
-    beforeScrollY.current = currentScrollY
-  }, [])
+        beforeScrollY.current = currentScrollY
+      }, 300),
+    [],
+  )
 
   useEffect(() => {
     if (themeMode === 'dark') {
@@ -93,7 +98,7 @@ const Header = styled.header<{ $isViewHeader: boolean }>`
   width: 100%;
   padding: 20px;
   z-index: 1;
-  transition: 0.3s;
+  transition: 1s;
   transform: translateY(${({ $isViewHeader }) => ($isViewHeader ? '-80px' : '0')});
 
   > div {
