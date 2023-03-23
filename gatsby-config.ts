@@ -25,7 +25,35 @@ const config: GatsbyConfig = {
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
     'gatsby-plugin-emotion',
-
+    {
+      resolve: 'gatsby-plugin-fusejs',
+      options: {
+        query: `
+          {
+            allMdx {
+              nodes {
+                id
+                frontmatter {
+                  title
+                  date
+                  slug
+                }
+                excerpt
+              }
+            }
+          }
+        `,
+        keys: ['title', 'excerpt'],
+        normalizer: ({ data }: any) =>
+          data.allMdx.nodes.map((node: any) => ({
+            id: node.id,
+            title: node.frontmatter.title,
+            slug: node.frontmatter.slug,
+            date: node.frontmatter.date,
+            excerpt: node.excerpt,
+          })),
+      },
+    },
     {
       resolve: 'gatsby-plugin-feed',
       options: {
