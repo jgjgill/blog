@@ -31,11 +31,7 @@ const CategoryTemplate = ({
       <Layout>
         <Flex flexDirection="column" gap={20}>
           <Author />
-          <Category
-            selectedCategory={pageContext.category}
-            totalCount={data.category.totalCount}
-            group={data.category.group}
-          />
+          <Category selectedCategory={pageContext.category} />
 
           <PostList>
             {data.allMdx.nodes.map((node) => (
@@ -72,13 +68,6 @@ export const query = graphql`
         }
         id
         excerpt
-      }
-    }
-    category: allMdx {
-      totalCount
-      group(field: { frontmatter: { category: SELECT } }) {
-        totalCount
-        fieldValue
       }
     }
   }

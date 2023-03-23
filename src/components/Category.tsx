@@ -1,26 +1,44 @@
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
+import { graphql, useStaticQuery } from 'gatsby'
 import React from 'react'
 
 import Link from './@shared/Link'
 
 interface Props {
   selectedCategory: string
-  totalCount: number
-  group: {
-    totalCount: number
-    fieldValue: string
-  }[]
 }
 
-const Category = ({ selectedCategory, totalCount, group }: Props) => {
+interface CategoryPostCount {
+  allMdx: {
+    totalCount: number
+    group: {
+      totalCount: number
+      fieldValue: string
+    }[]
+  }
+}
+
+const Category = ({ selectedCategory }: Props) => {
+  const data: CategoryPostCount = useStaticQuery(graphql`
+    query {
+      allMdx {
+        totalCount
+        group(field: { frontmatter: { category: SELECT } }) {
+          totalCount
+          fieldValue
+        }
+      }
+    }
+  `)
+
   return (
     <List>
       <Item to={`${PATH.HOME}`} isactive={+(selectedCategory === 'all')}>
-        All ({totalCount})
+        All ({data.allMdx.totalCount})
       </Item>
 
-      {group.map((category) => (
+      {data.allMdx.group.map((category) => (
         <Item
           key={category.fieldValue}
           to={`${PATH.CATEGORY}${category.fieldValue}`}
