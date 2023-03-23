@@ -3,9 +3,11 @@ import { ImageDataLike } from 'gatsby-plugin-image'
 
 export interface Content {
   id: string
-  frontmatter: { date: string; slug: string; title: string; category: string }
+  frontmatter: Frontmatter
   excerpt: ReactNode
 }
+
+export type Frontmatter = { date: string; slug: string; title: string; category: string }
 
 export interface Blog {
   frontmatter: {

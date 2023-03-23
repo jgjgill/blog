@@ -37,6 +37,7 @@ const config: GatsbyConfig = {
                   title
                   date
                   slug
+                  category
                 }
                 excerpt
               }
@@ -47,9 +48,12 @@ const config: GatsbyConfig = {
         normalizer: ({ data }: any) =>
           data.allMdx.nodes.map((node: any) => ({
             id: node.id,
-            title: node.frontmatter.title,
-            slug: node.frontmatter.slug,
-            date: node.frontmatter.date,
+            frontmatter: {
+              title: node.frontmatter.title,
+              slug: node.frontmatter.slug,
+              date: node.frontmatter.date,
+              category: node.frontmatter.category,
+            },
             excerpt: node.excerpt,
           })),
       },
