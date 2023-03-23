@@ -44,7 +44,7 @@ const config: GatsbyConfig = {
             }
           }
         `,
-        keys: ['title', 'excerpt'],
+        keys: ['frontmatter.title', 'excerpt'],
         normalizer: ({ data }: any) =>
           data.allMdx.nodes.map((node: any) => ({
             id: node.id,

@@ -3,6 +3,7 @@ import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
+import Search from 'images/search.inline.svg'
 import Sun from 'images/sun.inline.svg'
 import { throttle } from 'lodash'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
@@ -65,7 +66,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
         <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
 
-          <div>
+          <Flex alignItems="center" gap={5}>
             <ThemeToggleButton
               onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
             >
@@ -75,7 +76,10 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
             <Link to={PATH.RSS}>
               <Rss width={25} height={25} fill="#7e22ce" />
             </Link>
-          </div>
+            <Link to={PATH.SEARCH}>
+              <Search width={25} height={25} fill="#7e22ce" />
+            </Link>
+          </Flex>
         </Flex>
       </Header>
 

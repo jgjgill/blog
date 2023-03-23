@@ -3,4 +3,5 @@ export const PATH = {
   BLOG: '/blog/',
   CATEGORY: '/category/',
   RSS: '/rss.xml',
+  SEARCH: '/search/',
 }

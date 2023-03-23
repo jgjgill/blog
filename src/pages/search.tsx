@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post } from 'components'
 import { Flex } from 'components/@shared'
-import Fuse from 'fuse.js'
 import { graphql, useStaticQuery } from 'gatsby'
-import React, { useMemo, useState } from 'react'
+import useSearch from 'hooks/useSearch'
+import React, { useState } from 'react'
 import { Content } from 'types/content'
 
 interface searchPost {
@@ -24,31 +24,30 @@ const Search = () => {
     }
   `)
   const [query, setQuery] = useState('')
-
-  const fuse = useMemo(() => {
-    return new Fuse<Content>(
-      search.fusejs.data,
-      {},
-      Fuse.parseIndex(JSON.parse(search.fusejs.index)),
-    )
-  }, [search])
+  const nodes = useSearch(query, search.fusejs)
 
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
-          <input
-            type="text"
+          <Input
+            placeholder="Search"
             value={query}
             onChange={(e) => setQuery(e.currentTarget.value)}
           />
 
-          <ul>
-            {fuse.search(query).map((post) => (
-              <Post key={post.refIndex} node={post.item} />
+          {query !== '' && (
+            <span>
+              &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}
+              개)
+            </span>
+          )}
+
+          <PostList>
+            {nodes.map((node) => (
+              <Post key={node.refIndex} node={node.item} />
             ))}
-          </ul>
-          <PostList></PostList>
+          </PostList>
         </Flex>
       </Layout>
     </App>
@@ -56,6 +55,17 @@ const Search = () => {
 }
 
 export default Search
+
+const Input = styled.input`
+  border-radius: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  border: 3px solid ${({ theme }) => theme.colors.secondary.light};
+
+  &:focus {
+    outline: none;
+  }
+`
 
 const PostList = styled.section`
   display: flex;
