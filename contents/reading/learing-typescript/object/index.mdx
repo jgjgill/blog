@@ -1,0 +1,367 @@
+---
+title: "객체"
+description: "러닝 타입스크립트 CHAPTER 4 '객체'에 대해 알아보겠습니다."
+date: "2023-03-24"
+slug: "object"
+thumbnail: "../images/learing-typescript.png"
+thumbnail_alt: "learning typescript"
+category: "reading"
+---
+
+# CHAPTER 4 객체
+
+<Callout>
+💡 객체 리터럴은 각자의 타입이 있는 키와 값의 집합입니다.
+</Callout>
+
+<br />
+
+## 객체 타입
+
+객체 타입은 타입스크립트가 자바스크립트 코드를 이해하는 방법에 대한 핵심 개념입니다.
+
+null과 undefined를 제외한 모든 값은 그 값에 대한 실제 타입의 멤버 집합을 가지므로 타입스크립트는 모든 값의 타입을 이해하기 위해 객체 타입을 이해해야 합니다.
+
+다음 `poet` 변수의 타입은 `number` 타입인 born과 `string` 타입인 name으로 이루어진 두 개의 속성을 갖는 객체입니다.
+
+두 개의 속성에 접근만 허용하고 다른 속성 이름으로 접근 시 타입 오류가 발생합니다.
+
+```tsx
+const poet = {
+  born: 1935,
+  name: "Mary Oliver",
+}
+
+poet['born']; // 타입: number
+poet.name; // 타입: string
+
+poet.end
+// Error: Property 'end' does not exist on type '{born: number; name: string; }.
+```
+
+<br />
+
+### 객체 타입 선언
+
+기존 객체에서 직접 타입을 유추해도 괜찮지만, 객체의 타입을 명시적으로 선언하는 것이 좋습니다.
+
+객체 타입은 객체 리터럴과 유사하게 보이지만 필드 값 대신 타입을 사용해 설명합니다.
+
+`poeLater` 변수는 이전과 동일하게 `born: number` 와 `name: string` 타입을 가집니다.
+
+```tsx
+let poetLater: {
+  born: number;
+  name: string;
+}
+
+// OK
+poetLater = {
+  born: 1935,
+  name: "Mary Oliver",
+}
+
+poetLater = "Sappho";
+// Error: Type 'string' is not assignable to type '{ born: number; name: string; }'
+```
+
+### 별칭 객체 타입
+
+객체 타입을 계속 작성하는 것은 매우 귀찮은 일로 각 객체 타입에 타입 별칭을 할당해 사용하는 방법이 더 일반적입니다.
+
+이전 예시는 `Poet` 타입으로 다시 작성할 수 있습니다. 이는 타입스크립트의 할당 가능성 오류 메시지를 좀 더 직접적으로 읽기 쉽게 만들어 줍니다.
+
+```tsx
+type Poet = {
+  born: number;
+  name: string;
+}
+
+let poetLater: Poet;
+
+poetLater = "Emily Dickinson";
+// Error: Type 'string' is not assignable to 'Poet'.
+```
+
+<br />
+
+## 구조적 타이핑
+
+타입스크립트의 타입 시스템은 **구조적으로 타입화**되어 있습니다. 타입을 충족하는 모든 값을 해당 타입의 값으로 사용할 수 있습니다.
+
+다시 말해서 매개변수나 변수가 특정 객체 타입으로 선언되면 타입스크립트에 어떤 객체를 사용하든 해당 속성이 있어야 한다는 것을 의미합니다.
+
+다음 예시에서의 `hasBoth` 변수는 `WithFirstName` 과 `WithLastName` 의 타입을 모두 가지고 있어 두 개의 별칭 객체 타입 내에 선언된 변수를 모두 제공할 수 있습니다.
+
+```tsx
+type WithFirstName = {
+  firstName: string;
+}
+
+type WithLastName = {
+  lastName: string;
+}
+
+const hasBoth = {
+  firstName: "Lucille",
+  lastName: "Clifton",
+}
+
+// OK: 'hasBoth'는 'string' 타입의 'firstName'을 포함.
+let withFirstName: WithFirstName = hasBoth;
+
+// OK: 'hasBoth'는 'string' 타입의 'lastName'을 포함.
+let withLastName: WithLastName = hasBoth;
+```
+구조적 타이핑은 **덕 타이핑**과는 다릅니다.
+
+- 타입스크립트의 타입 검사기에서 구조적 타이핑은 **정적 시스템이 타입을 검사하는 경우**입니다.
+- 덕 타이핑은 **런타임에서 사용될 때까지 객체 타입을 검사하지 않는 것**을 말합니다.
+
+자바스크립트는 **덕 타입**인 반면 타입스크립트는 **구조적으로 타입화**됩니다.
+
+### 사용 검사
+
+객체 타입으로 애너테이션된 위치에 값을 제공할 때 타입스크립트는 값을 해당 객체 타입에 할당할 수 있는지 확인합니다.
+
+할당하는 값에는 객체 타입의 필수 속성이 있어야 하며 필요한 멤버가 없다면 타입 오류를 발생시킵니다.
+
+다음 별칭 객체 타입 `FirstAndLastNames` 는 `first` 와 `last` 속성 모두 있어야 합니다.
+
+```tsx
+type FirstAndLastNames = {
+  first: string;
+  last: string;
+}
+
+const hasBoth: FirstAndLastNames = {
+  first: "Sarojini",
+  last: "Naidu",
+}
+
+const hasOnlyOne: FirstAndLastNames = {
+  // Error: Property 'last' is missing in type '{ first: string; }'
+  // but required in type 'FirstAndLastNames'.
+  first: "Sappho"
+}
+```
+
+### 초과 속성 검사
+
+변수가 객체 타입으로 선언되고, 초깃값에 객체 타입에서 정의된 것보다 많은 필드가 있다면 타입스크립트에서 타입 오류가 발생합니다.
+
+따라서 변수를 객체 타입으로 선언하는 것은 타입 검사기가 해당 타입에 예상되는 필드만 있는지 확인하는 방법이기도 합니다.
+
+다음 `poetMatch` 변수는 별칭 객체 타입에 정의된 필드가 `Poet` 에 정확히 있지만, 초과 속성이 있는 `extraProperty` 는 타입 오류를 발생시킵니다.
+
+```tsx
+type Poet = {
+  born: number;
+  name: string;
+}
+
+// OK: Poet의 필드와 일치.
+const poetMatch: Poet = {
+  born: 1928,
+  name: "Maya Angelou"
+}
+
+const extraProperty: Poet = {
+  activity: "walking",
+  // Error: Type '{ activity: string; born: number; name: string; }'
+  // is not assignable to type 'Poet'.
+  // Object literal may only specify known properties,
+  // and 'activity' does not exist in type 'Poet'.
+  born: 1935,
+  name: "Mary Oliver",
+}
+```
+
+초과 속성 검사는 **객체 타입으로 선언된 위치에서 생성되는 객체 리터럴**에 대해서만 일어납니다.
+
+기존 객체 리터럴을 제공하면 초과 속성 검사를 우회합니다.
+
+다음 `extraPropertyButOk` 변수는 초깃값이 구조적으로 `Poet` 와 일치해서 이전 `Poet` 타입과 달리 타입 오류가 발생하지 않습니다.
+
+```tsx
+const existingObject = {
+  activity: "walking',
+  born: 1935,
+  name: "Mary Oliver",
+}
+
+const extraPropertyButOk: Poet = existingObject; // OK
+```
+
+타입스크립트에서 초과 속성을 금지하면 코드를 깨끗하게 유지할 수 있고 예상한 대로 작동하도록 만들 수 있습니다.
+
+### 중첩된 객체 타입
+
+자바스크립트 객체처럼 타입스크립트의 객체 타입도 타입 시스템에서 중첩된 객체 타입을 나타낼 수 있습니다.
+
+자체 별칭 객체 타입으로 추출할 시 타입스크립트의 타입 오류 메시지에 더 많은 정보를 담을 수 있습니다.
+
+```tsx
+type Author = {
+  firstName: string;
+  lastName: string;
+};
+
+type Poem = {
+  author: Author;
+  name: string;
+};
+
+const poemMismatch: Poem = {
+  author: {
+    name: "Sylvia Plath",
+    // Error Type '{ name: string; }' is not assignable to type 'Author'.
+    // Object literal may only specify known properties,
+    // and 'name' does not exist in type 'Author'.
+  }
+  name: "Tulips",
+}
+```
+
+### 선택적 속성
+
+타입의 속성 애너테이션에서 : 앞에 ?를 추가하면 선택적 속성임을 나타낼 수 있습니다.
+
+선택적 속성과 `undefined` 를 포함한 유니언 타입의 속성 사이에는 차이가 분명히 존재합니다.
+
+?를 사용한 속성은 존재하지 않아도 됩니다. `undefined` 는 그 값이 `undefined` 일지라도 반드시 존재해야 합니다.
+
+```tsx
+type Writers = {
+  author: string | undefined;
+  editor?: string;
+};
+
+const missingRequired: Writers = {};
+// Error: Property 'author' is missing in type '{}' but required in type 'Writers'.
+```
+
+<br />
+
+## 객체 타입 유니언
+
+### 유추된 객체 타입 유니언
+
+변수에 여러 객체 타입 중 하나가 될 수 있는 초깃값이 주어지면 타입스크립트는 해당 타입을 **객체 타입 유니언**으로 유추합니다.
+
+유니언 타입은 가능한 각 객체 타입을 구성하고 있는 요소를 모두 가질 수 있습니다.
+
+```tsx
+const poem = Math.random() > 0.5
+  ? { name: "The Double Image", pages: 7 }
+  : { name: "Her Kind", rhymes: true };
+// 타입:
+// {  name: string;
+//    pages: number;
+//    rhymes?: undefined;
+// }
+// |
+// {
+//    name: string;
+//    pages?: undefined;
+//    rhymes: boolean;
+// }
+
+poem.name; // string
+poem.pages; // number | undefined
+poem.rhymes; // boolean | undefined
+```
+
+### 명시된 객체 타입 유니언
+
+객체 타입의 조합을 명시하여 객체 타입을 더 명확히 정의할 수 있습니다.
+`type Poem = PoemWithPages | PoemWithRhymes` 와 같은 형태로 객체 타입을 조합할 수 있습니다.
+
+### 객체 타입 내로잉
+
+타입 검사기가 유니언 타입 값에 특정 속성이 포함된 경우에만 코드 영역을 실행할 수 있음을 알게 되면, 값이 타입을 해당 속성을 포함한 구성 요소로만 좁힐 수 있습니다.
+
+코드에서 객체의 형태를 확인하고 **타입 내로잉**이 객체에 적용됩니다.
+
+```tsx
+if ("pages" in poem) {
+  poem.pages; // OK: poem은 PoemWithPages로 좁혀짐.
+} else {
+  poem.rhymes; // OK: poem은 PoemWithRhymes로 좁혀짐.
+}
+```
+
+`if (poem.pages)` 와 같은 존재하지 않는 객체의 속성에 접근하려고 시도하면 타입 가드처럼 작동하는 방식으로 사용해도 타입 오류로 간주합니다.
+
+### 판별된 유니언
+
+객체의 속성이 객체의 형태를 나타내도록 하는 **판별된 유니언**을 사용할 수 있습니다.
+
+객체의 타입을 가리키는 속성이 **판별값**으로 타입스크립트는 판별 속성을 사용해 타입 내로잉을 수행합니다.
+
+```tsx
+if (poem.type === "pages") {
+  poem.pages; // OK: poem은 PoemWithPages로 좁혀짐.
+} else {
+  poem.rhymes; // OK: poem은 PoemWithRhymes로 좁혀짐.
+}
+
+poem.type; // 타입: 'pages' | 'rhymes'
+```
+
+판별된 유니언은 우아한 자바스크립트 패턴과 타입스크립트의 타입 내로잉을 아릅답게 결합한 것입니다.
+
+<br />
+
+## 교차 타입
+
+자바스크립트의 런타임 | 연산자가 & 연산자에 대응하는 것처럼 타입스크립트에서도 **& 교차 타입**을 사용해 여러 타입을 동시에 나타냅니다.
+
+교차 타입은 일반적으로 여러 기존 객체 타입을 별칭 객체 타입으로 결합해 새로운 타입을 생성합니다.
+
+```tsx
+type Artwork = {
+  genre: string;
+  name: string;
+}
+
+type Writing = {
+  pages: number;
+  name: string;
+}
+
+type WrittenArt = Artwork & Writing;
+// {
+//    genre: string;
+//    name: string;
+//    pages: number;
+// }
+```
+
+### 교차 타입의 위험성
+
+**긴 할당 가능성 오류**
+
+복잡한 교차 타입을 만들게 되면 할당 가능성 오류 메시지가 읽기 어려워집니다.
+
+메시지가 너무 복잡해지기 전에 일련의 별칭으로 된 객체 타입으로 분할하여 타입스크립트가 해당 이름을 출력하도록 하면 읽기가 훨씬 쉬워집니다. 
+
+**never**
+
+교차 타입은 잘못 사용하기 쉽고 불가능한 타입을 생성합니다. 원시 타입 값은 동시에 여러 타입이 될 수 없기 때문에 교차 타입의 구성 요소로 함께 결합할 수 없습니다.
+
+`type NotPossible = number & string` 과 같이 두 개의 원시 타입을 함께 시도하면 `never` 키워드로 타입이 표시됩니다.
+
+`never` 타입은 `bottom` 타입 또는 `empty` 타입을 뜻합니다. `bottom` 타입은 값을 가질 수 없고 참조할 수 없는 타입으므로 `bottom` 타입에 어떠한 타입도 제공할 수 없습니다.
+
+`never` 타입은 거의 사용하지 않지만 코드에서 불가능한 상태를 나타내기 위해 가끔 등장합니다.
+
+<br />
+
+## 마치며
+
+- 타입스크립트가 **객체 타입 리터럴**의 타입을 해석하는 방법
+- **중첩과 선택적 속성**을 포함한 객체 리터럴 타입
+- 객체 리터럴 타입의 **유니언 타입 선언, 추론 및 타입 내로잉**
+- **판별된 유니언 타입과 판별값**
+- **교차 타입**으로 객체 타입을 결합하는 방법
