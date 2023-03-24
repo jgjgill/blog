@@ -2,6 +2,7 @@ import App from 'App'
 import { Author, Category, Layout, Post, PostList, Seo } from 'components'
 import { Flex } from 'components/@shared'
 import { graphql, HeadFC, PageProps } from 'gatsby'
+import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -17,6 +18,8 @@ interface Props {
 }
 
 const IndexPage = ({ data }: PageProps<Props>) => {
+  const { ref, page } = useIntersectionObserver(data.allMdx.nodes.length)
+
   return (
     <App>
       <Layout>
@@ -24,10 +27,11 @@ const IndexPage = ({ data }: PageProps<Props>) => {
           <Author />
           <Category selectedCategory="all" />
           <PostList
-            render={data.allMdx.nodes.map((node) => (
+            render={data.allMdx.nodes.slice(0, page).map((node) => (
               <Post key={node.id} node={node} />
             ))}
           />
+          <div ref={ref} />
         </Flex>
       </Layout>
     </App>

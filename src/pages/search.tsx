@@ -3,6 +3,7 @@ import App from 'App'
 import { Layout, Post, PostList } from 'components'
 import { Flex } from 'components/@shared'
 import { graphql, useStaticQuery } from 'gatsby'
+import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import useSearch from 'hooks/useSearch'
 import React, { useState } from 'react'
 import { Content } from 'types/content'
@@ -25,6 +26,7 @@ const Search = () => {
   `)
   const [query, setQuery] = useState('')
   const nodes = useSearch(query, search.fusejs)
+  const { ref, page } = useIntersectionObserver(nodes.length)
 
   return (
     <App>
@@ -44,10 +46,11 @@ const Search = () => {
           )}
 
           <PostList
-            render={nodes.map((node) => (
+            render={nodes.slice(0, page).map((node) => (
               <Post key={node.refIndex} node={node.item} />
             ))}
           />
+          <div ref={ref} />
         </Flex>
       </Layout>
     </App>

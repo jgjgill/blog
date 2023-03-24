@@ -5,6 +5,7 @@ import Category from 'components/Category'
 import Layout from 'components/Layout'
 import Post from 'components/Post'
 import { graphql, HeadFC, PageProps } from 'gatsby'
+import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -25,6 +26,8 @@ const CategoryTemplate = ({
   data,
   pageContext,
 }: PageProps<Props, { category: string }>) => {
+  const { ref, page } = useIntersectionObserver(data.allMdx.nodes.length)
+
   return (
     <App>
       <Layout>
@@ -33,10 +36,11 @@ const CategoryTemplate = ({
           <Category selectedCategory={pageContext.category} />
 
           <PostList
-            render={data.allMdx.nodes.map((node) => (
+            render={data.allMdx.nodes.slice(0, page).map((node) => (
               <Post key={node.id} node={node} />
             ))}
           />
+          <div ref={ref} />
         </Flex>
       </Layout>
     </App>
