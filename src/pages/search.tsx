@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Layout, Post } from 'components'
+import { Layout, Post, PostList } from 'components'
 import { Flex } from 'components/@shared'
 import { graphql, useStaticQuery } from 'gatsby'
 import useSearch from 'hooks/useSearch'
@@ -43,11 +43,11 @@ const Search = () => {
             </span>
           )}
 
-          <PostList>
-            {nodes.map((node) => (
+          <PostList
+            render={nodes.map((node) => (
               <Post key={node.refIndex} node={node.item} />
             ))}
-          </PostList>
+          />
         </Flex>
       </Layout>
     </App>
@@ -65,11 +65,4 @@ const Input = styled.input`
   &:focus {
     outline: none;
   }
-`
-
-const PostList = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
 `

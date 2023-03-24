@@ -1,6 +1,5 @@
-import styled from '@emotion/styled'
 import App from 'App'
-import { Author, Seo } from 'components'
+import { Author, PostList, Seo } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
 import Layout from 'components/Layout'
@@ -33,11 +32,11 @@ const CategoryTemplate = ({
           <Author />
           <Category selectedCategory={pageContext.category} />
 
-          <PostList>
-            {data.allMdx.nodes.map((node) => (
+          <PostList
+            render={data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />
             ))}
-          </PostList>
+          />
         </Flex>
       </Layout>
     </App>
@@ -71,11 +70,4 @@ export const query = graphql`
       }
     }
   }
-`
-
-const PostList = styled.section`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
 `
