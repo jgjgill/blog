@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
+import { useIsViewScrollHeader } from 'hooks/useIsViewScrollHeader'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Search from 'images/search.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import { throttle } from 'lodash'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
@@ -19,26 +19,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
       : 'light',
   )
 
-  const [isViewHeader, setIsViewHeader] = useState(true)
-  const beforeScrollY = useRef<number>(0)
-
-  const handleScroll = useMemo(
-    () =>
-      throttle(() => {
-        if (typeof window === 'undefined') return
-        const currentScrollY = window.scrollY
-
-        if (currentScrollY < 300) setIsViewHeader(true)
-        else {
-          beforeScrollY.current < currentScrollY
-            ? setIsViewHeader(false)
-            : setIsViewHeader(true)
-        }
-
-        beforeScrollY.current = currentScrollY
-      }, 300),
-    [],
-  )
+  const { isView } = useIsViewScrollHeader(300)
 
   useEffect(() => {
     if (themeMode === 'dark') {
@@ -50,19 +31,9 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
     }
   }, [themeMode])
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return
-
-    window.addEventListener('scroll', handleScroll)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-    }
-  }, [handleScroll])
-
   return (
     <Container>
-      <Header $isViewHeader={isViewHeader}>
+      <Header $isViewHeader={isView}>
         <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
 
