@@ -10,6 +10,7 @@ const H3 = ({ ...props }) => <StyledH3 {...props} />
 const P = ({ ...props }) => <StyledP {...props} />
 const Ul = ({ ...props }) => <StyledUl {...props} />
 const Li = ({ ...props }) => <StyledLi {...props} />
+const Anchor = ({ ...props }) => <StyledAnchor {...props} />
 const Blockquote = ({ ...props }) => <StyledBlockquote {...props} />
 const Callout = ({ ...props }) => <StyledCallout {...props} />
 
@@ -21,6 +22,7 @@ Mdx.H3 = H3
 Mdx.P = P
 Mdx.UL = Ul
 Mdx.LI = Li
+Mdx.ANCHOR = Anchor
 Mdx.BLOCKQUOTE = Blockquote
 Mdx.CALLOUT = Callout
 
@@ -53,7 +55,13 @@ const StyledLi = styled.li`
     padding-right: 5px;
   }
 `
+
+const StyledAnchor = styled.a`
+  color: ${({ theme }) => theme.colors.primary.base};
+`
+
 const StyledBlockquote = styled.blockquote`
+  margin: 10px 0;
   border-left: 4px solid ${({ theme }) => theme.colors.secondary.base};
   padding: 10px 10px 10px 20px;
   background-color: ${({ theme }) => theme.colors.gray};

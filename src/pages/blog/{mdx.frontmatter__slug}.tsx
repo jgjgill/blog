@@ -38,6 +38,7 @@ const BlogPost = ({ data, children }: PageProps<Props>) => {
             p: Mdx.P,
             ul: Mdx.UL,
             li: Mdx.LI,
+            a: Mdx.ANCHOR,
             blockquote: Mdx.BLOCKQUOTE,
             Callout: Mdx.CALLOUT,
           }}
