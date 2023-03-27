@@ -1,35 +1,18 @@
 import styled from '@emotion/styled'
 import { Flex, Link } from 'components/@shared'
 import { PATH } from 'constants/path'
+import { useDarkMode } from 'hooks/useDarkMode'
 import { useIsViewScrollHeader } from 'hooks/useIsViewScrollHeader'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Search from 'images/search.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
-  const [themeMode, setThemeMode] = useState<'dark' | 'light'>(
-    typeof window !== 'undefined' &&
-      (localStorage.getItem('theme') === 'dark' ||
-        (!('theme' in localStorage) &&
-          window.matchMedia('(prefers-color-scheme: dark)').matches))
-      ? 'dark'
-      : 'light',
-  )
-
+  const { themeMode, setThemeMode } = useDarkMode()
   const { isView } = useIsViewScrollHeader(300)
-
-  useEffect(() => {
-    if (themeMode === 'dark') {
-      document.body.classList.add('dark')
-      typeof window !== 'undefined' && localStorage.setItem('theme', 'dark')
-    } else {
-      document.body.classList.remove('dark')
-      typeof window !== 'undefined' && localStorage.setItem('theme', 'light')
-    }
-  }, [themeMode])
 
   return (
     <Container>
