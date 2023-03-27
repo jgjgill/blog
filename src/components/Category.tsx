@@ -1,9 +1,7 @@
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
-import { graphql, useStaticQuery } from 'gatsby'
+import { graphql, Link, useStaticQuery } from 'gatsby'
 import React from 'react'
-
-import Link from './@shared/Link'
 
 interface Props {
   selectedCategory: string

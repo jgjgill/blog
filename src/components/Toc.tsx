@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
+import { Link } from 'gatsby'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { TableItem } from 'types/content'
-
-import { Link } from './@shared'
 
 interface Props {
   toc: {

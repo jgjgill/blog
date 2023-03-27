@@ -1,9 +1,9 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post, Seo } from 'components'
-import { Flex, Link } from 'components/@shared'
+import { Flex } from 'components/@shared'
 import { PATH } from 'constants/path'
-import { graphql, HeadFC, PageProps } from 'gatsby'
+import { graphql, HeadFC, Link, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
 

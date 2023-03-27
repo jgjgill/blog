@@ -1,6 +1,8 @@
+import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
-import { Flex, Link } from 'components/@shared'
+import { Flex } from 'components/@shared'
 import { PATH } from 'constants/path'
+import { Link } from 'gatsby'
 import { useDarkMode } from 'hooks/useDarkMode'
 import { useIsViewScrollHeader } from 'hooks/useIsViewScrollHeader'
 import Moon from 'images/moon.inline.svg'
@@ -13,6 +15,8 @@ import { StrictPropsWithChildren } from 'types/custom'
 const Layout = ({ children }: StrictPropsWithChildren) => {
   const { themeMode, setThemeMode } = useDarkMode()
   const { isView } = useIsViewScrollHeader(300)
+  const theme = useTheme()
+  const iconColor = theme.colors.primary.dark
 
   return (
     <Container>
@@ -22,16 +26,17 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
 
           <Flex alignItems="center" gap={5}>
             <ThemeToggleButton
+              aria-label="theme-toggle-button"
               onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
             >
-              {themeMode === 'light' && <Sun width={25} height={25} fill="#7e22ce" />}
-              {themeMode === 'dark' && <Moon width={25} height={25} fill="#7e22ce" />}
+              {themeMode === 'light' && <Sun width={25} height={25} fill={iconColor} />}
+              {themeMode === 'dark' && <Moon width={25} height={25} fill={iconColor} />}
             </ThemeToggleButton>
-            <Link to={PATH.RSS}>
-              <Rss width={25} height={25} fill="#7e22ce" />
+            <Link aria-label="rss-link" to={PATH.RSS}>
+              <Rss width={25} height={25} fill={iconColor} />
             </Link>
-            <Link to={PATH.SEARCH}>
-              <Search width={25} height={25} fill="#7e22ce" />
+            <Link aria-label="search-link" to={PATH.SEARCH}>
+              <Search width={25} height={25} fill={iconColor} />
             </Link>
           </Flex>
         </Flex>

@@ -213,6 +213,11 @@ const config: GatsbyConfig = {
         display: `standalone`,
         icon: 'src/images/icon.png',
         cache_busting_mode: 'none',
+        icon_options: {
+          // For all the options available,
+          // please see the section "Additional Resources" below.
+          purpose: `any maskable`,
+        },
       },
     },
     // gatsby-plugin-offline: manifest.webmanifest 캐시 생성을 위해 manifest 플러그인 이후에 위치

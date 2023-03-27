@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
+import { Link } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
-
-import Link from './@shared/Link'
 
 interface Props {
   node: Content
