@@ -12,6 +12,7 @@ const Ul = ({ ...props }) => <StyledUl {...props} />
 const Li = ({ ...props }) => <StyledLi {...props} />
 const Anchor = ({ ...props }) => <StyledAnchor {...props} />
 const Blockquote = ({ ...props }) => <StyledBlockquote {...props} />
+const Image = ({ ...props }) => <StyledImage {...props} />
 const Callout = ({ ...props }) => <StyledCallout {...props} />
 
 export default Mdx
@@ -24,6 +25,7 @@ Mdx.UL = Ul
 Mdx.LI = Li
 Mdx.ANCHOR = Anchor
 Mdx.BLOCKQUOTE = Blockquote
+Mdx.IMAGE = Image
 Mdx.CALLOUT = Callout
 
 const StyledH1 = styled.h1`
@@ -65,6 +67,10 @@ const StyledBlockquote = styled.blockquote`
   border-left: 4px solid ${({ theme }) => theme.colors.secondary.base};
   padding: 10px 10px 10px 20px;
   background-color: ${({ theme }) => theme.colors.gray};
+`
+
+const StyledImage = styled.img`
+  margin: 20px 0;
 `
 
 const StyledCallout = styled.aside`

@@ -40,6 +40,7 @@ const BlogPost = ({ data, children }: PageProps<Props>) => {
             li: Mdx.LI,
             a: Mdx.ANCHOR,
             blockquote: Mdx.BLOCKQUOTE,
+            Image: Mdx.IMAGE,
             Callout: Mdx.CALLOUT,
           }}
         >
@@ -70,10 +71,7 @@ export const query = graphql`
     }
   }
 `
-// {
-//   location: { pathname: string }
-//   pageContext: { frontmatter: { title: string; description: string; keyword: string[] } }
-// }
+
 export const Head = ({
   location,
   pageContext,
