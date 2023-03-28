@@ -1,7 +1,6 @@
-const { createFilePath } = require(`gatsby-source-filesystem`)
 const path = require('path')
 
-exports.createPages = async ({ actions, graphql }) => {
+exports.createPages = async ({ actions, graphql, reporter }) => {
   const { createPage } = actions
   const categoryTemplate = path.resolve('src/templates/CategoryTemplate.tsx')
   const result = await graphql(`
@@ -14,6 +13,11 @@ exports.createPages = async ({ actions, graphql }) => {
     }
   `)
 
+  if (result.errors) {
+    reporter.panicOnBuild(`Error while running GraphQL query.`)
+    return
+  }
+
   const categories = result.data.allMdx.group
 
   categories.forEach((category) => {
@@ -25,16 +29,4 @@ exports.createPages = async ({ actions, graphql }) => {
       },
     })
   })
-}
-
-exports.onCreateNode = ({ node, actions, getNode }) => {
-  const { createNodeField } = actions
-  // if (node.internal.type === `MarkdownRemark`) {
-  //   const value = createFilePath({ node, getNode })
-  //   createNodeField({
-  //     name: `slug`,
-  //     node,
-  //     value,
-  //   })
-  // }
 }
