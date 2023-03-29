@@ -1,19 +1,16 @@
 ---
-title: "타입 시스템"
+title: '타입 시스템'
 description: "러닝 타입스크립트 CHAPTER 2 '타입 시스템'에 대해 알아보겠습니다."
-date: "2023-03-09"
-slug: "type-system"
-thumbnail: "../images/learing-typescript.png"
-thumbnail_alt: "learning typescript"
-category: "reading"
+date: '2023-03-09'
+slug: 'type-system'
+thumbnail: '../images/learing-typescript.png'
+thumbnail_alt: 'learning typescript'
+category: 'reading'
 ---
 
 # CHAPTER 2 타입 시스템
 
-<Callout>
-💡 자바스크립트의 힘은 유연함에서 나옵니다.
-그 유연함을 조심하세요!
-</Callout>
+<Callout>💡 자바스크립트의 힘은 유연함에서 나옵니다. 그 유연함을 조심하세요!</Callout>
 
 <br />
 
@@ -23,7 +20,7 @@ category: "reading"
 
 타입스크립트의 가장 기본적인 타입은 자바스크립트의 일곱 가지 기본 원시 타입과 동일합니다.
 
-원시타입: `null` `undefined` `boolean` `string` `number` `bigint` `symbol` 
+원시타입: `null` `undefined` `boolean` `string` `number` `bigint` `symbol`
 
 ### 타입 시스템
 
@@ -77,15 +74,15 @@ console.blub('hello')
 타입스크립트 변수에 동일한 타입의 다른 값이 할당될 때는 문제가 없습니다.
 
 ```tsx
-let firstName = "Carole";
-firstName = "Joan";
+let firstName = 'Carole'
+firstName = 'Joan'
 ```
 
 하지만 타입스크립트 변수에 다른 타입의 값이 할당되면 타입 오류가 발생합니다.
 
 ```tsx
-let lastName = "King";
-lastName = true;
+let lastName = 'King'
+lastName = true
 // Error: Type 'boolean' is not assignable to type 'string'.
 ```
 
@@ -110,16 +107,16 @@ lastName = true;
 초기 타입을 유추할 수 없는 변수를 **진화하는 any** 라고 부릅니다. 특정 타입을 강제하는 대신 새로운 값이 할당될 때마다 변수 타입에 대한 이해를 발전시키는 것입니다.
 
 ```tsx
-let rocker; // 타입: any
+let rocker // 타입: any
 
-rocker = "Joan Jett"; // 타입: string
+rocker = 'Joan Jett' // 타입: string
 
-rocker.toUpperCase(); // OK
+rocker.toUpperCase() // OK
 
-rocker = 19.58; // 타입: number
-rocker.toPrecision(1); // OK
+rocker = 19.58 // 타입: number
+rocker.toPrecision(1) // OK
 
-rocker.toUpperCase();
+rocker.toUpperCase()
 // Error: 'toUpperCase' does not exist on type 'number'.
 ```
 
@@ -128,9 +125,9 @@ rocker.toUpperCase();
 타입스크립트는 초깃값을 할당하지 않고도 변수의 타입을 선언할 수 있게 하기 위해 **타입 애너테이션**을 제공합니다.
 
 ```tsx
-let rocker: string;
-rocker = "Joan Jett";
-rocket = 19.58;
+let rocker: string
+rocker = 'Joan Jett'
+rocket = 19.58
 // Error: Type 'number' is not assignable to type 'string'.
 ```
 
@@ -141,13 +138,13 @@ rocket = 19.58;
 다음 코드는 `string` 타입 애너테이션이 중복되는 경우입니다.
 
 ```tsx
-let firstName: string = "Tina" // 타입 시스템은 변경되지 않음
+let firstName: string = 'Tina' // 타입 시스템은 변경되지 않음
 ```
 
 다음 코드는 초깃값이 있는 변수에 일치하지 않는 타입 애너테이션을 추가하여 호환되지 않는 경우입니다.
 
 ```tsx
-let firstName: string = 42;
+let firstName: string = 42
 // Error: Type 'number' is not assignable to type 'string'.
 ```
 
@@ -160,10 +157,10 @@ let firstName: string = 42;
 타입스크립트는 변수에 할당된 값이 원래 타입과 일치하는지 확인하는 것 이외에도 객체에 어떤 멤버 속성이 존재하는지 알고 있습니다.
 
 ```tsx
-let rapper = "Queen Latifah";
-rapper.length; // OK
+let rapper = 'Queen Latifah'
+rapper.length // OK
 
-rapper.push("!");
+rapper.push('!')
 // Error: Property 'push' does not exist on type 'string'.
 ```
 
@@ -178,13 +175,13 @@ ECMA스크립트 2015에서 파일 간에 가져오고 내보내는 구문을 �
 
 ```tsx
 // a.ts
-const shared = "Cher";
+const shared = 'Cher'
 // Error: Cannot redeclare block-scoped variable 'shared'.
 ```
 
 ```tsx
 // b.ts
-const shared = "Cher";
+const shared = 'Cher'
 // Error: Cannot redeclare block-scoped variable 'shared'.
 ```
 
@@ -192,9 +189,9 @@ const shared = "Cher";
 
 ```tsx
 // a.ts and b.ts
-const shared = "Cher"; // OK
+const shared = 'Cher' // OK
 
-export {};
+export {}
 ```
 
 <br />

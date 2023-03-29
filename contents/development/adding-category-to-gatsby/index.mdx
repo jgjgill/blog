@@ -1,18 +1,18 @@
 ---
-title: "Gatsby - 카테고리 구현하기"
-description: "Gatsby에서 카테고리 기능을 구현한 과정을 정리합니다."
-date: "2023-03-28"
-slug: "adding-category-to-gatsby"
-thumbnail: "./images/gatsby-thumbnail.png"
-thumbnail_alt: "gatsby-thumbnail"
-category: "development"
+title: 'Gatsby - 카테고리 구현하기'
+description: 'Gatsby에서 카테고리 기능을 구현한 과정을 정리합니다.'
+date: '2023-03-28'
+slug: 'adding-category-to-gatsby'
+thumbnail: './images/gatsby-thumbnail.png'
+thumbnail_alt: 'gatsby-thumbnail'
+category: 'development'
 ---
 
 # Gatsby Blog 제작기
 
 <Callout>
-💡 Gatsby에서 카테고리 기능 구현과 리팩토링 과정을 남기고자 합니다.
-피드백은 언제나 환영입니다:)
+  💡 Gatsby에서 카테고리 기능 구현과 리팩토링 과정을 남기고자 합니다. 피드백은 언제나
+  환영입니다:)
 </Callout>
 
 <br />
@@ -29,19 +29,24 @@ category에 대한 데이터를 받아오기 위해서는 해당하는 컨텐츠
 
 ```markdown
 ---
-title: "Gatsby - 카테고리 구현하기"
-category: "development"
+title: 'Gatsby - 카테고리 구현하기'
+category: 'development'
 ---
 ```
 
 그러면 Graphql에서 category에 대한 데이터가 생성되는 것을 확인하실 수 있습니다.
 
-<Image src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-mdx-category.png" alt="graphql-mdx-category" />
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-mdx-category.png"
+  alt="graphql-mdx-category"
+/>
 
 특정 mdx 파일뿐만 아니라 전체 mdx 파일에서도 해당하는 카테고리에 대한 데이터를 받아올 수 있습니다.
 
-<Image src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-allmdx-category.png" alt="graphql-allmdx-category" />
-
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-allmdx-category.png"
+  alt="graphql-allmdx-category"
+/>
 
 ### 카테고리 페이지 Template 만들기
 
@@ -213,7 +218,6 @@ categories.forEach((category) => {
 
 [관련 링크](https://www.gatsbyjs.com/docs/adding-tags-and-categories-to-blog-posts/#make-a-tags-index-page-tags-that-renders-a-list-of-all-tags)
 
-
 ## 카테고리에 게시판 개수 구현하기
 
 ### 훌륭한 GraphQL
@@ -222,10 +226,12 @@ categories.forEach((category) => {
 
 이 또한, GraphQL를 통해 카테고리별로 해당하는 게시물 개수의 데이터를 받아올 수 있습니다.
 
-<Image src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-category-count.png" alt="graphql-category-count" />
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/graphql-category-count.png"
+  alt="graphql-category-count"
+/>
 
 게시물 개수를 받아올 수 있으니 query에서 해당 데이터를 받아오면 됩니다.
-
 
 <br />
 
@@ -234,7 +240,7 @@ categories.forEach((category) => {
 
 <br />
 
-그래서 Category 컴포넌트에서 데이터를 불러오는 방식이 더 좋을 것입니다. 
+그래서 Category 컴포넌트에서 데이터를 불러오는 방식이 더 좋을 것입니다.
 카테고리에 대한 관심사를 Category 컴포넌트 내부에서만 관리할 수 있기 때문에 용이합니다.
 
 <br />
@@ -320,7 +326,10 @@ const Item = styled(Link)<{ isactive: number }>`
 
 ## 마무리
 
-<Image src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/category.gif" alt="category" />
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-category-to-gatsby/images/category.gif"
+  alt="category"
+/>
 
 이렇게 Gastby에서 카테고리를 구현한 과정에 대해 알아봤습니다.
 

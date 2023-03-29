@@ -1,24 +1,24 @@
 ---
-title: "유니언과 리터럴"
+title: '유니언과 리터럴'
 description: "러닝 타입스크립트 CHAPTER 3 '유니언과 리터럴'에 대해 알아보겠습니다."
-date: "2023-03-16"
-slug: "union-and-literal"
-thumbnail: "../images/learing-typescript.png"
-thumbnail_alt: "learning typescript"
-category: "reading"
+date: '2023-03-16'
+slug: 'union-and-literal'
+thumbnail: '../images/learing-typescript.png'
+thumbnail_alt: 'learning typescript'
+category: 'reading'
 ---
 
 # CHAPTER 3 유니언과 리터럴
 
 <Callout>
-💡 상수를 제외한 모든 것은 변합니다. 시간이 지나면서 값도 변할 수 있습니다.
+  💡 상수를 제외한 모든 것은 변합니다. 시간이 지나면서 값도 변할 수 있습니다.
 </Callout>
 
 <br />
 
 ## 타입스크립트에서의 추론
 
-타입스크립트에서는 해당 값을 바탕으로  두 가지 핵심 개념을 통해 추론을 수행합니다.
+타입스크립트에서는 해당 값을 바탕으로 두 가지 핵심 개념을 통해 추론을 수행합니다.
 
 - **유니언**: 값에 허용된 타입을 두 개 이상의 가능한 타입으로 확장합니다.
 - **내로잉**: 값에 허용된 타입이 하나 이상의 가능한 타입이 되지 않도록 좁힙니다.
@@ -32,9 +32,7 @@ category: "reading"
 다음 예시를 살펴보겠습니다.
 
 ```tsx
-let mathematician = Math.random() > 0.5
-	? undefined
-	: "Mark Goldberg";
+let mathematician = Math.random() > 0.5 ? undefined : 'Mark Goldberg'
 ```
 
 `mathematician` 은 `undefined` 이거나 `string` 입니다.
@@ -50,10 +48,10 @@ let mathematician = Math.random() > 0.5
 변수의 초깃값이 있더라도 변수에 대한 명시적 타입 애너테이션을 제공하는 것이 유용할 때도 있습니다. 이때 유니언 타입을 사용할 수 있습니다.
 
 ```tsx
-let thinker: string | null = null;
+let thinker: string | null = null
 
 if (Math.random() > 0.5) {
-	thinker = "Susanne Langer"; // OK
+  thinker = 'Susanne Langer' // OK
 }
 ```
 
@@ -90,13 +88,13 @@ if (Math.random() > 0.5) {
 **변수에 값을 직접 할당**하면 타입스크립트는 변수의 타입을 할당된 값의 타입으로 좁힙니다.
 
 ```tsx
-let admiral: number | string;
+let admiral: number | string
 
-admiral = "Grace Hopper";
+admiral = 'Grace Hopper'
 
-admiral.toUpperCase(); // OK: string
+admiral.toUpperCase() // OK: string
 
-admiral.toFixed();
+admiral.toFixed()
 // Error: Property 'toFixed' does not exist on type 'string'.
 ```
 
@@ -105,9 +103,9 @@ admiral.toFixed();
 타입스크립트는 변수가 나중에 유니언 타입으로 선언된 타입 중 하나의 값을 받을 수 있지만, 처음에는 초기에 할당된 값의 타입으로 시작합니다.
 
 ```tsx
-let inventor: number | string = "Hedy Lamarr";
+let inventor: number | string = 'Hedy Lamarr'
 
-inventor.toUpperCase(); // OK: string
+inventor.toUpperCase() // OK: string
 // Error: Property 'toFixed' does not exist on type 'string'.
 ```
 
@@ -119,17 +117,15 @@ inventor.toUpperCase(); // OK: string
 
 ```tsx
 // scientist: number | string의 타입
-let scientist = Math.random() > 0.5
-	? "Rosalind Franklin"
-	: 51;
+let scientist = Math.random() > 0.5 ? 'Rosalind Franklin' : 51
 
-if (scientist === "Rosalind Franklin") {
-	// scientist: strinig의 타입
-	scientist.toUpperCase(); // OK
+if (scientist === 'Rosalind Franklin') {
+  // scientist: strinig의 타입
+  scientist.toUpperCase() // OK
 }
 
 // scientist: number | string의 타입
-scientist.toUpperCase();
+scientist.toUpperCase()
 // Error: Property 'toUpperCase' dose not exist on type 'string | number'.
 // Property 'toUpperCase' does not exist on type 'number'.
 ```
@@ -141,27 +137,25 @@ scientist.toUpperCase();
 타입스크립트는 직접 값을 확인해 타입을 좁히기도 하지만, `typeof` 연산자를 사용할 수도 있습니다.
 
 ```tsx
-let researcher = Math.random() > 0.5
-	? "Rosalind Franklin"
-	: 51;
+let researcher = Math.random() > 0.5 ? 'Rosalind Franklin' : 51
 
-if (typeof researcher === "string") {
-	researcher.toUpperCase(); // OK: string
+if (typeof researcher === 'string') {
+  researcher.toUpperCase() // OK: string
 }
 ```
 
 !를 사용한 논리적 부정과 else 문, 삼항 연산자에서도 잘 작동합니다.
 
 ```tsx
-if (!(typeof resarcher === "string")) {
-	researcher.toFixed(); // OK: number
-}  else {
-	researcher.toUpperCase(); // OK: string
+if (!(typeof resarcher === 'string')) {
+  researcher.toFixed() // OK: number
+} else {
+  researcher.toUpperCase() // OK: string
 }
 
-typeof researcher === "string"
-	? researcher.toUpperCase() // OK: string
-	: researcher.toFixed(); // OK: number
+typeof researcher === 'string'
+  ? researcher.toUpperCase() // OK: string
+  : researcher.toFixed() // OK: number
 ```
 
 <br />
@@ -171,7 +165,7 @@ typeof researcher === "string"
 **리터럴 타입**은 좀 더 구체적인 버전의 원시 타입입니다.
 
 ```tsx
-const philosopher = "Hypatia";
+const philosopher = 'Hypatia'
 ```
 
 `philosopher` 는 string 타입이지만 “Hypatia”라는 특별한 값입니다.
@@ -192,10 +186,10 @@ const philosopher = "Hypatia";
 유니언 타입 애너테이션에서는 리터럴과 원시 타입을 섞어서 사용할 수 있습니다.
 
 ```tsx
-let lifespan: number | "ongoing" | "uncertain";
+let lifespan: number | 'ongoing' | 'uncertain'
 
-lifespan = 89; // OK
-lifespan = "ongoing"; // OK
+lifespan = 89 // OK
+lifespan = 'ongoing' // OK
 ```
 
 ### 리터럴 할당 가능성
@@ -203,16 +197,16 @@ lifespan = "ongoing"; // OK
 0과 1처럼 동일한 원시 타입일지라도 서로 다른 리터럴 타입은 서로 할당할 수 없습니다.
 
 ```tsx
-let specificallyAda: "Ada";
+let specificallyAda: 'Ada'
 
-specificallyAda = "Ada"; // OK
+specificallyAda = 'Ada' // OK
 
-specificallyAda = "Byron";
+specificallyAda = 'Byron'
 // Error: Type "Byron" is not assignable to type '"Ada"'.
 
-let someString = ""; // 타입: string
+let someString = '' // 타입: string
 
-specificallyAda = someString;
+specificallyAda = someString
 // Error: Typ 'string' is not assignable to type '"Ada"'.
 ```
 
@@ -221,7 +215,7 @@ specificallyAda = someString;
 반대로 리터럴 타입은 그 값이 해당하는 원시 타입에 할당할 수 있습니다. 그래서 `someString` 변수에 특정 리터럴 문자열이 할당 가능합니다.
 
 ```tsx
-someString = ":)";
+someString = ':)'
 ```
 
 <br />
@@ -232,7 +226,7 @@ someString = ":)";
 
 ### 십억 달러의 실수
 
-> 저는 이를 십억 달러의 실수라고 부릅니다. 1965년, null 참조의 발명으로 수많은 오류, 취약성 및 시스템 충돌이 발생했으며 지난 40년 동안 십억 달러의 고통과 피해를 입었을 것입니다. 
+> 저는 이를 십억 달러의 실수라고 부릅니다. 1965년, null 참조의 발명으로 수많은 오류, 취약성 및 시스템 충돌이 발생했으며 지난 40년 동안 십억 달러의 고통과 피해를 입었을 것입니다.
 
 ‘십억 달러의 실수’는 다른 타입이 필요한 위치에서 `null` 값을 사용하도록 허용하는 많은 타입 시스템을 가리키는 업계 용어입니다. 엄격한 `null` 검사가 없는 언어에서는 다음 예제 코드처럼 string 타입 변수에 `null` 을 할당하는 것이 허용됩니다.
 
@@ -243,22 +237,18 @@ someString = ":)";
 `strictNullChecks` 을 false로 설정하면 다음 코드의 타입은 안전하다고 간주하지만 `nameMaybe` 변수가 `.toLowerCase` 에 접근할 때 `undefined` 가 되는 것은 잘못된 것입니다.
 
 ```tsx
-let nameMaybe = Math.random() > 0.5
-	? "Tony Hoare"
-	: undefined;
+let nameMaybe = Math.random() > 0.5 ? 'Tony Hoare' : undefined
 
-nameMaybe.toLowerCase();
+nameMaybe.toLowerCase()
 // Potential runtime error: Cannot read property 'toLowerCase' of undefined.
 ```
 
 엄격한 `null` 검사가 활성화되면, 타입스크립트는 다음 코드에서 발생하게 될 잠재적 충돌을 확인합니다.
 
 ```tsx
-let nameMaybe = Math.random() > 0.5
-	? "Tony Hoare"
-	: undefined;
+let nameMaybe = Math.random() > 0.5 ? 'Tony Hoare' : undefined
 
-nameMaybe.toLowerCase();
+nameMaybe.toLowerCase()
 // Error: Object is possibly 'undefined'.
 ```
 
@@ -269,34 +259,32 @@ nameMaybe.toLowerCase();
 타입스크립트는 잠재적인 값 중 **truthy**로 확인된 일부에 한해서만 변수의 타입을 좁힐 수 있습니다.
 
 ```tsx
-let geneticist = Math.random() > 0.5
-	? "Barbara McClintock"
-	: undefined;
+let geneticist = Math.random() > 0.5 ? 'Barbara McClintock' : undefined
 
 if (geneticist) {
-	geneticist.toUpperCase(); // OK: string
+  geneticist.toUpperCase() // OK: string
 }
 
-geneticist.toUpperCase();
+geneticist.toUpperCase()
 // Error: Object is possibly 'undefined'.
 ```
 
 논리 연산자인 && 와 ? 는 참 여부를 검사하는 일도 잘 수행합니다. 하지만 참 여부 확인 외에 다른 기능은 제공하지 않습니다. `string | undefined` 값에 대해 알고 있는 것이 **falsy**라면, 그것이 빈 문자열인지 `undefined` 인지 알 수 없습니다.
 
 ```tsx
-geneticist && geneticist.toUpperCase(); // OK: string | undefined
-geneticist?.toUpperCase(); // OK: string | undefined
+geneticist && geneticist.toUpperCase() // OK: string | undefined
+geneticist?.toUpperCase() // OK: string | undefined
 ```
 
 다음 코드에서 `biologist` 는 `false | string` 타입이고, if 문에서 string으로 좁힐 수 있지만, else 문에서 `biologist` 가 빈 문자열인 경우에는 여전히 `string` 이 될 수 있음을 알 수 있습니다.
 
 ```tsx
-let biologist = Math.random() > 0.5 && "Rachel Carson";
+let biologist = Math.random() > 0.5 && 'Rachel Carson'
 
 if (biologist) {
-	biologist; // 타입: string
+  biologist // 타입: string
 } else {
-	biologist; // 타입: false | string
+  biologist // 타입: false | string
 }
 ```
 
@@ -307,13 +295,13 @@ if (biologist) {
 타입스크립트에서 `undefined` 를 포함하지 않는 타입으로 변수를 선언한 다음, 값을 할당하기 전에 사용하려고 하면 에러가 발생합니다.
 
 ```tsx
-let mathematician: string;
+let mathematician: string
 
-mathematician?.length;
+mathematician?.length
 // Error: Variable 'mathematician' is used before being assigned.
 
-mathematician = "Mark Goldberg";
-mathematician.length; // OK
+mathematician = 'Mark Goldberg'
+mathematician.length // OK
 ```
 
 <br />
@@ -327,11 +315,11 @@ mathematician.length; // OK
 타입 별칭은 `type NEW_NAME = TYPE` 형태를 갖습니다. **파스칼 케이스**로 이름을 지정합니다.
 
 ```tsx
-type RawData = boolean | number | string | null | undefined;
+type RawData = boolean | number | string | null | undefined
 
-let rawDataFirst: RawData;
-let rawDataSecond: RawData;
-let rawDataThird: RawData;
+let rawDataFirst: RawData
+let rawDataSecond: RawData
+let rawDataThird: RawData
 ```
 
 ### 타입 별칭은 자바스크립트가 아닙니다
@@ -339,9 +327,9 @@ let rawDataThird: RawData;
 타입 별칭은 자바스크립트로 컴파일되지 않습니다. 순전히 타입스크립트 **타입 시스템에만 존재**합니다. 런타임 코드에서는 참조할 수 없습니다.
 
 ```tsx
-type SomeType = string | undefined;
+type SomeType = string | undefined
 
-console.log(SomeType);
+console.log(SomeType)
 // Error: 'SomeType' only refers to a type, but is being used as a value here.
 ```
 
@@ -352,11 +340,12 @@ console.log(SomeType);
 타입 별칭은 다른 타입 별칭을 참조할 수 있습니다. 사용 순서대로 타입 별칭을 선언할 필요는 없습니다.
 
 ```tsx
-type Id = number | string;
+type Id = number | string
 
 // IdMaybe 타입은 다음과 같음: number | string | undefined | null
-type IdMaybe = Id | undefined | null;
+type IdMaybe = Id | undefined | null
 ```
+
 <br />
 
 ## 마치며
