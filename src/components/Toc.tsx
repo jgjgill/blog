@@ -31,7 +31,9 @@ const TocElement = ({ toc }: Props) => {
       const visibleContent = Object.values(contentRef.current).filter(
         (content) => content.isIntersecting,
       )
-      setScrollTocId(visibleContent[0]?.target.id)
+      if (visibleContent[0]?.target.id !== undefined) {
+        setScrollTocId(visibleContent[0].target.id)
+      }
     },
     [],
   )
