@@ -6,7 +6,11 @@ interface Props {
   siteUrl?: string
 }
 
-const Seo = ({ title = 'jgjgill', description = 'jgjgill-blog', siteUrl }: Props) => {
+const Seo = ({
+  title = 'jgjgill',
+  description = 'jgjgill-blog',
+  siteUrl = 'https://jgjgill-blog.netlify.app/',
+}: Props) => {
   return (
     <>
       <title>{title}</title>
