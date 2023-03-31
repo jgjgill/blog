@@ -26,7 +26,7 @@ Gastby에서는 SEO 컴포넌트를 통해 검색엔진이 컨텐츠를 이해�
 
 그래서 SEO 컴포넌트에 해당 태그들을 추가해줍니다.
 
-```tsx
+```html
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="keywords" content="development" />
@@ -84,7 +84,7 @@ Gastby에서는 SEO 컴포넌트를 통해 검색엔진이 컨텐츠를 이해�
 
 **Seo.tsx**
 
-```tsx
+```js
 import React from 'react'
 
 interface Props {
@@ -127,7 +127,7 @@ export default Seo
 
 이렇게 만들어진 SEO 컴포넌트는 페이지별로 `Head`에서 불러오면 됩니다.
 
-```tsx
+```js
 import React from 'react'
 import { SEO } from 'components'
 
@@ -182,7 +182,7 @@ yarn add gatsby-plugin-sitemap
 
 **gatsby-config.ts**
 
-```jsx
+```js
 {
   resolve: 'gatsby-plugin-sitemap',
   options: {
@@ -287,7 +287,7 @@ yarn add gatsby-plugin-feed
 
 **gatsby-node.js**
 
-```jsx
+```js
 exports.onCreateNode = ({ node, actions, getNode }) => {
   const { createNodeField } = actions
   if (node.internal.type === `Mdx`) {
@@ -307,7 +307,7 @@ name에는 URL이나 slug 같은 유니크한 값으로 지정해줍니다.
 
 **gatsby-config.ts**
 
-```jsx
+```js
 {
   resolve: 'gatsby-plugin-feed',
   options: {
@@ -378,7 +378,7 @@ robots.txt 파일은 크롤러가 사이트에서 접근할 수 있는 URL을 �
 
 ### gatsby-plugin-robots-txt 설정하기
 
-```tsx
+```js
 {
   resolve: 'gatsby-plugin-robots-txt',
   options: {

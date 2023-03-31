@@ -50,7 +50,7 @@ yarn add gatsby-plugin-fusejs
 
 gatsby-config 파일에서 관련된 설정을 해줍니다.
 
-```jsx
+```js
 {
   resolve: 'gatsby-plugin-fusejs',
   options: {
@@ -92,7 +92,7 @@ gatsby-config 파일에서 관련된 설정을 해줍니다.
 
 <br />
 
-```jsx
+```js
 query: `
   {
     allMdx {
@@ -115,7 +115,7 @@ query에서는 만들고자 하는 데이터를 받습니다.
 
 <br />
 
-```jsx
+```js
 keys: ['frontmatter.title', 'excerpt'],
 ```
 
@@ -126,7 +126,7 @@ keys에서는 검색에 사용할 부분을 인덱스로 정합니다.
 
 <br />
 
-```jsx
+```js
 normalizer: ({ data }: any) =>
   data.allMdx.nodes.map((node: any) => ({
     id: node.id,
@@ -168,7 +168,7 @@ gatsby-plugin-fusejs에서는 **react-use-fusejs**와 함께 사용할 것을 �
 내부 코드를 살펴봤을 때 `useGatsbyPluginFusejs` 함수만 사용하는 것 같았습니다.
 이 정도면 제가 커스텀해서 사용해도 괜찮겠다는 생각을 하게 되었습니다.
 
-```tsx
+```js
 export function useGatsbyPluginFusejs<T>(
   query: string,
   fusejs: { data: T[]; index: string },
@@ -227,7 +227,7 @@ yarn add fuse.js
 
 **useSearch.ts**
 
-```tsx
+```js
 import Fuse from 'fuse.js'
 import { useMemo } from 'react'
 
@@ -251,7 +251,7 @@ export default function useSearch<T>(
 
 **search.tsx**
 
-```tsx
+```js
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post, PostList } from 'components'

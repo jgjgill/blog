@@ -55,7 +55,7 @@ category: 'development'
 
 이렇게 만들어진 Template은 `/category/{category-name}`와 같은 경로로 활용될 것입니다.
 
-```tsx
+```js
 import App from 'App'
 import { Author, PostList, Seo } from 'components'
 import Flex from 'components/@shared/Flex'
@@ -141,7 +141,7 @@ Template에 해당하는 페이지를 만들기 위해 `gatsby-node.js`에서 `c
 
 전체 코드는 다음과 같습니다.
 
-```jsx
+```js
 const path = require('path')
 
 exports.createPages = async ({ actions, graphql, reporter }) => {
@@ -180,7 +180,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
 `result` 에서는 category에 대한 값들을 받습니다.
 
-```jsx
+```js
 const { createPage } = actions
 const categoryTemplate = path.resolve('src/templates/CategoryTemplate.tsx')
 const result = await graphql(`
@@ -198,7 +198,7 @@ const result = await graphql(`
 
 `context` 에서 사용되는 값은 `CategoryPage` query에서 지정된 category 게시물 데이터를 가져오는데 사용됩니다.
 
-```jsx
+```js
 const categories = result.data.allMdx.group
 
 categories.forEach((category) => {
@@ -248,7 +248,7 @@ categories.forEach((category) => {
 이와 관련해서 Graphql에서 지원해주는 기능이 있었습니다.
 `useStaticQuery`를 사용하면 페이지 단위가 아닌 Category 컴포넌트에서도 데이터 처리가 가능합니다.
 
-```tsx
+```js
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
 import { graphql, Link, useStaticQuery } from 'gatsby'
