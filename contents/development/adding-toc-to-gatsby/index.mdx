@@ -1,0 +1,227 @@
+---
+title: 'Gatsby - TOC 기능 구현하기 (Gastby 프레임워크에 기여한 경험)'
+description: 'Gatsby에서 TOC 기능을 구현한 과정을 정리합니다.'
+date: '2023-04-03'
+slug: 'adding-toc-to-gatsby'
+thumbnail: './images/gatsby-thumbnail.png'
+thumbnail_alt: 'gatsby-thumbnail'
+category: 'development'
+---
+
+# Gatsby Blog 제작기
+
+<Callout>
+  💡 Gatsby에서 TOC 기능 구현과 리팩토링 과정을 남기고자 합니다. 피드백은 언제나
+  환영입니다:)
+</Callout>
+
+<br />
+
+## TOC 기능 구현하기
+
+긴 글을 읽다보면 현재 어느 자신이 글의 부분을 읽고 있는지 알고 싶을 때가 있습니다.
+또한, 클릭한 목차에 따라 화면을 이동시키거나 현재 있는 화면에 해당하는 목차를 표시하면서 더 좋은 사용자 경험을 제공해 줄 수 있습니다.
+이를 위해 저의 블로그에도 TOC (Table of Contents) 기능을 구현하고자 했습니다.
+
+<br />
+
+### gatsby-remark-autolink-headers 설정하기
+
+[해당 플러그인](https://www.gatsbyjs.com/plugins/gatsby-remark-autolink-headers/?=mdx)을 설치해줍니다.
+
+```
+yarn add gatsby-remark-autolink-headers
+```
+
+<br />
+
+gatsby.config.ts에 플러그인을 추가해줍니다.
+
+**gatsby.config.ts**
+
+```js
+{
+  resolve: 'gatsby-plugin-mdx',
+  options: {
+    gatsbyRemarkPlugins: [
+      {
+        resolve: 'gatsby-remark-autolink-headers',
+      },
+      // gatsby-remark-autolink-headers: gatsby-remark-prismjs 앞에 위치
+      // https://github.com/gatsbyjs/gatsby/issues/5764
+      {
+        resolve: 'gatsby-remark-prismjs',
+      },
+    ],
+  },
+},
+```
+
+저는 `gatsby-plugin-mdx`와 같이 사용하고 있어서 다음과 같이 설정해줍니다.
+관련된 [설명](https://www.gatsbyjs.com/plugins/gatsby-plugin-mdx/?=gatsby-plugin-mdx#gatsby-remark--plugins)을 참고해주세요.
+
+<br />
+
+또한, `gatsby-remark-autolink-headers` 문서에서는 `gatsby-remark-prismjs`을 사용하고 있으면 플러그인을 추가한 순서에 유의해야 합니다.
+관련 [이슈](https://github.com/gatsbyjs/gatsby/issues/5764) 확인해보시고 `gatsby-remark-autolink-headers`을 `gatsby-remark-prismjs` **앞에 위치**시킵니다.
+
+<br />
+
+설정이 끝나면 GraphQL에서 **tableOfContents**에서 데이터가 생성되었음을 확인할 수 있습니다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/graphql-tableofcontents.png"
+  alt="graphql-tableofcontents"
+/>
+
+<br />
+
+데이터를 보면 알 수 있듯이 `items` 내부에 `url`과 `title`, 재귀적으로 `items`과 호출되는 것을 확인할 수 있습니다.
+
+이에 맞추어 관련된 타입 작업을 진행합니다.
+
+```js
+export interface TableItem {
+  url: string
+  title: string
+  items?: TableItem[]
+}
+```
+
+```js
+interface Props {
+  toc: {
+    items?: TableItem[],
+  };
+}
+
+const Toc = ({ toc }: Props) => {
+  return (
+    <Aside>
+      <TocElement toc={toc} />
+    </Aside>
+  )
+}
+```
+
+```js
+const TocElement = ({ toc }: Props) => {
+  return (
+    <TocList>
+      {toc.items &&
+        toc.items.map((item) => (
+          <TocItem key={item.title}>{item.items && <TocElement toc={item} />}</TocItem>
+        ))}
+    </TocList>
+  )
+}
+```
+
+<br />
+
+### 스크롤에 따른 TOC 스타일 적용하기
+
+현재 사용자가 보고 있는 위치에 따라 TOC에 스타일을 주면 더 좋을 것 같습니다.
+이를 위해 **IntersectionObserver**를 활용하고자 합니다.
+Heading 태그가 TOC를 나누는 기준이기 때문에 해당 태그들을 감지하면 될 것 같습니다.
+
+<br />
+
+추가된 코드는 다음과 같습니다.
+
+```js
+const TocElement = ({ toc }: Props) => {
+  const [scrollTocId, setScrollTocId] = useState('')
+
+  const contentRef = useRef<{ [index: string]: IntersectionObserverEntry }>({})
+
+  const callback = useCallback(
+    (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
+      entries.forEach((entry) => {
+        contentRef.current[entry.target.id] = entry
+      })
+
+      const visibleContent = Object.values(contentRef.current).filter(
+        (content) => content.isIntersecting,
+      )
+      if (visibleContent[0]?.target.id !== undefined) {
+        setScrollTocId(visibleContent[0].target.id)
+      }
+    },
+    [],
+  )
+
+  useEffect(() => {
+    const obeserver = new IntersectionObserver(callback)
+    const contents = document.querySelectorAll('h1, h2, h3')
+
+    contents.forEach((content) => obeserver.observe(content))
+
+    return () => obeserver.disconnect()
+  }, [callback])
+
+  return (
+    <TocList>
+      {toc.items &&
+        toc.items.map((item) => (
+          <TocItem key={item.title}>
+            <StyledLink
+              to={item.url}
+              className={scrollTocId === item.url.slice(1) ? 'active' : ''}
+            >
+              {item.title}
+            </StyledLink>
+            {item.items && <TocElement toc={item} />}
+          </TocItem>
+        ))}
+    </TocList>
+  )
+}
+
+export default Toc
+```
+
+## 마무리
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/toc.gif"
+  alt="toc"
+/>
+
+<br />
+
+### Gastby 프레임워크에 기여하기
+
+TOC 작업을 하는 과정에서 공식 문서를 읽다가 `gatsby-remark-autolink-headers`에서 오타를 발견했습니다.🧐
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/redudant-typo.png"
+  alt="redudant-typo"
+/>
+
+`redundant`가 `redudant`로 오타가 있네요.
+Gatsby라는 거대한 프레임워크에 기여할 수 있는 좋은 기회라고 생각하여 빠르게 수정하고 PR을 남겨봤습니다.
+
+<br />
+
+단순히 오타를 수정하는 작업으로 코드 한 줄만 바꾸는 것이지만, 혹시나 하는 마음에 계속 확인하며 기다렸네요.😂
+
+<br />
+
+**PR Merge**
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/pr-merge.png"
+  alt="pr-merge"
+/>
+
+다행히도 [머지](https://github.com/gatsbyjs/gatsby/pull/37812)되었습니다.👍
+(대단한 개발자분의 Thanks까지... 영광입니다..)
+
+<br />
+
+TOC 작업을 하면서 제가 사용한 기술에 작게나마 기여해서 뿌듯했습니다.
+Gastby를 학습하는 과정에서 오픈 소스에 기여하는 경험까지 할 수 있어서 Gastby가 저한테 더 특별하게 느껴지네요.😄
+
+<br />
+
+이번 글을 통해 Gatsby에서 TOC 기능을 구현하려는 분들에게 도움이 되었으면 합니다.🙇‍♂️
