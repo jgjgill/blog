@@ -9,7 +9,9 @@ const Text = <C extends React.ElementType = 'span'>({
   as,
   children,
   ...rest
-}: StrictPropsWithChildren<Props<C> & React.ComponentPropsWithoutRef<C>>) => {
+}: StrictPropsWithChildren<
+  Props<C> & Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>>
+>) => {
   const Component = as || 'span'
 
   return <Component {...rest}>{children}</Component>

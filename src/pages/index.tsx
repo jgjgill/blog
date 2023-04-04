@@ -1,6 +1,6 @@
 import App from 'App'
 import { Author, Category, Layout, Post, PostList, Seo } from 'components'
-import { Flex, Text } from 'components/@shared'
+import { Flex } from 'components/@shared'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
@@ -23,7 +23,6 @@ const IndexPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <Text>asdaasdsdasd</Text>
         <Flex flexDirection="column" gap={20}>
           <Author />
           <Category selectedCategory="all" />

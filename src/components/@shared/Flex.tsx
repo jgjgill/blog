@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
-import React, { HTMLAttributes } from 'react'
+import React from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
-interface FlexProps extends HTMLAttributes<HTMLDivElement> {
+interface Props<C extends React.ElementType> {
+  as?: C
   gap?: number
   flexDirection?: 'row' | 'row-reverse' | 'column' | 'column-reverse'
   justifyContent?:
@@ -15,34 +15,28 @@ interface FlexProps extends HTMLAttributes<HTMLDivElement> {
   alignItems?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
 }
 
-const Flex = ({
+const Flex = <C extends React.ElementType = 'div'>({
+  as,
   children,
   gap = 0,
   flexDirection = 'row',
   justifyContent = 'flex-end',
   alignItems = 'start',
-  ...props
-}: StrictPropsWithChildren<FlexProps>) => {
-  // const Element = as || 'div'
+  ...rest
+}: StrictPropsWithChildren<
+  Props<C> & Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>>
+>) => {
+  const Element = as || 'div'
+
   return (
-    <StyledFlex
+    <Element
       gap={gap}
-      flexDirection={flexDirection}
-      justifyContent={justifyContent}
-      alignItems={alignItems}
-      {...props}
+      style={{ display: 'flex', flexDirection, justifyContent, alignItems, gap }}
+      {...rest}
     >
       {children}
-    </StyledFlex>
+    </Element>
   )
 }
-
-const StyledFlex = styled.div<FlexProps>`
-  display: flex;
-  flex-direction: ${({ flexDirection }) => flexDirection};
-  justify-content: ${({ justifyContent }) => justifyContent};
-  align-items: ${({ alignItems }) => alignItems};
-  gap: ${({ gap }) => `${gap}px`};
-`
 
 export default Flex
