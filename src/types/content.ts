@@ -5,6 +5,7 @@ export interface Content {
   id: string
   frontmatter: Frontmatter
   excerpt: ReactNode
+  body: string
 }
 
 export type Frontmatter = { date: string; slug: string; title: string; category: string }

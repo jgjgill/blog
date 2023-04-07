@@ -3,19 +3,23 @@ import { PATH } from 'constants/path'
 import { Link } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
+import { readingTimeWithCount } from 'utils/reading-time'
 
 interface Props {
   node: Content
 }
 
 const Post = ({ node }: Props) => {
+  const readingTime = readingTimeWithCount(node.body)
+
   return (
     <Container>
       <Link to={`${PATH.BLOG}${node.frontmatter.slug}`}>
         <Wrapper>
           <h3>{node.frontmatter.title}</h3>
           <Excerpt>{node.excerpt}</Excerpt>
-          <time>{node.frontmatter.date}</time>
+          <time>{node.frontmatter.date}</time> |{' '}
+          <span>{readingTime.minutes} min read</span>
         </Wrapper>
       </Link>
     </Container>
