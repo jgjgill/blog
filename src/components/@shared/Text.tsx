@@ -5,7 +5,16 @@ interface Props<C extends React.ElementType> {
   as?: C
 }
 
-const Text = <C extends React.ElementType = 'span'>({
+type TextProps<C extends React.ElementType> = StrictPropsWithChildren<Props<C>> &
+  Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>> & {
+    ref?: React.ComponentPropsWithRef<C>['ref']
+  }
+
+type TextComponent = <C extends React.ElementType = 'span'>(
+  props: TextProps<C>,
+) => React.ReactElement | null
+
+const Text: TextComponent = <C extends React.ElementType = 'span'>({
   as,
   children,
   ...rest

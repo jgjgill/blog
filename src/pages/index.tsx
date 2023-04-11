@@ -5,7 +5,6 @@ import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
 import { Content } from 'types/content'
-import { readingTimeWithCount } from 'utils/reading-time'
 
 interface Props {
   allMdx: {

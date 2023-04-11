@@ -15,28 +15,41 @@ interface Props<C extends React.ElementType> {
   alignItems?: 'start' | 'center' | 'end' | 'stretch' | 'baseline'
 }
 
-const Flex = <C extends React.ElementType = 'div'>({
-  as,
-  children,
-  gap = 0,
-  flexDirection = 'row',
-  justifyContent = 'flex-end',
-  alignItems = 'start',
-  ...rest
-}: StrictPropsWithChildren<
-  Props<C> & Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>>
->) => {
-  const Element = as || 'div'
+type FlexProps<C extends React.ElementType> = StrictPropsWithChildren<Props<C>> &
+  Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>> & {
+    ref?: React.ComponentPropsWithRef<C>['ref']
+  }
 
-  return (
-    <Element
-      gap={gap}
-      style={{ display: 'flex', flexDirection, justifyContent, alignItems, gap }}
-      {...rest}
-    >
-      {children}
-    </Element>
-  )
-}
+type FlexComponent = <C extends React.ElementType = 'div'>(
+  props: FlexProps<C>,
+) => React.ReactElement | null
+
+const Flex: FlexComponent = React.forwardRef(
+  <C extends React.ElementType = 'div'>(
+    {
+      as,
+      children,
+      gap = 0,
+      flexDirection = 'row',
+      justifyContent = 'flex-end',
+      alignItems = 'start',
+      ...rest
+    }: FlexProps<C>,
+    ref: React.ComponentPropsWithRef<C>['ref'],
+  ) => {
+    const Element = as || 'div'
+
+    return (
+      <Element
+        gap={gap}
+        style={{ display: 'flex', flexDirection, justifyContent, alignItems, gap }}
+        ref={ref}
+        {...rest}
+      >
+        {children}
+      </Element>
+    )
+  },
+)
 
 export default Flex
