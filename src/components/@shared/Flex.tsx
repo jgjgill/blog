@@ -31,7 +31,7 @@ const Flex: FlexComponent = React.forwardRef(
       children,
       gap = 0,
       flexDirection = 'row',
-      justifyContent = 'flex-end',
+      justifyContent = 'flex-start',
       alignItems = 'start',
       ...rest
     }: FlexProps<C>,
