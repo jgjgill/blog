@@ -40,6 +40,7 @@ const config: GatsbyConfig = {
                   category
                 }
                 excerpt
+                body
               }
             }
           }
@@ -55,6 +56,7 @@ const config: GatsbyConfig = {
               category: node.frontmatter.category,
             },
             excerpt: node.excerpt,
+            body: node.body,
           })),
       },
     },

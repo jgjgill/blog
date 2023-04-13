@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post, PostList } from 'components'
-import { Flex } from 'components/@shared'
+import { Flex, Text } from 'components/@shared'
 import { graphql, useStaticQuery } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import useSearch from 'hooks/useSearch'
@@ -39,10 +39,9 @@ const Search = () => {
           />
 
           {query !== '' && (
-            <span>
-              &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}
-              개)
-            </span>
+            <Text>
+              &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}개)
+            </Text>
           )}
 
           <PostList
