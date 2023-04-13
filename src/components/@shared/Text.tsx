@@ -14,16 +14,19 @@ type TextComponent = <C extends React.ElementType = 'span'>(
   props: TextProps<C>,
 ) => React.ReactElement | null
 
-const Text: TextComponent = <C extends React.ElementType = 'span'>({
-  as,
-  children,
-  ...rest
-}: StrictPropsWithChildren<
-  Props<C> & Omit<React.ComponentPropsWithoutRef<C>, keyof Props<C>>
->) => {
-  const Component = as || 'span'
+const Text: TextComponent = React.forwardRef(
+  <C extends React.ElementType = 'span'>(
+    { as, children, ...rest }: TextProps<C>,
+    ref: React.ComponentPropsWithRef<C>['ref'],
+  ) => {
+    const Element = as || 'span'
 
-  return <Component {...rest}>{children}</Component>
-}
+    return (
+      <Element ref={ref} {...rest}>
+        {children}
+      </Element>
+    )
+  },
+)
 
 export default Text
