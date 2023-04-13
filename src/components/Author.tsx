@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
-import { Flex } from 'components/@shared'
+import { Flex, Text } from 'components/@shared'
 import React from 'react'
 
 const Author = () => {
   return (
     <Container>
       <Flex flexDirection="column">
-        <b>이종길 | 프론트엔드</b>
-        <span>Go High</span>
+        <Text as="b">이종길 | 프론트엔드</Text>
+        <Text>Go High</Text>
       </Flex>
       <Flex gap={20}>
         <Link href="https://github.com/jgjgill" target="_blank" rel="noreferrer">

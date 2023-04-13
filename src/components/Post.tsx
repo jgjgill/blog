@@ -5,6 +5,8 @@ import React from 'react'
 import { Content } from 'types/content'
 import { readingTimeWithCount } from 'utils/reading-time'
 
+import { Text } from './@shared'
+
 interface Props {
   node: Content
 }
@@ -16,10 +18,10 @@ const Post = ({ node }: Props) => {
     <Container>
       <Link to={`${PATH.BLOG}${node.frontmatter.slug}`}>
         <Wrapper>
-          <h3>{node.frontmatter.title}</h3>
+          <Text as="h3">{node.frontmatter.title}</Text>
           <Excerpt>{node.excerpt}</Excerpt>
-          <time>{node.frontmatter.date}</time> |{' '}
-          <span>{readingTime.minutes} min read</span>
+          <Text as="time">{node.frontmatter.date}</Text> |{' '}
+          <Text>{readingTime.minutes} min read</Text>
         </Wrapper>
       </Link>
     </Container>
