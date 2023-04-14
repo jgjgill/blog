@@ -19,7 +19,7 @@ const Comment = () => {
       'data-reactions-enabled': '1',
       'data-emit-metadata': '0',
       'data-input-position': 'bottom',
-      'data-theme': 'light',
+      'data-theme': 'transparent_dark',
       'data-lang': 'ko',
       'data-loading': 'lazy',
     }).forEach(([key, value]) => {
