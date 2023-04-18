@@ -86,6 +86,7 @@ export const globalStyles = css`
   /* custom code */
   body code.language-text {
     padding: 0 5px;
+    word-break: break-all;
   }
 
   /* dark mode */
