@@ -12,8 +12,6 @@ category: 'study'
 
 <Callout>💡 객체 리터럴은 각자의 타입이 있는 키와 값의 집합입니다.</Callout>
 
-<br />
-
 ## 객체 타입
 
 객체 타입은 타입스크립트가 자바스크립트 코드를 이해하는 방법에 대한 핵심 개념입니다.
@@ -36,8 +34,6 @@ poet.name // 타입: string
 poet.end
 // Error: Property 'end' does not exist on type '{born: number; name: string; }.
 ```
-
-<br />
 
 ### 객체 타입 선언
 
@@ -81,8 +77,6 @@ poetLater = 'Emily Dickinson'
 // Error: Type 'string' is not assignable to 'Poet'.
 ```
 
-<br />
-
 ## 구조적 타이핑
 
 타입스크립트의 타입 시스템은 **구조적으로 타입화**되어 있습니다. 타입을 충족하는 모든 값을 해당 타입의 값으로 사용할 수 있습니다.
@@ -93,11 +87,11 @@ poetLater = 'Emily Dickinson'
 
 ```js
 type WithFirstName = {
-  firstName: string
+  firstName: string,
 }
 
 type WithLastName = {
-  lastName: string
+  lastName: string,
 }
 
 const hasBoth = {
@@ -240,8 +234,6 @@ const missingRequired: Writers = {}
 // Error: Property 'author' is missing in type '{}' but required in type 'Writers'.
 ```
 
-<br />
-
 ## 객체 타입 유니언
 
 ### 유추된 객체 타입 유니언
@@ -311,8 +303,6 @@ poem.type // 타입: 'pages' | 'rhymes'
 
 판별된 유니언은 우아한 자바스크립트 패턴과 타입스크립트의 타입 내로잉을 아릅답게 결합한 것입니다.
 
-<br />
-
 ## 교차 타입
 
 자바스크립트의 런타임 | 연산자가 & 연산자에 대응하는 것처럼 타입스크립트에서도 **& 교차 타입**을 사용해 여러 타입을 동시에 나타냅니다.
@@ -355,8 +345,6 @@ type WrittenArt = Artwork & Writing
 `never` 타입은 `bottom` 타입 또는 `empty` 타입을 뜻합니다. `bottom` 타입은 값을 가질 수 없고 참조할 수 없는 타입으므로 `bottom` 타입에 어떠한 타입도 제공할 수 없습니다.
 
 `never` 타입은 거의 사용하지 않지만 코드에서 불가능한 상태를 나타내기 위해 가끔 등장합니다.
-
-<br />
 
 ## 마치며
 

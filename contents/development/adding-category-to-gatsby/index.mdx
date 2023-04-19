@@ -15,8 +15,6 @@ category: 'development'
   환영입니다:)
 </Callout>
 
-<br />
-
 ## 카테고리 구현하기
 
 Gatsby에서 카테고리를 구현하는 방법으로 여러 개 존재할 것입니다.
@@ -212,8 +210,6 @@ categories.forEach((category) => {
 })
 ```
 
-<br />
-
 추가로 `/category` 경로에 대한 페이지가 필요하면 `/src/pages/category.js`에서 작업하시면 됩니다.
 
 [관련 링크](https://www.gatsbyjs.com/docs/adding-tags-and-categories-to-blog-posts/#make-a-tags-index-page-tags-that-renders-a-list-of-all-tags)
@@ -233,17 +229,11 @@ categories.forEach((category) => {
 
 게시물 개수를 받아올 수 있으니 query에서 해당 데이터를 받아오면 됩니다.
 
-<br />
-
 하지만 페이지에서 카테고리에 대한 데이터를 받아오는 방식은 비효율적입니다.
 페이지를 추가할 때마다 카테고리 데이터를 추가하는 번거로운 과정을 거쳐야 할 것입니다.
 
-<br />
-
 그래서 Category 컴포넌트에서 데이터를 불러오는 방식이 더 좋을 것입니다.
 카테고리에 대한 관심사를 Category 컴포넌트 내부에서만 관리할 수 있기 때문에 용이합니다.
-
-<br />
 
 이와 관련해서 Graphql에서 지원해주는 기능이 있었습니다.
 `useStaticQuery`를 사용하면 페이지 단위가 아닌 Category 컴포넌트에서도 데이터 처리가 가능합니다.

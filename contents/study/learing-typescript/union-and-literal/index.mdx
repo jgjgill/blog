@@ -14,8 +14,6 @@ category: 'study'
   💡 상수를 제외한 모든 것은 변합니다. 시간이 지나면서 값도 변할 수 있습니다.
 </Callout>
 
-<br />
-
 ## 타입스크립트에서의 추론
 
 타입스크립트에서는 해당 값을 바탕으로 두 가지 핵심 개념을 통해 추론을 수행합니다.
@@ -24,8 +22,6 @@ category: 'study'
 - **내로잉**: 값에 허용된 타입이 하나 이상의 가능한 타입이 되지 않도록 좁힙니다.
 
 타입스크립트에서 **코드 정보에 입각한 추론**을 해내는 강력한 개념입니다.
-
-<br />
 
 ## 유니언 타입
 
@@ -72,8 +68,6 @@ if (Math.random() > 0.5) {
 유니언 타입으로 정의된 여러 타입 중 하나의 타입으로 된 값의 속성을 사용하려면 코드에서 값이 보다 구체적인 타입 중 하나라는 것을 타입스크립트에 알려야 합니다.
 
 이것을 **내로잉**이라고 부릅니다.
-
-<br />
 
 ## 내로잉
 
@@ -158,8 +152,6 @@ typeof researcher === 'string'
   : researcher.toFixed() // OK: number
 ```
 
-<br />
-
 ## 리터럴 타입
 
 **리터럴 타입**은 좀 더 구체적인 버전의 원시 타입입니다.
@@ -217,8 +209,6 @@ specificallyAda = someString
 ```js
 someString = ':)'
 ```
-
-<br />
 
 ## 엄격한 null 검사
 
@@ -304,8 +294,6 @@ mathematician = 'Mark Goldberg'
 mathematician.length // OK
 ```
 
-<br />
-
 ## 타입 별칭
 
 대부분의 유니언 타입은 두세 개의 구성 요소만 갖습니다. 그러나 가끔 반복해서 입력하기 불편한 조금 긴 형태의 유니언 타입을 발견할 수 있습니다.
@@ -345,8 +333,6 @@ type Id = number | string
 // IdMaybe 타입은 다음과 같음: number | string | undefined | null
 type IdMaybe = Id | undefined | null
 ```
-
-<br />
 
 ## 마치며
 

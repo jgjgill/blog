@@ -89,6 +89,10 @@ export const globalStyles = css`
     word-break: break-all;
   }
 
+  body div.gatsby-highlight {
+    margin: 25px 0;
+  }
+
   /* dark mode */
   body {
     background-color: var(--bg-color);
@@ -106,15 +110,6 @@ export const globalStyles = css`
 
   a {
     color: var(--link-color);
-  }
-
-  body.dark pre.language-tsx {
-    background-color: var(--bg-inline-color);
-  }
-
-  body.dark code.language-tsx {
-    text-shadow: none;
-    color: var(--text-color);
   }
 
   body.dark code.language-text {
