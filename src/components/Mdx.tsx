@@ -16,7 +16,6 @@ const Image = ({ ...props }) => <StyledImage {...props} />
 const Callout = ({ ...props }) => <StyledCallout {...props} />
 
 export default Mdx
-
 Mdx.H1 = H1
 Mdx.H2 = H2
 Mdx.H3 = H3
@@ -44,9 +43,11 @@ const StyledH3 = styled.h3`
 
 const StyledP = styled.p`
   line-height: 1.7;
+  margin: 5px 0;
 `
 
 const StyledUl = styled.ul`
+  list-style: none;
   padding: 10px;
 `
 const StyledLi = styled.li`
