@@ -9,14 +9,49 @@ import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Search from 'images/search.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
+
+interface BeforeInstallPromptEvent extends Event {
+  readonly platforms: string[]
+  readonly userChoice: Promise<{
+    outcome: 'accepted' | 'dismissed'
+    platform: string
+  }>
+  prompt(): Promise<void>
+}
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
   const { themeMode, setThemeMode } = useDarkMode()
   const { isView } = useIsViewScrollHeader(300)
   const theme = useTheme()
   const iconColor = theme.colors.primary.dark
+
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
+    null,
+  )
+
+  useEffect(() => {
+    const handler = (e: BeforeInstallPromptEvent) => {
+      e.preventDefault()
+      setDeferredPrompt(e)
+    }
+
+    window.addEventListener('beforeinstallprompt', handler as any)
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handler as any)
+    }
+  }, [])
+
+  const install = () => {
+    if (deferredPrompt === null) return
+
+    deferredPrompt.prompt()
+    deferredPrompt.userChoice.then(() => clearPrompt())
+  }
+  const clearPrompt = () => {
+    setDeferredPrompt(null)
+  }
 
   return (
     <Container>
@@ -43,6 +78,17 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
       </Header>
 
       <Main>{children}</Main>
+
+      {deferredPrompt && (
+        <Flex justifyContent="center">
+          <Flex as="button" onClick={install}>
+            추가
+          </Flex>
+          <Flex as="button" onClick={install}>
+            삭제
+          </Flex>
+        </Flex>
+      )}
     </Container>
   )
 }
