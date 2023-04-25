@@ -49,7 +49,7 @@ const Container = styled.div<{ $isAnimation: boolean }>`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   transform: ${({ $isAnimation }) => !$isAnimation && 'translateY(500px)'};
   transform: ${({ $isAnimation }) => $isAnimation && 'translateY(0)'};
-  transition: 2s;
+  transition: 1s;
 `
 
 const ButtonWrapper = styled(Flex)`
@@ -59,6 +59,8 @@ const ButtonWrapper = styled(Flex)`
 const Button = styled(Text)`
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
+  background-color: transparent;
+  transition: 1s;
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary.dark};
