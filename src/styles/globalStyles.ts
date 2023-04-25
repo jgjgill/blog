@@ -8,10 +8,22 @@ export const globalStyles = css`
     --link-color: #333;
   }
 
-  body.dark {
+  .dark {
     --bg-color: #282828;
     --text-color: #f1f1f1;
     --link-color: #f1f1f1;
+  }
+
+  .modal {
+    --bg-color: #d8b4fe;
+    --text-color: #343434;
+    --link-color: #f1f1f1;
+  }
+
+  .dark .modal {
+    --bg-color: #c471f5;
+    --text-color: #fff;
+    --link-color: #333;
   }
 
   /* Box sizing rules */
@@ -97,6 +109,7 @@ export const globalStyles = css`
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
+    transition: 0.3s;
   }
 
   body.dark {
@@ -124,5 +137,10 @@ export const globalStyles = css`
 
   body.dark blockquote {
     background-color: var(--bg-inline-color);
+  }
+
+  .modal {
+    background-color: var(--bg-color);
+    color: var(--text-color);
   }
 `
