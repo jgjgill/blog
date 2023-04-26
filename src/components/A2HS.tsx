@@ -25,7 +25,10 @@ const A2HS = () => {
           저의 블로그를 방문해주셔서 감사합니다😄 <br /> 바로가기를 추가하시겠습니까?
         </Text>
 
-        <ButtonWrapper justifyContent="space-around">
+        <ButtonWrapper
+          justifyContent="space-around"
+          onTransitionEnd={(e: React.MouseEvent<HTMLDivElement>) => e.stopPropagation()}
+        >
           <Button as="button" className="modal" onClick={install}>
             추가
           </Button>
@@ -49,7 +52,8 @@ const Container = styled.div<{ $isAnimation: boolean }>`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   transform: ${({ $isAnimation }) => !$isAnimation && 'translateY(500px)'};
   transform: ${({ $isAnimation }) => $isAnimation && 'translateY(0)'};
-  transition: 1s;
+  transition: transform 1s;
+  transition: background-color, color 0.3s;
 `
 
 const ButtonWrapper = styled(Flex)`
@@ -60,7 +64,7 @@ const Button = styled(Text)`
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
   background-color: transparent;
-  transition: 1s;
+  transition: 0.3s;
 
   &:hover {
     color: ${({ theme }) => theme.colors.primary.dark};

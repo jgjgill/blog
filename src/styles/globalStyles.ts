@@ -109,7 +109,8 @@ export const globalStyles = css`
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: 0.3s;
+    transition-property: background-color;
+    transition-duration: 0.3s;
   }
 
   body.dark {
