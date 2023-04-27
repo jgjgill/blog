@@ -3,13 +3,13 @@ import { css } from '@emotion/react'
 export const globalStyles = css`
   .light {
     --bg-color: #fff;
-    --bg-inline-color: #3a3a3a;
     --text-color: #343434;
     --link-color: #333;
   }
 
   .dark {
     --bg-color: #282828;
+    --bg-inline-color: #202124;
     --text-color: #f1f1f1;
     --link-color: #f1f1f1;
   }
@@ -106,22 +106,15 @@ export const globalStyles = css`
   }
 
   /* dark mode */
-  body.light {
+  html {
+    background-color: var(--bg-color);
+  }
+
+  body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition-property: background-color;
     transition-duration: 0.3s;
-  }
-
-  body.dark {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition-property: background-color;
-    transition-duration: 0.3s;
-  }
-
-  body.dark a {
-    color: var(--link-color);
   }
 
   a {
@@ -139,6 +132,9 @@ export const globalStyles = css`
   }
 
   body.dark blockquote {
+    background-color: var(--bg-inline-color);
+  }
+  body.light blockquote {
     background-color: var(--bg-inline-color);
   }
 

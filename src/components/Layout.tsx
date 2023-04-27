@@ -9,19 +9,10 @@ import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
 import Search from 'images/search.inline.svg'
 import Sun from 'images/sun.inline.svg'
-import React, { useState } from 'react'
+import React from 'react'
 import { StrictPropsWithChildren } from 'types/custom'
 
 import A2HS from './A2HS'
-
-interface BeforeInstallPromptEvent extends Event {
-  readonly platforms: string[]
-  readonly userChoice: Promise<{
-    outcome: 'accepted' | 'dismissed'
-    platform: string
-  }>
-  prompt(): Promise<void>
-}
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
   const { themeMode, setThemeMode } = useDarkMode()
