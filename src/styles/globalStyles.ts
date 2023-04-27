@@ -1,7 +1,7 @@
 import { css } from '@emotion/react'
 
 export const globalStyles = css`
-  body {
+  .light {
     --bg-color: #fff;
     --bg-inline-color: #3a3a3a;
     --text-color: #343434;
@@ -106,7 +106,7 @@ export const globalStyles = css`
   }
 
   /* dark mode */
-  body {
+  body.light {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition-property: background-color;
@@ -116,6 +116,8 @@ export const globalStyles = css`
   body.dark {
     background-color: var(--bg-color);
     color: var(--text-color);
+    transition-property: background-color;
+    transition-duration: 0.3s;
   }
 
   body.dark a {
