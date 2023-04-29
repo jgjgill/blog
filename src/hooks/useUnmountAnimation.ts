@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-export default function useAnimation(codition: boolean) {
+export default function useUnmountAnimation(codition: boolean) {
   const [isCompleted, setIsCompleted] = useState(false)
 
   const isRenderCodition = isCompleted || codition
@@ -13,7 +13,7 @@ export default function useAnimation(codition: boolean) {
   useEffect(() => {
     let timeoutId: any
 
-    if (codition) timeoutId = setTimeout(() => setIsCompleted(true), 500)
+    if (codition) timeoutId = setIsCompleted(true)
     return () => clearTimeout(timeoutId)
   }, [codition])
 

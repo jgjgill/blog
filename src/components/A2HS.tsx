@@ -1,6 +1,6 @@
 import styled from '@emotion/styled'
 import useA2HS from 'hooks/useA2HS'
-import useAnimation from 'hooks/useAnimation'
+import useAnimation from 'hooks/useUnmountAnimation'
 import React from 'react'
 
 import { Flex, Text } from './@shared'
@@ -51,8 +51,17 @@ const Container = styled.div<{ $isAnimation: boolean }>`
   border-radius: 20px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   transform: ${({ $isAnimation }) => !$isAnimation && 'translateY(500px)'};
-  transform: ${({ $isAnimation }) => $isAnimation && 'translateY(0)'};
+  animation: mountAnimation 1s;
   transition: background-color 0.3s, color 0.3s, transform 1s;
+
+  @keyframes mountAnimation {
+    0% {
+      transform: translateY(500px);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
 `
 
 const ButtonWrapper = styled(Flex)`
