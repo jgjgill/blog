@@ -4,10 +4,9 @@ const HtmlAttributes = {
 
 const setInitThemeMode = () => {
   if (
-    typeof window !== 'undefined' &&
-    (localStorage.getItem('theme') === 'dark' ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches))
+    (typeof window !== 'undefined' && localStorage.getItem('theme') === 'dark') ||
+    (!('theme' in localStorage) &&
+      window.matchMedia('(prefers-color-scheme: dark)').matches)
   ) {
     document.documentElement.classList.add('dark')
     document.documentElement.classList.remove('light')
@@ -21,13 +20,6 @@ const setInitThemeMode = () => {
     document.body.classList.add('light')
     document.body.classList.remove('dark')
   }
-
-  // typeof window !== 'undefined' &&
-  // (localStorage.getItem('theme') === 'dark' ||
-  //   (!('theme' in localStorage) &&
-  //     window.matchMedia('(prefers-color-scheme: dark)').matches))
-  //   ? document.body.classList.add('dark')
-  //   : document.body.classList.remove('dark')
 }
 
 const functionToScript = (cb) => String(cb)

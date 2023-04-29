@@ -2,7 +2,7 @@ export class a2hs {
   private static HIDE_INSTALL_A2HS = 'hide_install_a2hs'
 
   static get hideInstallA2HS() {
-    return typeof window !== 'undefined' && localStorage.getItem(this.HIDE_INSTALL_A2HS)
+    return localStorage.getItem(this.HIDE_INSTALL_A2HS)
   }
 
   static get isValidateHideInstallA2HS() {
@@ -11,11 +11,10 @@ export class a2hs {
 
   static setHideInstallA2HS() {
     const currentAfterWeek = String(new Date().setDate(new Date().getDate() + 7))
-    typeof window !== 'undefined' &&
-      localStorage.setItem(this.HIDE_INSTALL_A2HS, currentAfterWeek)
+    localStorage.setItem(this.HIDE_INSTALL_A2HS, currentAfterWeek)
   }
 
   static clear() {
-    typeof window !== 'undefined' && localStorage.removeItem(this.HIDE_INSTALL_A2HS)
+    localStorage.removeItem(this.HIDE_INSTALL_A2HS)
   }
 }
