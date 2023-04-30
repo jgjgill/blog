@@ -1,13 +1,13 @@
 import styled from '@emotion/styled'
 import useA2HS from 'hooks/useA2HS'
-import useAnimation from 'hooks/useUnmountAnimation'
+import useUnmountAnimation from 'hooks/useUnmountAnimation'
 import React from 'react'
 
 import { Flex, Text } from './@shared'
 
 const A2HS = () => {
   const { deferredPrompt, install, clearPrompt } = useA2HS()
-  const { isRenderCodition, handleTransitionEnd, triggerAnimation } = useAnimation(
+  const { isRenderCodition, handleTransitionEnd, triggerAnimation } = useUnmountAnimation(
     Boolean(deferredPrompt),
   )
 
