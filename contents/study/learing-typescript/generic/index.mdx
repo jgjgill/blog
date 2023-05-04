@@ -1,0 +1,415 @@
+---
+title: '러닝 타입스크립트 CHAPTER 10 - 제네릭'
+description: "러닝 타입스크립트 CHAPTER 10 '제네릭'에 대해 알아보겠습니다."
+date: '2023-05-04'
+slug: 'generic'
+thumbnail: '../images/learing-typescript-thumbnail.png'
+thumbnail_alt: 'learing-typescript-thumbnail'
+category: 'study'
+---
+
+# CHAPTER 10 제네릭
+
+<Callout>💡 타입 시스템에서 선언된 변수는 완전히 새롭게 타입된 세계가 됩니다!</Callout>
+
+때로는 코드에서 호출하는 방식에 따라 **다양한 타입**으로 작동하도록 의도할 수 있습니다.
+타입스크립트는 **제네릭**을 사용해 타입 간의 관계를 알아냅니다.
+
+타입 매개변수는 전형적으로 T나 U 같은 단일 문자 이름 또는 Key와 Value 같은 파스칼 케이스 이름을 갖습니다.
+
+## 제네릭 함수
+
+매개변수 괄호 바로 앞 홑화살괄호로 묶인 타입 매개변수에 별칭을 배치해 함수를 제네릭으로 만듭니다.
+
+```js
+function identity<T>(input: T) {
+  return input
+}
+```
+
+**명시적 제네릭 호출 타입**
+
+때로는 타입 인수를 해석하기 위해 타입스크립트에 알려줘야 하는 함수 호출 정보가 충분하지 않을 수도 있습니다.
+
+```js
+function logWrapper<Input>(callback: (input: Input) => void) {
+  return (input: Input) => {
+    console.log('Input: ', input)
+    callback(input)
+  }
+}
+
+// 타입: (input: string) => void
+logWrapper((input: string) => {
+  console.log(input.length)
+})
+
+// 타입: (input: unknown) => void
+const qq = logWrapper((input) => {
+  console.log(input.length)
+  // Error
+})
+```
+
+기본값이 unknown으로 설정되는 것을 피하기 위해 **명시적 제네릭 타입 인수**를 사용해 함수를 호출할 수 있습니다.
+
+```ts
+// 타입: (input: string) => void
+logWrapper<string>((input) => {
+  console.log(input.length)
+})
+```
+
+**다중 함수 타입 매개변수**
+
+임의의 수의 타입 매개변수를 쉼표로 구분해 함수를 정의합니다.
+
+> 제네릭 구조체에서 두 개보다 많은 타입 매개변수는 코드를 읽고 이해하는 것을 어렵게 만듭니다.
+
+## 제네릭 인터페이스
+
+인터페이스도 제네릭으로 선언할 수 있습니다.
+내장 Array 메서드는 제네릭 인터페이스로 정의됩니다.
+
+```js
+inteface Array<T> {
+  // ...
+
+  // 배열에서 마지막 요소를 제거하고 그 요소를 반환
+  // 배열이 비어 있는 경우 undefined를 반환하고 배열은 수정하지 않음
+  pop(): T | undefined
+
+  // 배열의 끝에 새로운 요소를 추가하고 배열의 길이를 반환
+  // items 배열에 추가된 새로운 요소
+  push(...items: T[]): number
+}
+```
+
+**유추된 제네릭 인터페이스 타입**
+
+제네릭 타입을 취하는 것으로 선언된 위치에 제공된 값이 타입에서 타입 인수를 유추합니다.
+
+## 제네릭 클래스
+
+클래스도 나중에 멤버에서 사용할 임의의 수의 타입 매개변수를 선언할 수 있습니다.
+클래스의 각 인스턴스는 타입 매개변수로 각자 다른 타입 인수 집합을 가집니다.
+
+```js
+class Secret<Key, Value> {
+  key: Key
+  value: Value
+
+  constructor(key: Key, value: Value) {
+    this.key = key
+    this.value = value
+  }
+
+  getValue(key: Key): Value | undefined {
+    return this.key === key ? this.value : undefined
+  }
+}
+
+const storage = new Secret(12345, 'luggage') // 타입: Secret<number, string>
+
+storage.getValue(1987) // 타입: string | undefined
+```
+
+### 명시적 제네릭 클래스 타입
+
+앞서 제네릭 함수와 동일한 방식으로 생성자에 전달된 인수에서 클래스 타입 인수를 유추할 수 없는 경우에는 타입 인수의 기본값은 **unknown**이 됩니다.
+unknown 타입을 피하기 위해 **명시적 타입 인수**를 제공할 수 있습니다.
+
+```ts
+class CurriedCallback<Input> {
+  #callback: (input: Input) => void
+
+  constructor(callback: (input: Input) => void) {
+    this.#callback = (input: Input) => {
+      console.log('Input', input)
+      callback(input)
+    }
+  }
+
+  call(input: Input) {
+    this.#callback(input)
+  }
+}
+
+// 타입: CurriedCallback<string>
+new CurriedCallback<string>((input) => {
+  console.log(input.length)
+})
+```
+
+### 제네릭 클래스 확장
+
+제네릭 클래스는 `extends` 키워드 다음에 오는 기본 클래스로 사용할 수 있습니다.
+
+### 제네릭 인터페이스 구현
+
+제네릭 클래스는 모든 필요한 매개변수를 제공함으로써 `implements` 키워드를 활용하여 제네릭 인터페이스를 구현합니다.
+
+### 메서드 제네릭
+
+클래스 메서드는 클래스 인스턴스와 별개로 자체 제네릭 타입을 선언할 수 있습니다.
+
+```js
+class CreatePairFactory<Key> {
+  key: Key
+
+  constructor(key: Key) {
+    this.key = key
+  }
+
+  createPair<Value>(value: Value) {
+    return { key: this.key, value }
+  }
+}
+
+// 타입: CreatePairFactory<string>
+const factory = new CreatePairFactory('role')
+
+// 타입: { key: string, value: number }
+const numberPair = factory.createPair(10)
+
+// 타입: { key: string, value: string }
+const stringPair = factory.createPair('Sophie')
+```
+
+### 정적 클래스 제네릭
+
+클래스의 정적 멤버는 인스턴스 멤버와 구별되고 클래스의 특정 인스턴스와 연결되어 있지 않습니다.
+클래스의 정적 멤버는 클래스 인스턴스에 접근할 수 없거나 타입 정보를 지정할 수 없습니다.
+따라서 정적 클래스 메서드는 자체 타입 매개변수를 선언할 수 있지만 클래스에 선언된 어떤 타입 매개변수에도 접근할 수 없습니다.
+
+```js
+class BothLogger<OnInstance> {
+  instanceLog(value: OnInstance) {
+    console.log(value)
+    return value
+  }
+
+  static staticLog<OnStatic>(value: OnStatic) {
+    let fromInstance: OnInstance
+    // Error: Static members cannot reference class type parameters.
+
+    console.log(value)
+    return value
+  }
+}
+
+const logger = new BothLogger<number[]>
+logger.instanceLog([1, 2, 3]) // 타입: number[]
+
+// 유추된 OnStatic 타입 인수: boolean[]
+BothLogger.staticLog([false, true])
+
+// 유추된 OnStatic 타입 인수: string
+BothLogger.staticLog<string>("You can't change the music of your soul")
+```
+
+## 제네릭 타입 별칭
+
+**제네릭 타입 별칭**은 일반적으로 제네릭 함수의 타입을 셜명하는 함수와 함께 사용됩니다.
+
+```js
+type CreatesValue<Input, Output> = (input: Input) => Output
+
+let creator: CreatesValue<string, number>
+
+creator = (text) => text.length // Ok
+creator = (text) => text.toUpperCase()
+// Error: Type 'string' is not assignable to type 'number'.
+```
+
+### 제네릭 판별된 유니언
+
+판별된 유니언 사용법을 통해 데이터의 성공 또는 오류로 인한 실패를 나타내는 제네릭 '결과' 타입을 만들 수 있습니다.
+
+```js
+type Result<Data> = FailureResult | SuccessfulResult<Data>
+
+interface FailureResult {
+  error: Error
+  succeeded: false
+}
+
+interface SuccessfulResult<Data> {
+  data: Data
+  succeeded: true
+}
+
+function handleResult(result: Result<string>) {
+  if (result.succeeded) {
+    // result: SuccessfulResult<string>의 타입
+    console.log(`We did it! ${result.data}`)
+  } else {
+    // result: FailureResult의 타입
+    console.error(`Awww... ${result.error}`)
+  }
+
+  result.data
+  // Error: roperty 'data' does not exist on type 'Result<string>'.
+  // Property 'data' does not exist on type 'FailureResult'.
+}
+```
+
+## 제네릭 제한자
+
+제네릭 타입 매개변수의 동작을 수정하는 구문도 제공합니다.
+
+### 제네릭 기본값
+
+타입 매개변수 선언 뒤에 `=` 와 기본 타입을 배치해 **타입 인수를 명시적으로 제공**할 수 있습니다.
+기본값은 타입 인수가 명시적으로 선언되지 않고 유추할 수 없는 모든 후속 타입에 사용됩니다.
+
+모든 기본 타입 매개변수는 기본 함수 매개변수처럼 선언 목록의 제일 **마지막**에 와야 합니다.
+
+```js
+function inTheEnd<First, Second, Third = number, Fourth = string>() {} // OK
+```
+
+## 제한된 제네릭 타입
+
+일부 함수는 제한된 타입에서만 작동해야 합니다.
+타입 매개변수를 제한하는 구문은 매개변수 이름 뒤에 `extends` 키워드를 배치하고 그 뒤에 이를 제한할 타입을 배치합니다.
+
+```js
+interface WithLength {
+  length: number
+}
+
+function logWithLength<T extends WithLength>(input: T) {
+  console.log(`Length: ${input.length}`)
+  return input
+}
+
+logWithLength('No one can figure out your worth but you.') // 타입: string
+logWithLength([false, true]) // 타입: boolean[]
+logWithLength({ length: 123 }) // 타입: { length: number }
+
+logWithLength(new Date())
+// Error: Argument of type 'Date' is not assignable to parameter of type 'WithLength'.
+// Property 'length' is missing in type 'Date' but required in type 'WithLength'.
+```
+
+### keyof와 제한된 타입 매개변수
+
+`keyof` 연산자는 제한된 타입 매개변수와도 잘 작동합니다.
+앞서 살펴본 `extends` 와 `keyof` 를 함께 사용하여 타입 매개변수를 이전 타입 매개변수의 키로 제한합니다.
+
+```js
+function get<T, Key extends keyof T>(container: T, key: Key) {
+  return container[key]
+}
+
+const roles = {
+  favorite: 'Fargo',
+  others: ['Almost Famous', 'Burn After Reading', 'Nomadland']
+}
+
+const favorite = get(roles, 'favorite') // 타입: string
+const others = get(roles, 'others') // 타입: string[]
+```
+
+## Promise
+
+자바스크립트의 Promise는 네트워크 요청과 같이 요청 이후 결과를 받기까지 대기가 필요한 것을 나타냅니다.
+각 Promise는 대기 중인 작업이 'resolve(성공적으로 완료됨)' 또는 'reject(오류 발생)'하는 경우 콜백을 등록하기 위한 메서드를 제공합니다.
+
+임의의 값 타입에 대해 유사한 작업을 나타내는 Promise의 기능은 타입스크립트의 제네릭과 자연스럽게 융합됩니다.
+Promise는 타입 시스템에서 최종적으로 resolve된 값을 나타내는 단일 타입 매개변수를 가진 Promise 클래스로 표현됩니다.
+
+### Promise 생성
+
+Promise 생성자는 단일 매개변수를 받도록 작성됩니다.
+해당 매개변수의 타입은 제네릭 Promise 클래스에 선언된 타입 매개변수에 의존합니다.
+축소된 형식은 대략 다음과 같습니다.
+
+```js
+class PromiseLike<Value> {
+  constructor(
+    executor: (
+      resolve: (value: Value) => void,
+      reject: (reason: unknown) => void,
+    ) => void,
+  ) {
+    /* ... */
+  }
+}
+```
+
+결과적으로 값을 resolve하려는 Promise를 만들려면 Promise의 타입 인수를 명시적으로 선언해야 합니다.
+
+```ts
+// 타입: Promise<unknown>
+const resolvesUnknown = new Promise((resolve) => {
+  setTimeout(() => resolve('Done!'), 1000)
+})
+
+// 타입: Promise<string>
+const resolvesString = new Promise<string>((resolve) => {
+  setTimeout(() => resolve('Done!'), 1000)
+})
+```
+
+### async 함수
+
+`async` 키워드를 사용해 선언한 모든 함수는 Promise를 반환합니다.
+`async` 함수에 따라서 반환된 값이 `Thenable` (.then() 메서드가 있는 객체, 실제로는 거의 항상 Promise)이 아닌 경우,
+promise.resolve가 호출된 것처럼 Promise로 래핑됩니다.
+
+```js
+// 타입: (text: string) => Promise<number>
+async function lengthAfterSecond(text: string) {
+  await new Promise((resolve) => setTimeout(resolve, 1000))
+  return text.length
+}
+
+// 타입: (text: string) => Promise<number>
+async function lengthImmediately(text: string) {
+  return text.length
+}
+```
+
+## 제네릭 올바르게 사용하기
+
+제네릭은 코드에서 타입을 설명하는데 많은 유연성을 제공할 수 있지만,
+코드가 빠르게 복잡해질 수 있습니다.
+
+> 타입스크립트 코드에서 혼동을 일으킬 정도로 제네릭을 많이 사용해서는 안됩니다.
+> 그러나 유틸리티 라이브러리에 대한 타입, 특히 범용 모듈은 경우에 따라 제네릭을 많이 사용합니다.
+> 제네릭을 이해하면 이러한 유틸리티 타입을 효과적으로 사용할 수 있습니다.
+
+### 제네릭 황금률
+
+함수에 타입 매개변수가 필요한지 여부를 판단할 수 있는 간단하고 빠른 방법은 타입 매개변수가 **최소 두 번 이상** 사용되었는지 확인하는 것입니다.
+제네릭은 타입 간의 관계를 설명하므로 제네릭 타입 매개변수가 한 곳에만 나타나면 여러 타입 간의 관계를 정의할 수 없습니다.
+
+### 제네릭 명명 규칙
+
+타입 매개변수에 대한 표준 명명 규칙은 기본적으로 첫 번째 타입 인수로 T를 사용하고,
+후속 타입 매개변수가 존재하면 U, V 등을 사용합니다.
+
+맥락과 관련된 정보가 알려진 경우 명명 규칙은 경우에 따라 해당 용어의 첫 글자를 사용하는 것으로 확장됩니다.
+하지만 하나의 문자를 사용하는 타입 인수명은 하나의 문자로 함수나 변수의 이름을 사용하는 것만큼 혼란스러울 수 있습니다.
+
+따라서 타입이 사용되는 용도를 가리키는 설명적인 제네릭 타입 이름을 사용하는 것이 가장 좋습니다.
+가독성을 위해 완전히 작성된 이름을 사용하도록 합니다.
+
+```js
+function labelBox<Label, Value>(label: Label, value: Value) {
+  /* ... */
+}
+```
+
+## 마치며
+
+- 구조체 간에 다른 타입을 나타내기 위한 **타입 매개변수** 사용법
+- 제네릭 함수를 호출할 때 **명시적 또는 암시적 타입 인수** 제공하기
+- 제네릭 객체 타입을 표현하는 **제네릭 인터페이스**
+- 클래스에 타입 매개변수를 추가하고 클래스의 타입에 미치는 영향 확인하기
+- **타입 별칭**, 특히 **판별된 타입 유니언**에 타입 매개변수 추가하기
+- **기본값**(`=`)과 **제한자**(`extends`)를 사용한 제네릭 타입 매개변수 수정하기
+- **Promise**와 **`async` 함수**가 제네릭을 사용해 비동기 데이터 흐름을 나타내는 방법
+- **제네릭 황금률**과 **명명 규칙**을 포함한 제네릭 모범 사례
