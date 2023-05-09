@@ -105,6 +105,10 @@ export const globalStyles = css`
     margin: 25px 0;
   }
 
+  body .token.operator {
+    background-color: transparent;
+  }
+
   /* dark mode */
   html {
     background-color: var(--bg-color);
