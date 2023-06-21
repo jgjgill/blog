@@ -99,6 +99,7 @@ export const globalStyles = css`
   body code.language-text {
     padding: 0 5px;
     word-break: break-all;
+    font-family: 'Pretendard', sans-serif;
   }
 
   body div.gatsby-highlight {
