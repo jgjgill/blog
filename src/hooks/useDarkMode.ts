@@ -14,14 +14,10 @@ export function useDarkMode() {
     if (themeMode === 'dark') {
       document.documentElement.classList.add('dark')
       document.documentElement.classList.remove('light')
-      document.body.classList.add('dark')
-      document.body.classList.remove('light')
       localStorage.setItem('theme', 'dark')
     } else {
       document.documentElement.classList.add('light')
       document.documentElement.classList.remove('dark')
-      document.body.classList.remove('dark')
-      document.body.classList.add('light')
       localStorage.setItem('theme', 'light')
     }
   }, [themeMode])

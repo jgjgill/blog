@@ -8,22 +8,20 @@ export const globalStyles = css`
   }
 
   .dark {
-    --bg-color: #282828;
+    --bg-color: #2f2f2f;
     --bg-inline-color: #202124;
-    --text-color: #f1f1f1;
-    --link-color: #f1f1f1;
+    --text-color: rgba(255, 255, 255, 0.8);
+    --link-color: rgba(255, 255, 255, 0.8);
   }
 
   .modal {
     --bg-color: #d8b4fe;
     --text-color: #343434;
-    --link-color: #f1f1f1;
   }
 
   .dark .modal {
     --bg-color: #c471f5;
-    --text-color: #fff;
-    --link-color: #333;
+    --text-color: rgba(255, 255, 255, 0.8);
   }
 
   /* Box sizing rules */
@@ -118,28 +116,27 @@ export const globalStyles = css`
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition-property: background-color;
-    transition-duration: 0.3s;
+    transition: background-color 0.3s;
   }
 
   a {
     color: var(--link-color);
   }
 
-  body.dark code.language-text {
+  html.dark code.language-text {
     background-color: var(--bg-inline-color);
     color: var(--text-color);
     text-shadow: none;
   }
 
-  body.dark .token.operator {
+  html.dark .token.operator {
     background-color: transparent;
   }
 
-  body.dark blockquote {
+  html.dark blockquote {
     background-color: var(--bg-inline-color);
   }
-  body.light blockquote {
+  html.light blockquote {
     background-color: var(--bg-inline-color);
   }
 

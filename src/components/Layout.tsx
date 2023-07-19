@@ -53,8 +53,9 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
 export default Layout
 
 const Container = styled.div`
-  height: 100vh;
+  // height: 100vh;
   width: 100%;
+  // background: teal;
 `
 
 const Header = styled.header<{ $isViewHeader: boolean }>`

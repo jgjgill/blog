@@ -66,8 +66,7 @@ const Item = styled(Link)<{ isactive: number }>`
   height: 100%;
   text-align: center;
   transition: 0.3s;
-  // 다크모드시 색상 활성화 유지
-  color: ${({ theme, isactive }) => isactive && theme.colors.secondary.dark} !important;
+  color: ${({ theme, isactive }) => isactive && theme.colors.secondary.dark};
   &:hover {
     color: ${({ theme }) => theme.colors.secondary.dark};
   }
