@@ -48,10 +48,13 @@ const StyledP = styled.p`
 
 const StyledUl = styled.ul`
   list-style: disc;
-  color: ${({ theme }) => theme.colors.primary.base};
   padding: 0 10px;
 `
 const StyledLi = styled.li`
+  ::marker {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+
   line-height: 1.6;
   padding: 5px 0;
 `
