@@ -32,7 +32,7 @@ const Category = ({ selectedCategory }: Props) => {
 
   return (
     <List>
-      <Item to={`${PATH.HOME}`} isactive={+(selectedCategory === 'all')}>
+      <Item to={`${PATH.BLOG}`} isactive={+(selectedCategory === 'all')}>
         All ({data.allMdx.totalCount})
       </Item>
 
@@ -59,15 +59,16 @@ const List = styled.nav`
   width: 100%;
   height: 100%;
   padding: 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.secondary.base};
 `
 
 const Item = styled(Link)<{ isactive: number }>`
   height: 100%;
   text-align: center;
   transition: 0.3s;
-  color: ${({ theme, isactive }) => isactive && theme.colors.secondary.dark};
-  &:hover {
-    color: ${({ theme }) => theme.colors.secondary.dark};
-  }
+  border: 1px;
+  padding: 10px 20px;
+  border-radius: 30px;
+  background-color: ${({ theme, isactive }) =>
+    isactive ? theme.colors.black : theme.colors.gray};
+  color: ${({ theme, isactive }) => (isactive ? theme.colors.white : theme.colors.black)};
 `

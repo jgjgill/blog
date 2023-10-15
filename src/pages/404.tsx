@@ -47,6 +47,12 @@ export const query = graphql`
           title
           slug
           category
+          thumbnail_alt
+          thumbnail {
+            childImageSharp {
+              gatsbyImageData(transformOptions: { fit: FILL })
+            }
+          }
         }
         id
         excerpt

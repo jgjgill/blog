@@ -23,7 +23,7 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
 
   categories.forEach((category) => {
     createPage({
-      path: `/category/${category.fieldValue}`,
+      path: `/blog/category/${category.fieldValue}`,
       component: categoryTemplate,
       context: {
         category: category.fieldValue,

@@ -8,7 +8,14 @@ export interface Content {
   body: string
 }
 
-export type Frontmatter = { date: string; slug: string; title: string; category: string }
+export type Frontmatter = {
+  date: string
+  slug: string
+  title: string
+  category: string
+  thumbnail_alt: string
+  thumbnail: ImageDataLike
+}
 
 export interface Blog {
   frontmatter: {

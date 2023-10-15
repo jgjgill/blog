@@ -38,6 +38,12 @@ const config: GatsbyConfig = {
                   date
                   slug
                   category
+                  thumbnail_alt
+                  thumbnail {
+                    childImageSharp {
+                      gatsbyImageData(transformOptions: { fit: FILL })
+                    }
+                  }
                 }
                 excerpt
                 body
@@ -54,6 +60,8 @@ const config: GatsbyConfig = {
               slug: node.frontmatter.slug,
               date: node.frontmatter.date,
               category: node.frontmatter.category,
+              thumbnail_alt: node.frontmatter.thumbnail_alt,
+              thumbnail: node.frontmatter.thumbnail,
             },
             excerpt: node.excerpt,
             body: node.body,

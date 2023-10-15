@@ -1,9 +1,6 @@
 import App from 'App'
-import { PostList, Seo } from 'components'
-import Flex from 'components/@shared/Flex'
-import Category from 'components/Category'
-import Layout from 'components/Layout'
-import Post from 'components/Post'
+import { Category, Layout, Post, PostList, Seo } from 'components'
+import { Flex } from 'components/@shared'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
@@ -12,8 +9,6 @@ import { Content } from 'types/content'
 interface Props {
   allMdx: {
     nodes: Content[]
-  }
-  category: {
     totalCount: number
     group: {
       totalCount: number
@@ -22,18 +17,14 @@ interface Props {
   }
 }
 
-const CategoryTemplate = ({
-  data,
-  pageContext,
-}: PageProps<Props, { category: string }>) => {
+const BlogPage = ({ data }: PageProps<Props>) => {
   const { ref, page } = useIntersectionObserver(data.allMdx.nodes.length)
 
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
-          <Category selectedCategory={pageContext.category} />
-
+          <Category selectedCategory="all" />
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (
               <Post key={node.id} node={node} />
@@ -46,21 +37,9 @@ const CategoryTemplate = ({
   )
 }
 
-export default CategoryTemplate
-
-export const Head: HeadFC = () => <Seo />
-
 export const query = graphql`
-  query ($category: String) {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-    allMdx(
-      sort: { frontmatter: { date: DESC } }
-      filter: { frontmatter: { category: { in: [$category] } } }
-    ) {
+  query {
+    allMdx(sort: { frontmatter: { date: DESC } }) {
       nodes {
         frontmatter {
           date(formatString: "MMMM DD, YYYY")
@@ -78,6 +57,15 @@ export const query = graphql`
         excerpt
         body
       }
+      totalCount
+      group(field: { frontmatter: { category: SELECT } }) {
+        totalCount
+        fieldValue
+      }
     }
   }
 `
+
+export const Head: HeadFC = () => <Seo />
+
+export default BlogPage

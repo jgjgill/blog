@@ -4,23 +4,20 @@ export const globalStyles = css`
   .light {
     --bg-color: #fff;
     --text-color: #343434;
-    --link-color: #333;
   }
 
   .dark {
-    --bg-color: #2f2f2f;
-    --bg-inline-color: #202124;
+    --bg-color: #1f2028;
+    --bg-inline-color: #2d3039;
     --text-color: rgba(255, 255, 255, 0.8);
-    --link-color: rgba(255, 255, 255, 0.8);
   }
 
   .modal {
-    --bg-color: #d8b4fe;
-    --text-color: #343434;
+    --bg-color: #f7f7f7;
   }
 
   .dark .modal {
-    --bg-color: #c471f5;
+    --bg-color: #2d3039;
     --text-color: rgba(255, 255, 255, 0.8);
   }
 
@@ -69,7 +66,6 @@ export const globalStyles = css`
 
   a {
     text-decoration: none;
-    /* color: red; */
   }
 
   /* Make images easier to work with */
@@ -94,10 +90,9 @@ export const globalStyles = css`
   }
 
   /* custom code */
-  body code.language-text {
-    padding: 0 5px;
+  body code {
     word-break: break-all;
-    font-family: 'Pretendard', sans-serif;
+    font-family: 'Pretendard', sans-serif !important;
   }
 
   body div.gatsby-highlight {
@@ -120,7 +115,7 @@ export const globalStyles = css`
   }
 
   a {
-    color: var(--link-color);
+    color: var(--text-color);
   }
 
   html.dark code.language-text {

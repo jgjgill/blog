@@ -62,7 +62,6 @@ const Input = styled.input`
   border-radius: 10px;
   width: 100%;
   padding: 10px 20px;
-  border: 3px solid ${({ theme }) => theme.colors.secondary.light};
 
   &:focus {
     outline: none;

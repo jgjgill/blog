@@ -82,11 +82,11 @@ const Aside = styled.aside`
 
   ::-webkit-scrollbar-thumb {
     border-radius: 20px;
-    background: ${({ theme }) => theme.colors.secondary.base};
+    background: ${({ theme }) => theme.colors.primary.base};
   }
 
   ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.colors.secondary.light};
+    background-color: ${({ theme }) => theme.colors.primary.light};
   }
 
   @media (max-width: 1400px) {

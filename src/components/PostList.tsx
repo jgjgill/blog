@@ -14,6 +14,6 @@ export default PostList
 const Container = styled.section`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 80px;
   width: 100%;
 `

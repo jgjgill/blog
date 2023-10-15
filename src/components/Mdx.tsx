@@ -47,20 +47,26 @@ const StyledP = styled.p`
 `
 
 const StyledUl = styled.ul`
-  list-style: none;
-  padding: 10px;
+  list-style: disc;
+  color: ${({ theme }) => theme.colors.primary.base};
+  padding: 0 10px;
 `
 const StyledLi = styled.li`
   line-height: 1.6;
-
-  ::before {
-    content: '-';
-    padding-right: 5px;
-  }
+  padding: 5px 0;
 `
 
 const StyledAnchor = styled.a`
-  color: ${({ theme }) => theme.colors.primary.base};
+  transition: 0.3;
+  font-weight: ${({ theme }) => theme.fontWeight.bold};
+
+  :not(.anchor) {
+    border-bottom: 2px solid ${({ theme }) => theme.colors.primary.base};
+  }
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
 `
 
 const StyledBlockquote = styled.blockquote`

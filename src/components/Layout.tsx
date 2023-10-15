@@ -18,13 +18,22 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
   const { themeMode, setThemeMode } = useDarkMode()
   const { isView } = useIsViewScrollHeader(300)
   const theme = useTheme()
-  const iconColor = theme.colors.primary.dark
+  const iconColor = themeMode === 'dark' ? 'rgba(255, 255, 255, 0.8)' : theme.colors.black
 
   return (
     <Container>
       <Header $isViewHeader={isView}>
         <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
+
+          <Flex gap={20}>
+            <Link aria-label="posts-link" to={PATH.BLOG}>
+              Blog
+            </Link>
+            <Link aria-label="about-link" to={PATH.ABOUT}>
+              About
+            </Link>
+          </Flex>
 
           <Flex alignItems="center" gap={5}>
             <ThemeToggleButton
@@ -34,6 +43,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
               {themeMode === 'light' && <Sun width={25} height={25} fill={iconColor} />}
               {themeMode === 'dark' && <Moon width={25} height={25} fill={iconColor} />}
             </ThemeToggleButton>
+
             <Link aria-label="rss-link" to={PATH.RSS}>
               <Rss width={25} height={25} fill={iconColor} />
             </Link>
@@ -46,6 +56,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
 
       <Main>{children}</Main>
       <A2HS />
+      <Footer>@2023 powered by jgjgill</Footer>
     </Container>
   )
 }
@@ -53,9 +64,7 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
 export default Layout
 
 const Container = styled.div`
-  // height: 100vh;
   width: 100%;
-  // background: teal;
 `
 
 const Header = styled.header<{ $isViewHeader: boolean }>`
@@ -64,7 +73,6 @@ const Header = styled.header<{ $isViewHeader: boolean }>`
   position: fixed;
   height: 60px;
   backdrop-filter: saturate(200%) blur(1ex);
-  background: linear-gradient(to top, #d8b4fe 0%, #f0abfc 100%);
   width: 100%;
   padding: 20px;
   z-index: 1;
@@ -80,7 +88,7 @@ const Header = styled.header<{ $isViewHeader: boolean }>`
 const HomeLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
-  color: ${({ theme }) => theme.colors.primary.dark} !important;
+  color: ${({ theme }) => theme.colors.primary.base};
 `
 
 const Main = styled.main`
@@ -94,4 +102,9 @@ const Main = styled.main`
 
 const ThemeToggleButton = styled.button`
   transition: 0.3s;
+`
+
+const Footer = styled.footer`
+  padding: 20px 0;
+  text-align: center;
 `
