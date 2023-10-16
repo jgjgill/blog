@@ -2,8 +2,8 @@ import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Flex } from 'components/@shared'
 import { PATH } from 'constants/path'
+import { useThemeContext } from 'context/themeContext'
 import { Link } from 'gatsby'
-import { useDarkMode } from 'hooks/useDarkMode'
 import { useIsViewScrollHeader } from 'hooks/useIsViewScrollHeader'
 import Moon from 'images/moon.inline.svg'
 import Rss from 'images/rss.inline.svg'
@@ -15,10 +15,12 @@ import { StrictPropsWithChildren } from 'types/custom'
 import A2HS from './A2HS'
 
 const Layout = ({ children }: StrictPropsWithChildren) => {
-  const { themeMode, setThemeMode } = useDarkMode()
   const { isView } = useIsViewScrollHeader(300)
   const theme = useTheme()
-  const iconColor = themeMode === 'dark' ? 'rgba(255, 255, 255, 0.8)' : theme.colors.black
+
+  const { colorMode, setColorMode } = useThemeContext()
+
+  const iconColor = colorMode === 'dark' ? 'rgba(255, 255, 255, 0.8)' : theme.colors.black
 
   return (
     <Container>
@@ -38,10 +40,10 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
           <Flex alignItems="center" gap={5}>
             <ThemeToggleButton
               aria-label="theme-toggle-button"
-              onClick={() => setThemeMode((prev) => (prev === 'dark' ? 'light' : 'dark'))}
+              onClick={() => setColorMode(colorMode === 'dark' ? 'dark' : 'light')}
             >
-              {themeMode === 'light' && <Sun width={25} height={25} fill={iconColor} />}
-              {themeMode === 'dark' && <Moon width={25} height={25} fill={iconColor} />}
+              {colorMode === 'dark' && <Sun width={25} height={25} fill={iconColor} />}
+              {colorMode === 'light' && <Moon width={25} height={25} fill={iconColor} />}
             </ThemeToggleButton>
 
             <Link aria-label="rss-link" to={PATH.RSS}>

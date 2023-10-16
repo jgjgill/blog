@@ -3,18 +3,21 @@ const HtmlAttributes = {
 }
 
 const setInitThemeMode = () => {
-  if (
-    typeof window !== 'undefined' &&
-    (localStorage.getItem('theme') === 'dark' ||
-      (!('theme' in localStorage) &&
-        window.matchMedia('(prefers-color-scheme: dark)').matches))
-  ) {
-    document.documentElement.classList.add('dark')
-    document.documentElement.classList.remove('light')
+  const mql = window.matchMedia('(prefers-color-scheme: dark)')
+  const prefersDarkFromMQ = mql.matches
+  const persistedPreference = localStorage.getItem('theme')
+
+  let colorMode = 'light'
+
+  const hasUsedToggle = typeof persistedPreference === 'string'
+
+  if (hasUsedToggle) {
+    colorMode = persistedPreference
   } else {
-    document.documentElement.classList.add('light')
-    document.documentElement.classList.remove('dark')
+    colorMode = prefersDarkFromMQ ? 'dark' : 'light'
   }
+
+  document.documentElement.classList.add(colorMode)
 }
 
 const functionToScript = (cb) => String(cb)
