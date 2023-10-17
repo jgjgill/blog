@@ -28,14 +28,14 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
         <Flex justifyContent="space-between" alignItems="center">
           <HomeLink to={PATH.HOME}>jgjgill</HomeLink>
 
-          <Flex gap={20}>
-            <Link aria-label="posts-link" to={PATH.BLOG}>
-              Blog
+          <NavLink gap={20}>
+            <Link aria-label="posts-link" to={PATH.POST}>
+              Post
             </Link>
             <Link aria-label="about-link" to={PATH.ABOUT}>
               About
             </Link>
-          </Flex>
+          </NavLink>
 
           <Flex alignItems="center" gap={5}>
             <ThemeToggleButton
@@ -91,6 +91,11 @@ const HomeLink = styled(Link)`
   font-size: ${({ theme }) => theme.fontSize.xxl};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
   color: ${({ theme }) => theme.colors.primary.base};
+`
+
+const NavLink = styled(Flex)`
+  margin-right: auto;
+  margin-left: 40px;
 `
 
 const Main = styled.main`

@@ -20,7 +20,7 @@ const Post = ({ node }: Props) => {
 
   return (
     <Container>
-      <Link to={`${PATH.BLOG}${node.frontmatter.slug}`}>
+      <Link to={`${PATH.POST}${node.frontmatter.slug}`}>
         <Card>
           <ThumbnailImage
             image={thumbnail}
