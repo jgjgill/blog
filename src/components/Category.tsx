@@ -32,7 +32,7 @@ const Category = ({ selectedCategory }: Props) => {
 
   return (
     <List>
-      <Item to={`${PATH.BLOG}`} isactive={+(selectedCategory === 'all')}>
+      <Item to={`${PATH.POST}`} isactive={+(selectedCategory === 'all')}>
         All ({data.allMdx.totalCount})
       </Item>
 

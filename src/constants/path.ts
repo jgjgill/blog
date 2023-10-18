@@ -1,7 +1,7 @@
 export const PATH = {
   HOME: '/',
   POST: '/post/',
-  CATEGORY: '/blog/category/',
+  CATEGORY: '/post/category/',
   RSS: '/rss.xml',
   SEARCH: '/search/',
   ABOUT: '/about/',
