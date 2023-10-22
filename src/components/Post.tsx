@@ -24,7 +24,7 @@ const Post = ({ node }: Props) => {
         <Card>
           <ThumbnailImage
             image={thumbnail}
-            objectFit="contain"
+            objectFit="fill"
             alt={node.frontmatter.thumbnail_alt}
           />
           <Wrapper>
