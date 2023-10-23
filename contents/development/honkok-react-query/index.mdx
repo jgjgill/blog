@@ -108,8 +108,8 @@ const { mutate: createPost } = useCreatePost();
 ## 무한 스크롤 적용하기
 
 <Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/honkok-react-query/images/honkok-infinite-scroll.gif"
-  alt="honkok-infinite-scroll"
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/honkok-react-query/images/honkok-scroll.gif"
+  alt="honkok-scroll"
 />
 
 혼콕에서는 채널마다 게시물이 여러 개가 나오는 방식이다.
@@ -204,7 +204,7 @@ return (
   alt="honkok-chat"
 />
 
-혼콕에서는 제공하고 있는 채팅 기능에서도 `React Query`가 사용되고 있다.
+혼콕에서 제공하고 있는 채팅 기능에서도 `React Query`가 사용되고 있다.
 
 ### polling
 
@@ -338,7 +338,7 @@ export const useGetPost = (postId: string) => {
 이에 대한 해결 방안으로 관련 자료를 찾아봤을 때 대표적으로 두 가지 방법을 적용할 수 있었다.
 
 - `useQuery`를 활용하여 `undefined`를 없애는 커스텀 훅 만들기
-- 타입적으로 `undefined`를 없내는 `assert` 구문 사용하기
+- 타입적으로 `undefined`를 없애는 `assert` 구문 사용하기
 
 <br />
 
@@ -512,3 +512,4 @@ export const useGetPost = (postId: string) => {
 - [TkDodo's blog](https://tkdodo.eu/blog)
 - [assertion-functions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-7.html#assertion-functions)
 - [Suspensive](https://suspensive.org)
+- [Function Overloads](https://www.typescriptlang.org/docs/handbook/2/functions.html#function-overloads)
