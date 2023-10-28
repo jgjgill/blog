@@ -208,7 +208,7 @@ let nothingInGiveString: () => string
 함수 타입은 **콜백 매개변수** (함수로 호출되는 매개변수)를 설명하는 데 자주 사용합니다.
 
 ```js
-const songs = ['Juice', 'Shake It Off', 'What's Up']
+const songs = ['Juice', 'Shake It Off', "What's Up"]
 
 function runOnSongs(getSongAt: (index: number) => string) {
   for (let i = 0; i < songs.length; i++) {

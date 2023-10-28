@@ -19,7 +19,7 @@ category: 'study'
 
 타입 별칭과 인터페이스로 구현한 다음 두 구문은 거의 같습니다.
 
-```js
+```ts
 type Poet = {
   born: number
   name: string
@@ -57,12 +57,12 @@ interface Book {
 // OK
 const ok: Book = {
   author: 'Rita Dove',
-  pages: 80
+  pages: 80,
 }
 
 // OK
 const missing: Book = {
-  pages: 80
+  pages: 80,
 }
 ```
 
@@ -74,7 +74,7 @@ const missing: Book = {
 타입스크립트는 속성 이름 앞에 `readonly` 키워드를 추가해 다른 값으로 설정될 수 없음을 나타냅니다.
 `readonly` 속성은 평소대로 읽을 수 있지만 새로운 값으로 재할당하지 못합니다.
 
-```js
+```ts
 interface Page {
   readonly text: string
 }
