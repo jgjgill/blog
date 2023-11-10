@@ -285,14 +285,15 @@ export const useGetChannels = () => {
 }
 ```
 
-이렇게 하면 배열 데이터에 한해서는 `undefined`를 없어지는 것을 확인할 수 있다.
+이렇게 하면 배열 데이터에 한해서 `undefined`가 없어지는 것을 확인할 수 있다.
 
 <Image
   src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/honkok-react-query/images/react-query-array-example.png"
   alt="react-query-array-example"
 />
 
-당연히 이러한 방식은 객체와 같은 단일 데이터 형식에서만 적용할 수 있어 문제가 발생했다.
+당연히 이러한 방식은 객체와 같은 단일 데이터 형식에서는 적용할 수 없어 문제가 발생했다.
+
 그래서 사용한지 얼마 지나지 않아 변경이 필요했다.
 
 ### suspense의 활용
@@ -375,7 +376,8 @@ export default assert
 
 ### useSuspenseQuery
 
-`assert` 구문만으로 처리하기에는 아쉬움이 남아서 혼콕 프로젝트 일정이 끝나고 추가적으로 학습을 해보았다.
+`assert` 구문만으로 처리하기에는 아쉬움이 남아서 혼콕 프로젝트 일정이 끝나고 추가적으로 학습을 진행했다.
+
 간단하게 `useSuspenseQuery`를 만들어보면 다음과 같이 쓸 수 있을 것이다.
 
 우선 기본적으로 `useQuery`에 대한 타입을 받아 새로운 쿼리 훅을 만들자.
@@ -423,7 +425,7 @@ type UseSuspenseQueryOptions<
 여기서 타입스크립트 개념으로 **함수 오버로딩**이 적용된다.
 동일한 이름에 매개 변수만 다른 여러 버전의 함수를 만드는 것이다.
 
-또한, 쿼리 옵션에서 `enabled`가 `false`일 때는 쿼리가 실행되지 않기 때문에 다음과 같은 상황도 고려해주어야 한다.
+또한, 쿼리 옵션에서 `enabled`가 `false`일 때는 쿼리가 실행되지 않는 상황도 고려해주어야 한다.
 반대로 `enabled`가 `true`이면 성공한 상황만 가정하면 된다.
 
 ```ts
@@ -503,8 +505,9 @@ export const useGetPost = (postId: string) => {
   alt="use-suspense-query-example"
 />
 
-이러한 `useSuspenseQuery`는 `React Query` [버전5](https://tanstack.com/blog/announcing-tanstack-query-v5)에서는 공식적으로 지원하고 있다.
-이제 버전5가 주요 버전이 되었으니 향후에는 지원하는 훅을 사용하자.
+이러한 `useSuspenseQuery`는 `React Query` [버전5](https://tanstack.com/blog/announcing-tanstack-query-v5)에서 공식적으로 지원하고 있다.
+
+이제 버전5가 주요 버전이 되었으니 향후에는 공식적으로 지원하는 훅을 사용하자.
 
 ## 참고 문서
 
