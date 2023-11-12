@@ -6,6 +6,7 @@ slug: 'type-operation'
 thumbnail: '../images/learing-typescript-thumbnail.png'
 thumbnail_alt: 'learing-typescript-thumbnail'
 category: 'study'
+type: 'post'
 ---
 
 # CHAPTER 15 타입 운영
@@ -23,7 +24,7 @@ category: 'study'
 ```ts
 type NewType = {
   [K in OriginalType]: NewProperty
-};
+}
 ```
 
 매핑된 타입의 일반적인 예시는 유니언 타입에 존재하는 각 문자열 리터럴 키를 가진 객체를 생성하는 것입니다.
@@ -33,7 +34,7 @@ type Animals = 'alligator' | 'baboon' | 'cat'
 
 type AnimalCounts = {
   [K in Animals]: number
-};
+}
 // {
 //   alligator: number;
 //   baboon: number;
@@ -54,7 +55,7 @@ interface AnimalVariants {
 
 type AnimalCounts = {
   [K in keyof AnimalVariants]: number
-};
+}
 
 // {
 //   alligator: number;
@@ -153,7 +154,7 @@ type ReadonlySpecies = MakeReadonly<Species>
 **조건부 타입**의 개념은 기존 타입을 바탕을 두 가지 가능한 타입 중 하나로 확인되는 타입입니다.
 
 ```ts
-type CheckStringAgainstNumber = string extends number ? true : false; // false
+type CheckStringAgainstNumber = string extends number ? true : false // false
 ```
 
 ### 제네릭 조건부 타입
@@ -163,9 +164,9 @@ type CheckStringAgainstNumber = string extends number ? true : false; // false
 ```ts
 type CheckAgainstNumber<T> = T extends number ? true : false
 
-type CheckString = CheckAgainstNumber<'parakeet'>; // false
+type CheckString = CheckAgainstNumber<'parakeet'> // false
 
-type CheckNumber = CheckAgainstNumber<1981>; // true
+type CheckNumber = CheckAgainstNumber<1981> // true
 ```
 
 ### 타입 분산
@@ -177,7 +178,7 @@ type CheckNumber = CheckAgainstNumber<1981>; // true
 ```ts
 type ArrayifyUnlessString<T> = T extends string ? T : T[]
 
-type HalfArrayified = ArrayifyUnlessString<string | number>; // string | number[]
+type HalfArrayified = ArrayifyUnlessString<string | number> // string | number[]
 ```
 
 ### 유추된 타입
@@ -188,11 +189,11 @@ type HalfArrayified = ArrayifyUnlessString<string | number>; // string | number[
 ```ts
 type ArrayItems<T> = T extends (infer Item)[] ? Item : T
 
-type StringItem = ArrayItems<string>; // string
+type StringItem = ArrayItems<string> // string
 
-type StringArrayItem = ArrayItems<string[]>; // string
+type StringArrayItem = ArrayItems<string[]> // string
 
-type String2DItem = ArrayItems<string[][]>; // string[]
+type String2DItem = ArrayItems<string[][]> // string[]
 ```
 
 ### 매팽된 조건부 타입
@@ -201,13 +202,11 @@ type String2DItem = ArrayItems<string[][]>; // string[]
 
 ```ts
 type MakeAllMembersFunctions<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => any
-    ? T[K]
-    : () => T[K]
+  [K in keyof T]: T[K] extends (...args: any[]) => any ? T[K] : () => T[K]
 }
 
 type MemberFuntions = MakeAllMembersFunctions<{
-  alreadyFunction: () => string,
+  alreadyFunction: () => string
   notYetFunction: number
 }>
 
@@ -242,9 +241,9 @@ type NeverUnion = never | string // string
 `never`는 유니언에서 무시되기 때문에 유니언 타입에서 제네릭 조건부의 결과는 `never`가 아닌 것이 됩니다.
 
 ```ts
-type OnlyStrings<T> = T extends string ? T : never;
+type OnlyStrings<T> = T extends string ? T : never
 
-type RedOrBlue = OnlyStrings<'red' | 'blue' | 0 | false>; // 'red' | 'blue'
+type RedOrBlue = OnlyStrings<'red' | 'blue' | 0 | false> // 'red' | 'blue'
 ```
 
 ### never와 매핑된 타입
@@ -267,7 +266,7 @@ interface AllEventData {
   year: number
 }
 
-type OnlyStringEventData = OnlyStringProperties<AllEventData>;
+type OnlyStringEventData = OnlyStringProperties<AllEventData>
 ```
 
 ## 템플릿 리터럴 타입

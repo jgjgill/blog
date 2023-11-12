@@ -6,6 +6,7 @@ slug: 'syntax-extension'
 thumbnail: '../images/learing-typescript-thumbnail.png'
 thumbnail_alt: 'learing-typescript-thumbnail'
 category: 'study'
+type: 'post'
 ---
 
 # CHAPTER 14 구문 확장
@@ -49,10 +50,7 @@ new Engineer('mechanical').area
 class NamedEngineer {
   fullName: string
 
-  constructor(
-    name: string,
-    public area: string
-  ) {
+  constructor(name: string, public area: string) {
     this.fullName = `${name}, ${area} engineer`
   }
 }
