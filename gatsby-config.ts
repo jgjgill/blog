@@ -139,7 +139,7 @@ const config: GatsbyConfig = {
                 siteUrl
               }
             }
-            allMdx(sort: {frontmatter: {date: DESC}}) {
+            allMdx(sort: {frontmatter: {date: DESC}} filter: { fields: { source: { eq: "contents" } } }) {
               group(field: {frontmatter: {category: SELECT}}) {
                 fieldValue
               }
