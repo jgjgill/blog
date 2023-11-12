@@ -46,6 +46,13 @@ const Author = () => {
             >
               Resume
             </Link>
+            <Link
+              href="https://www.figma.com/file/98VNcvYtopATDMoiwx9I80/Resume?type=design&node-id=114%3A2&mode=design&t=PibH4KfMCwQ3mRZD-1"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Portfolio
+            </Link>
           </Flex>
         </Flex>
       </Profile>
