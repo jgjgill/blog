@@ -39,7 +39,10 @@ const BlogPage = ({ data }: PageProps<Props>) => {
 
 export const query = graphql`
   query {
-    allMdx(sort: { frontmatter: { date: DESC } }) {
+    allMdx(
+      sort: { frontmatter: { date: DESC } }
+      filter: { fields: { source: { eq: "contents" } } }
+    ) {
       nodes {
         frontmatter {
           date(formatString: "MMMM DD, YYYY")

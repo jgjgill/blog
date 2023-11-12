@@ -40,7 +40,11 @@ const IndexPage = ({ data }: PageProps<Props>) => {
 
 export const query = graphql`
   query {
-    allMdx(limit: 3, sort: { frontmatter: { date: DESC } }) {
+    allMdx(
+      limit: 3
+      sort: { frontmatter: { date: DESC } }
+      filter: { fields: { source: { eq: "contents" } } }
+    ) {
       nodes {
         frontmatter {
           date(formatString: "MMMM DD, YYYY")

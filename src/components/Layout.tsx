@@ -35,6 +35,9 @@ const Layout = ({ children }: StrictPropsWithChildren) => {
             <Link aria-label="about-link" to={PATH.ABOUT}>
               About
             </Link>
+            <Link aria-label="road-link" to={PATH.ROAD}>
+              Road
+            </Link>
           </NavLink>
 
           <Flex alignItems="center" gap={5}>

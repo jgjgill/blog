@@ -5,4 +5,5 @@ export const PATH = {
   RSS: '/rss.xml',
   SEARCH: '/search/',
   ABOUT: '/about/',
+  ROAD: '/road/',
 }
