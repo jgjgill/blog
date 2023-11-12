@@ -162,7 +162,7 @@ const config: GatsbyConfig = {
           }
         }) => {
           const posts = nodes.map((node) => ({
-            path: `/blog/${node.frontmatter.slug}`,
+            path: `/post/${node.frontmatter.slug}`,
             lastmod: node.frontmatter.date,
           }))
 
@@ -172,7 +172,7 @@ const config: GatsbyConfig = {
           }
 
           const categories = group.map((node) => ({
-            path: `/category/${node.fieldValue}`,
+            path: `/post/category/${node.fieldValue}`,
             lastmod: posts[posts.length - 1].lastmod,
           }))
 
@@ -239,6 +239,13 @@ const config: GatsbyConfig = {
       options: {
         name: `contents`,
         path: `${__dirname}/contents/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `roads`,
+        path: `${__dirname}/roads/`,
       },
     },
   ],
