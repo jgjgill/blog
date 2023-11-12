@@ -2,11 +2,16 @@ import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
 import { Layout, Mdx, Seo } from 'components'
-import { graphql, HeadFC, PageProps } from 'gatsby'
+import { graphql, HeadFC, useStaticQuery } from 'gatsby'
 import React from 'react'
-import { Content } from 'types/content'
+import { Blog, Content } from 'types/content'
 
 interface Props {
+  mdx: Blog
+  children: React.ReactNode
+}
+
+interface Roads {
   allMdx: {
     nodes: Content[]
     totalCount: number
@@ -17,7 +22,29 @@ interface Props {
   }
 }
 
-const LoadPage = ({ data, children }: PageProps<Props>) => {
+const MyRoad = ({ mdx, children }: Props) => {
+  const data: Roads = useStaticQuery(graphql`
+    query {
+      allMdx(
+        filter: { fields: { source: { eq: "roads" } } }
+        sort: { frontmatter: { date: DESC } }
+      ) {
+        totalCount
+        nodes {
+          fields {
+            source
+            slug
+          }
+          id
+          body
+          frontmatter {
+            date
+          }
+        }
+      }
+    }
+  `)
+
   return (
     <App>
       <Layout>
@@ -29,17 +56,7 @@ const LoadPage = ({ data, children }: PageProps<Props>) => {
             ))}
           </ul>
         </Aside>
-        <h2>My Road 제작중..! 🫡</h2>
-        <div>그날 그날 생각을 정리하는 페이지를 만들 예정 😚</div>
-
-        <ul>
-          {data.allMdx.nodes.map((node) => (
-            <li key={node.id}>
-              <h2>{node.frontmatter.date.replaceAll('-', '.')}</h2>
-              <p>{node.body}</p>
-            </li>
-          ))}
-        </ul>
+        <time>{mdx.frontmatter.date}</time>
 
         <MDXProvider
           components={{
@@ -62,31 +79,9 @@ const LoadPage = ({ data, children }: PageProps<Props>) => {
   )
 }
 
-export const query = graphql`
-  query {
-    allMdx(
-      filter: { fields: { source: { eq: "roads" } } }
-      sort: { frontmatter: { date: DESC } }
-    ) {
-      totalCount
-      nodes {
-        fields {
-          source
-          slug
-        }
-        id
-        body
-        frontmatter {
-          date
-        }
-      }
-    }
-  }
-`
-
 export const Head: HeadFC = () => <Seo />
 
-export default LoadPage
+export default MyRoad
 
 const Aside = styled.aside`
   position: fixed;

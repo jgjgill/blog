@@ -18,6 +18,10 @@ export type Frontmatter = {
 }
 
 export interface Blog {
+  fields: {
+    slug: string
+    source: 'contents' | 'roads'
+  }
   frontmatter: {
     title: string
     date: string
