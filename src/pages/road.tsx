@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
-import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
-import { Layout, Mdx, Seo } from 'components'
-import { graphql, HeadFC, PageProps } from 'gatsby'
+import { Layout, Seo } from 'components'
+import { PATH } from 'constants/path'
+import { graphql, HeadFC, Link, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -17,7 +17,8 @@ interface Props {
   }
 }
 
-const LoadPage = ({ data, children }: PageProps<Props>) => {
+const LoadPage = ({ data }: PageProps<Props>) => {
+  console.log(data.allMdx.nodes[0])
   return (
     <App>
       <Layout>
@@ -25,38 +26,26 @@ const LoadPage = ({ data, children }: PageProps<Props>) => {
           <h2>Recent Posts</h2>
           <ul>
             {data.allMdx.nodes.map((node) => (
-              <li key={node.id}>{node.frontmatter.date.replaceAll('-', '.')}</li>
+              <li key={node.id}>
+                <StyledLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
+                  {node.frontmatter.date.replaceAll('-', '.')}
+                </StyledLink>
+              </li>
             ))}
           </ul>
         </Aside>
-        <h2>My Road 제작중..! 🫡</h2>
-        <div>그날 그날 생각을 정리하는 페이지를 만들 예정 😚</div>
+        <MyRoad>My Road</MyRoad>
 
-        <ul>
+        <RoadCard>
           {data.allMdx.nodes.map((node) => (
             <li key={node.id}>
-              <h2>{node.frontmatter.date.replaceAll('-', '.')}</h2>
-              <p>{node.body}</p>
+              <StyledDateLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
+                <h2>{node.frontmatter.date.replaceAll('-', '.')}</h2>
+                <p>{node.frontmatter.title}</p>
+              </StyledDateLink>
             </li>
           ))}
-        </ul>
-
-        <MDXProvider
-          components={{
-            h1: Mdx.H1,
-            h2: Mdx.H2,
-            h3: Mdx.H3,
-            p: Mdx.P,
-            ul: Mdx.UL,
-            li: Mdx.LI,
-            a: Mdx.ANCHOR,
-            blockquote: Mdx.BLOCKQUOTE,
-            Image: Mdx.IMAGE,
-            Callout: Mdx.CALLOUT,
-          }}
-        >
-          {children}
-        </MDXProvider>
+        </RoadCard>
       </Layout>
     </App>
   )
@@ -74,10 +63,14 @@ export const query = graphql`
           source
           slug
         }
+        internal {
+          contentFilePath
+        }
         id
         body
         frontmatter {
           date
+          title
         }
       }
     }
@@ -112,5 +105,50 @@ const Aside = styled.aside`
 
   @media (max-width: 1400px) {
     display: none;
+  }
+`
+
+const MyRoad = styled.h1`
+  font-size: xx-large;
+  font-weight: bold;
+`
+
+const StyledLink = styled(Link)`
+  transition: 0.3s;
+
+  &.active {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+`
+
+const StyledDateLink = styled(Link)`
+  h2 {
+    transition: 0.3s;
+  }
+
+  &.active {
+    h2 {
+      color: ${({ theme }) => theme.colors.primary.base};
+    }
+  }
+
+  &:hover {
+    h2 {
+      color: ${({ theme }) => theme.colors.primary.base};
+    }
+  }
+`
+
+const RoadCard = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+
+  h2 {
+    font-size: x-large;
   }
 `

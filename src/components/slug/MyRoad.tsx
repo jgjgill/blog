@@ -2,7 +2,10 @@ import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import App from 'App'
 import { Layout, Mdx, Seo } from 'components'
-import { graphql, HeadFC, useStaticQuery } from 'gatsby'
+import { Flex } from 'components/@shared'
+import { PATH } from 'constants/path'
+import { graphql, HeadFC, Link, navigate, useStaticQuery } from 'gatsby'
+import BackSpace from 'images/back-space.inline.svg'
 import React from 'react'
 import { Blog, Content } from 'types/content'
 
@@ -52,11 +55,26 @@ const MyRoad = ({ mdx, children }: Props) => {
           <h2>Recent Posts</h2>
           <ul>
             {data.allMdx.nodes.map((node) => (
-              <li key={node.id}>{node.frontmatter.date.replaceAll('-', '.')}</li>
+              <StyledLink key={node.id} to={`${PATH.ROAD}${node.frontmatter.date}`}>
+                <li>{node.frontmatter.date.replaceAll('-', '.')}</li>
+              </StyledLink>
             ))}
           </ul>
         </Aside>
-        <time>{mdx.frontmatter.date}</time>
+        <Flex gap={10}>
+          <BackButton
+            type="button"
+            onClick={() =>
+              document.startViewTransition(() => {
+                navigate(-1)
+              })
+            }
+          >
+            <BackSpace width={50} height={50} />
+          </BackButton>
+
+          <h1>{mdx.frontmatter.title}</h1>
+        </Flex>
 
         <MDXProvider
           components={{
@@ -107,5 +125,28 @@ const Aside = styled.aside`
 
   @media (max-width: 1400px) {
     display: none;
+  }
+`
+
+const StyledLink = styled(Link)`
+  transition: 0.3s;
+
+  &.active {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+`
+
+const BackButton = styled.button`
+  width: fit-content;
+  padding: 0;
+
+  transition: 0.3s;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary.base};
   }
 `
