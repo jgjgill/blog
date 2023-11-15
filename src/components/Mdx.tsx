@@ -86,8 +86,11 @@ const StyledImage = styled.img`
 const StyledCallout = styled.aside`
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.primary.light};
-  color: ${({ theme }) => theme.colors.black};
   padding: 10px;
   font-weight: ${({ theme }) => theme.fontWeight.bold};
   margin-bottom: 20px;
+
+  p {
+    color: ${({ theme }) => theme.colors.black};
+  }
 `

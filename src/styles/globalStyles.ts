@@ -104,6 +104,10 @@ export const globalStyles = css`
     background-color: transparent;
   }
 
+  body span.token {
+    color: #343434;
+  }
+
   /* dark mode */
   html {
     background-color: var(--bg-color);

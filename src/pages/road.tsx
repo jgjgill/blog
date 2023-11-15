@@ -17,7 +17,6 @@ interface Props {
 }
 
 const LoadPage = ({ data }: PageProps<Props>) => {
-  console.log(data.allMdx.nodes[0].body)
   return (
     <App>
       <Layout>
