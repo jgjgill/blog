@@ -47,8 +47,6 @@ const Container = styled.article`
   width: 100%;
 
   &:hover {
-    transition: 0.3s;
-
     h3 {
       color: ${({ theme }) => theme.colors.primary.base};
     }

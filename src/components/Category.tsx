@@ -64,7 +64,6 @@ const List = styled.nav`
 const Item = styled(Link)<{ isactive: number }>`
   height: 100%;
   text-align: center;
-  transition: 0.3s;
   border: 1px;
   padding: 10px 20px;
   border-radius: 30px;

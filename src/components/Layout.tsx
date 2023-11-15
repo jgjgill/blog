@@ -110,9 +110,7 @@ const Main = styled.main`
   max-width: 768px;
 `
 
-const ThemeToggleButton = styled.button`
-  transition: 0.3s;
-`
+const ThemeToggleButton = styled.button``
 
 const Footer = styled.footer`
   padding: 20px 0;

@@ -1,48 +1,40 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Seo } from 'components'
+import DateToc from 'components/slug/DateToc'
 import { PATH } from 'constants/path'
-import { graphql, HeadFC, Link, PageProps } from 'gatsby'
+import { graphql, HeadFC, navigate, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
+import { viewTransition } from 'utils/view-transition'
 
 interface Props {
   allMdx: {
     nodes: Content[]
     totalCount: number
-    group: {
-      totalCount: number
-      fieldValue: string
-    }[]
+    group: { totalCount: number; fieldValue: string }[]
   }
 }
 
 const LoadPage = ({ data }: PageProps<Props>) => {
-  console.log(data.allMdx.nodes[0])
+  console.log(data.allMdx.nodes[0].body)
   return (
     <App>
       <Layout>
-        <Aside>
-          <h2>Recent Posts</h2>
-          <ul>
-            {data.allMdx.nodes.map((node) => (
-              <li key={node.id}>
-                <StyledLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
-                  {node.frontmatter.date.replaceAll('-', '.')}
-                </StyledLink>
-              </li>
-            ))}
-          </ul>
-        </Aside>
-        <MyRoad>My Road</MyRoad>
+        <DateToc contents={data.allMdx.nodes} />
 
+        <MyRoad>My Road</MyRoad>
         <RoadCard>
           {data.allMdx.nodes.map((node) => (
             <li key={node.id}>
-              <StyledDateLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
-                <h2>{node.frontmatter.date.replaceAll('-', '.')}</h2>
-                <p>{node.frontmatter.title}</p>
-              </StyledDateLink>
+              <StyledTitleButton
+                onClick={() =>
+                  viewTransition(() => navigate(`${PATH.ROAD}${node.frontmatter.date}`))
+                }
+              >
+                <h3>{node.frontmatter.date.replaceAll('-', '.')}</h3>
+                <h2>{node.frontmatter.title}</h2>
+              </StyledTitleButton>
             </li>
           ))}
         </RoadCard>
@@ -81,61 +73,14 @@ export const Head: HeadFC = () => <Seo />
 
 export default LoadPage
 
-const Aside = styled.aside`
-  position: fixed;
-  top: 100px;
-  left: 20px;
-  border-left: 3px solid ${({ theme }) => theme.colors.primary.base};
-  width: 300px;
-  height: calc(100vh - 128px);
-  padding: 0 10px;
-  overflow-y: scroll;
-  ::-webkit-scrollbar {
-    width: 3px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    background: ${({ theme }) => theme.colors.primary.base};
-  }
-
-  ::-webkit-scrollbar-track {
-    background-color: ${({ theme }) => theme.colors.primary.light};
-  }
-
-  @media (max-width: 1400px) {
-    display: none;
-  }
-`
-
 const MyRoad = styled.h1`
   font-size: xx-large;
   font-weight: bold;
+  margin-bottom: 20px;
 `
 
-const StyledLink = styled(Link)`
-  transition: 0.3s;
-
-  &.active {
-    color: ${({ theme }) => theme.colors.primary.base};
-  }
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary.base};
-  }
-`
-
-const StyledDateLink = styled(Link)`
-  h2 {
-    transition: 0.3s;
-  }
-
-  &.active {
-    h2 {
-      color: ${({ theme }) => theme.colors.primary.base};
-    }
-  }
-
+const StyledTitleButton = styled.button`
+  padding: 0;
   &:hover {
     h2 {
       color: ${({ theme }) => theme.colors.primary.base};
@@ -149,6 +94,12 @@ const RoadCard = styled.ul`
   gap: 30px;
 
   h2 {
-    font-size: x-large;
+    font-size: large;
+  }
+
+  h3 {
+    font-size: medium;
+    font-weight: 500;
+    text-align: start;
   }
 `

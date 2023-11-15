@@ -41,7 +41,8 @@ export const globalStyles = css`
   dl,
   dd,
   ul,
-  ol {
+  ol,
+  button {
     margin: 0;
     padding: 0;
   }
@@ -111,11 +112,14 @@ export const globalStyles = css`
   body {
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: background-color 0.3s;
+    transition: 0.3s;
+    transition-property: background-color, color;
   }
 
-  a {
+  * {
+    transition: 0.3s;
     color: var(--text-color);
+    transition-property: color;
   }
 
   html.dark code.language-text {

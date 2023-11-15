@@ -1,7 +1,6 @@
 import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
-import App from 'App'
-import { Comment, Layout, Mdx, Seo, Toc } from 'components'
+import { Comment, Mdx, Seo, Toc } from 'components'
 import { Flex } from 'components/@shared'
 import { HeadProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
@@ -21,36 +20,34 @@ const BlogPost = ({ mdx, children }: Props) => {
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
 
   return (
-    <App>
-      <Layout>
-        <h1>{mdx.frontmatter.title}</h1>
-        <time>{mdx.frontmatter.date}</time>
-        <span>{readingTime.minutes} min read</span>
-        <Toc toc={mdx.tableOfContents} />
-        <Flex justifyContent="center">
-          <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
-        </Flex>
+    <>
+      <h1>{mdx.frontmatter.title}</h1>
+      <time>{mdx.frontmatter.date}</time>
+      <span>{readingTime.minutes} min read</span>
+      <Toc toc={mdx.tableOfContents} />
+      <Flex justifyContent="center">
+        <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
+      </Flex>
 
-        <MDXProvider
-          components={{
-            h1: Mdx.H1,
-            h2: Mdx.H2,
-            h3: Mdx.H3,
-            p: Mdx.P,
-            ul: Mdx.UL,
-            li: Mdx.LI,
-            a: Mdx.ANCHOR,
-            blockquote: Mdx.BLOCKQUOTE,
-            Image: Mdx.IMAGE,
-            Callout: Mdx.CALLOUT,
-          }}
-        >
-          {children}
-        </MDXProvider>
+      <MDXProvider
+        components={{
+          h1: Mdx.H1,
+          h2: Mdx.H2,
+          h3: Mdx.H3,
+          p: Mdx.P,
+          ul: Mdx.UL,
+          li: Mdx.LI,
+          a: Mdx.ANCHOR,
+          blockquote: Mdx.BLOCKQUOTE,
+          Image: Mdx.IMAGE,
+          Callout: Mdx.CALLOUT,
+        }}
+      >
+        {children}
+      </MDXProvider>
 
-        <Comment />
-      </Layout>
-    </App>
+      <Comment />
+    </>
   )
 }
 

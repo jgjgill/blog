@@ -1,10 +1,9 @@
-import styled from '@emotion/styled'
-import { Seo } from 'components'
+import App from 'App'
+import { Layout, Seo } from 'components'
 import BlogPost from 'components/slug/BlogPost'
 import MyRoad from 'components/slug/MyRoad'
 import { HeadProps } from 'gatsby'
 import { graphql, PageProps } from 'gatsby'
-import { GatsbyImage } from 'gatsby-plugin-image'
 import React from 'react'
 import { Blog } from 'types/content'
 
@@ -13,13 +12,16 @@ interface Props {
 }
 
 const Slug = ({ data, children }: PageProps<Props>) => {
-  if (data.mdx.fields.source === 'roads') {
-    return <MyRoad mdx={data.mdx}>{children}</MyRoad>
-  }
-
-  if (data.mdx.fields.source === 'contents') {
-    return <BlogPost mdx={data.mdx}>{children}</BlogPost>
-  }
+  return (
+    <App>
+      <Layout>
+        {data.mdx.fields.source === 'roads' && <MyRoad mdx={data.mdx}>{children}</MyRoad>}
+        {data.mdx.fields.source === 'contents' && (
+          <BlogPost mdx={data.mdx}>{children}</BlogPost>
+        )}
+      </Layout>
+    </App>
+  )
 }
 
 export const query = graphql`
@@ -59,13 +61,3 @@ export const Head = ({
 }
 
 export default Slug
-
-const ThumbnailImage = styled(GatsbyImage)`
-  margin: 20px 0;
-
-  width: 50%;
-
-  @media (max-width: 480px) {
-    width: 100%;
-  }
-`

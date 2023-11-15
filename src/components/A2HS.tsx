@@ -52,7 +52,7 @@ const Container = styled.div<{ $isAnimation: boolean }>`
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
   transform: ${({ $isAnimation }) => !$isAnimation && 'translateY(500px)'};
   animation: mountAnimation 1s;
-  transition: background-color 0.3s, color 0.3s, transform 1s;
+  transition: background-color 0.3s, transform 1s;
 
   @keyframes mountAnimation {
     0% {
@@ -72,9 +72,8 @@ const Button = styled(Text)`
   font-size: ${({ theme }) => theme.fontSize.lg};
   font-weight: ${({ theme }) => theme.fontWeight.bold};
   background-color: transparent;
-  transition: 0.3s;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary.dark};
+    color: ${({ theme }) => theme.colors.primary.light};
   }
 `
