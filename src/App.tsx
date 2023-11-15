@@ -5,6 +5,12 @@ import { globalStyles } from 'styles/globalStyles'
 import { theme } from 'styles/theme'
 import { StrictPropsWithChildren } from 'types/custom'
 
+declare global {
+  interface Document {
+    startViewTransition(callback: () => void): void
+  }
+}
+
 const App = ({ children }: StrictPropsWithChildren) => {
   return (
     <ThemeProvider theme={theme}>
