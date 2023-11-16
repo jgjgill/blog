@@ -89,6 +89,7 @@ const StyledCallout = styled.aside`
   padding: 10px;
   font-weight: ${({ theme }) => theme.fontWeight.bold};
   margin-bottom: 20px;
+  color: ${({ theme }) => theme.colors.black};
 
   p {
     color: ${({ theme }) => theme.colors.black};
