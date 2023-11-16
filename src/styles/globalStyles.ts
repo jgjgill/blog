@@ -126,10 +126,6 @@ export const globalStyles = css`
     transition-property: color;
   }
 
-  svg {
-    transition: 0.3s;
-  }
-
   html.dark code.language-text {
     background-color: var(--bg-inline-color);
     color: var(--text-color);

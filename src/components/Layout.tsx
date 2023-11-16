@@ -110,20 +110,7 @@ const Main = styled.main`
   max-width: 768px;
 `
 
-const ThemeToggleButton = styled.button`
-  svg {
-    animation: fadeIn 0.3s;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-`
+const ThemeToggleButton = styled.button``
 
 const Footer = styled.footer`
   padding: 20px 0;

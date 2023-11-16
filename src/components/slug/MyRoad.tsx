@@ -1,9 +1,7 @@
-import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import { Mdx, Seo } from 'components'
 import { Flex } from 'components/@shared'
-import { useThemeContext } from 'context/themeContext'
 import { graphql, HeadFC, navigate, useStaticQuery } from 'gatsby'
 import BackSpace from 'images/back-space.inline.svg'
 import React from 'react'
@@ -29,12 +27,6 @@ interface Roads {
 }
 
 const MyRoad = ({ mdx, children }: Props) => {
-  const theme = useTheme()
-
-  const { colorMode } = useThemeContext()
-
-  const iconColor = colorMode === 'dark' ? 'rgba(255, 255, 255, 0.8)' : theme.colors.black
-
   const data: Roads = useStaticQuery(graphql`
     query {
       allMdx(
@@ -68,7 +60,7 @@ const MyRoad = ({ mdx, children }: Props) => {
             viewTransition(() => navigate(-1))
           }}
         >
-          <BackSpace width={50} height={50} fill={iconColor} />
+          <BackSpace width={50} height={50} />
         </BackButton>
 
         <h1>{mdx.frontmatter.title}</h1>
