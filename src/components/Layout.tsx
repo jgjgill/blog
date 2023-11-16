@@ -98,7 +98,7 @@ const HomeLink = styled(Link)`
 
 const NavLink = styled(Flex)`
   margin-right: auto;
-  margin-left: 40px;
+  margin-left: 20px;
 `
 
 const Main = styled.main`

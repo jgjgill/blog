@@ -63,7 +63,7 @@ const MyRoad = ({ mdx, children }: Props) => {
           <BackSpace width={50} height={50} />
         </BackButton>
 
-        <h1>{mdx.frontmatter.title}</h1>
+        <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
       </Flex>
 
       <MDXProvider
