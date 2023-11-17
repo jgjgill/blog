@@ -103,6 +103,12 @@ const TocItem = styled.li`
 `
 
 const StyledLink = styled(Link)`
+  transition: 0.3s;
+
+  &.active {
+    color: ${({ theme }) => theme.colors.primary.base};
+  }
+
   &:hover {
     color: ${({ theme }) => theme.colors.primary.base};
   }
