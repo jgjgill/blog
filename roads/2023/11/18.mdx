@@ -1,0 +1,129 @@
+---
+title: 'Next.js 13 에러 삽질기 - 카카오맵 작업'
+date: '2023-11-18'
+slug: '2023-11-18'
+type: 'road'
+---
+
+## 에러 상황
+
+### 타입 추가하기
+
+타입스크립트에서 `window.kakao`라는 방식을 인식하도록 해주자.
+
+```ts
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    kakao: any
+  }
+}
+```
+
+### 스크립트 불러오기
+
+카카오맵 스크립트가 다 로드된 이후에 kakao.maps에 접근이 가능하도록 해야 한다.
+
+코드는 다음과 같다.
+
+```tsx
+useEffect(() => {
+  const kakaoMapScript = document.createElement('script')
+  kakaoMapScript.async = false
+  kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services`
+  document.head.appendChild(kakaoMapScript)
+
+  const onLoadKakaoAPI = () => {
+    window.kakao.maps.load(() => {
+      // 여기서 window.kakao 접근 가능!
+      setMap(new window.kakao.maps.Map(container, options))
+    })
+  }
+
+  kakaoMapScript.addEventListener('load', onLoadKakaoAPI)
+}, [lat, lng])
+```
+
+위의 주석 처리한 부분에서 `window.kakao`에 대한 접근이 가능해진다.
+
+현재 지도와 좌표, 두 가지 용도로 프로젝트에서 사용되고 있는데 다음과 같이 커스텀훅 형태로 만들었다.
+
+**useGetMap.ts**
+
+```tsx
+import { useEffect, useState } from 'react'
+
+type UseGetMapPropsType = { lat: number; lng: number }
+
+const useGetMap = ({ lat = 37.566826, lng = 126.9786567 }: UseGetMapPropsType) => {
+  const [map, setMap] = useState<React.ReactNode>()
+
+  useEffect(() => {
+    const kakaoMapScript = document.createElement('script')
+    kakaoMapScript.async = false
+    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services`
+    document.head.appendChild(kakaoMapScript)
+
+    const onLoadKakaoAPI = () => {
+      window.kakao.maps.load(() => {
+        console.log(window.kakao)
+        const container = document.getElementById('map')
+        const options = {
+          center: new window.kakao.maps.LatLng(lat, lng),
+          level: 3,
+        }
+
+        setMap(new window.kakao.maps.Map(container, options))
+      })
+    }
+
+    kakaoMapScript.addEventListener('load', onLoadKakaoAPI)
+  }, [lat, lng])
+
+  return map
+}
+
+export default useGetMap
+```
+
+**useCoordinate.ts**
+
+```tsx
+import { useEffect, useState } from 'react'
+import { Document } from '../_types/kakaoMap'
+
+const useCoordinate = (address: string) => {
+  const [coords, setCoords] = useState([0, 0])
+
+  useEffect(() => {
+    const kakaoMapScript = document.createElement('script')
+    kakaoMapScript.async = false
+    kakaoMapScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_MAP_KEY}&autoload=false&libraries=services`
+    document.head.appendChild(kakaoMapScript)
+
+    const onLoadKakaoAPI = () => {
+      window.kakao.maps.load(() => {
+        const geocoder = new window.kakao.maps.services.Geocoder()
+
+        geocoder.addressSearch(
+          address,
+          function (result: Document[], status: 'OK' | 'ZERO_RESULT' | 'ERROR') {
+            if (status === window.kakao.maps.services.Status.OK) {
+              setCoords([Number(result[0].y), Number(result[0].x)])
+            }
+          },
+        )
+      })
+    }
+    kakaoMapScript.addEventListener('load', onLoadKakaoAPI)
+  }, [address])
+
+  return coords
+}
+
+export default useCoordinate
+```
+
+참고 문서
+
+- [Next.js, React에서 카카오맵 API 완벽하게 사용하기](https://mycodings.fly.dev/blog/2023-06-26-howto-nextjs-react-kakao-map-api)
