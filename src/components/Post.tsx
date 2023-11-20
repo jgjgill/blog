@@ -46,9 +46,22 @@ const Container = styled.article`
   border-bottom: 1px solid transparent;
   width: 100%;
 
+  animation-duration: 2s;
+  animation-name: fadeIn;
+
   &:hover {
     h3 {
       color: ${({ theme }) => theme.colors.primary.base};
+    }
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
     }
   }
 `
@@ -82,7 +95,6 @@ const ThumbnailImage = styled(GatsbyImage)`
   height: 240px;
   flex-shrink: 0;
   border-radius: 10px;
-  background-color: black;
 
   @media (max-width: 768px) {
     width: 100%;
