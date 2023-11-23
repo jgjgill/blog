@@ -22,11 +22,6 @@ type: 'road'
   alt="next-js-13-matching-error"
 />
 
-<Image
-  src="https://github.com/jgjgill/blog/assets/79239852/d086aeeb-907d-4249-a801-d51e1ea9526e"
-  alt="next-js-13-matching-error"
-/>
-
 추측으로는 서버와 클라이언트 과정에서 HTML이 달라서 발생한 문제인 것 같다.
 
 한 가지 의문인 것은 `use client`로 클라이언트 컴포넌트로 작성했는데도 발생했다는 것인데..
@@ -87,7 +82,7 @@ const LoginHeader = dynamic(() => import('./LoginHeader'), { ssr: false })
 
 <br />
 
-사용되는 개념
+**사용되는 개념**
 
 - **Lazy Loading**
 - **Dynamic Imports**
@@ -95,7 +90,7 @@ const LoginHeader = dynamic(() => import('./LoginHeader'), { ssr: false })
 - **streaming**
 - **Server, Client Components**
 
-공부할 부분
+### 공부할 부분
 
 - [Lazy Loading](https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading)
 - [Loading UI and Streaming](https://nextjs.org/docs/app/building-your-application/routing/loading-ui-and-streaming)
