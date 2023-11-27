@@ -30,7 +30,9 @@ const config: GatsbyConfig = {
       options: {
         query: `
           {
-            allMdx {
+            allMdx(
+              filter: { fields: { source: { eq: "contents" } } }
+            ) {
               nodes {
                 id
                 frontmatter {
