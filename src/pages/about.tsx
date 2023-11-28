@@ -82,6 +82,16 @@ const AboutPage = () => {
                   </p>
                 </Flex>
               </Flex>
+
+              <Flex flexDirection="column" gap={10}>
+                <Description as="h3">
+                  좋은 루틴과 환경을 만드는데 관심이 많습니다.
+                </Description>
+
+                <h3>글또</h3>
+
+                <p>커뮤니티를 활용하여 글쓰는 환경을 만들고자 합니다.</p>
+              </Flex>
             </Flex>
           </Flex>
 
@@ -90,7 +100,7 @@ const AboutPage = () => {
 
             <h3>데브코스</h3>
 
-            <h3>세종대학교</h3>
+            <p></p>
           </Flex>
         </Flex>
       </Layout>
