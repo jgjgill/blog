@@ -20,7 +20,7 @@ interface CategoryPostCount {
 const Category = ({ selectedCategory }: Props) => {
   const data: CategoryPostCount = useStaticQuery(graphql`
     query {
-      allMdx {
+      allMdx(filter: { fields: { source: { eq: "contents" } } }) {
         totalCount
         group(field: { frontmatter: { category: SELECT } }) {
           totalCount

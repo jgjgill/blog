@@ -94,6 +94,7 @@ const RoadCard = styled.ul`
 
   h2 {
     font-size: large;
+    text-align: start;
   }
 
   h3 {
