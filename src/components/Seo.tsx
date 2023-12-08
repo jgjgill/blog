@@ -9,7 +9,7 @@ interface Props {
 
 const Seo = ({
   title = 'jgjgill',
-  description = '프론트엔드 개발자 이종길입니다. 작은 것부터 한 걸음씩 나아가며 문제를 접근하는 것을 좋아합니다. 주변을 먼저 살피며 팀과 함께 성장하는 것을 지향합니다.',
+  description = '프론트엔드 개발자 이종길입니다. - Go High',
   siteUrl = 'https://jgjgill-blog.netlify.app/',
   ogImage = 'https://raw.githubusercontent.com/jgjgill/blog/main/src/images/og-image.png',
 }: Props) => {
