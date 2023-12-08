@@ -15,6 +15,8 @@ export type Frontmatter = {
   category: string
   thumbnail_alt: string
   thumbnail: ImageDataLike
+  type: 'post' | 'road'
+  description: string
 }
 
 export interface Blog {

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
-import { Mdx, Seo } from 'components'
+import { Mdx } from 'components'
 import { Flex } from 'components/@shared'
-import { graphql, HeadFC, navigate, useStaticQuery } from 'gatsby'
+import { graphql, navigate, useStaticQuery } from 'gatsby'
 import BackSpace from 'images/back-space.inline.svg'
 import React from 'react'
 import { Blog, Content } from 'types/content'
@@ -85,8 +85,6 @@ const MyRoad = ({ mdx, children }: Props) => {
     </>
   )
 }
-
-export const Head: HeadFC = () => <Seo />
 
 export default MyRoad
 

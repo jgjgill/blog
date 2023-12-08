@@ -51,19 +51,6 @@ const BlogPost = ({ mdx, children }: Props) => {
   )
 }
 
-export const Head = ({
-  location,
-  pageContext,
-}: HeadProps<object, { frontmatter: { title: string; description: string } }>) => {
-  return (
-    <Seo
-      title={pageContext.frontmatter.title}
-      description={pageContext.frontmatter.description}
-      siteUrl={`https://jgjgill-blog.netlify.app${location.pathname}`}
-    />
-  )
-}
-
 export default BlogPost
 
 const ThumbnailImage = styled(GatsbyImage)`
