@@ -76,6 +76,11 @@ const Aside = styled.aside`
   height: calc(100vh - 128px);
   padding: 0 10px;
   overflow-y: scroll;
+
+  ul > li > ul > li > ul {
+    border-left: 2px solid ${({ theme }) => theme.colors.primary.light};
+  }
+
   ::-webkit-scrollbar {
     width: 3px;
   }
@@ -96,10 +101,12 @@ const Aside = styled.aside`
 
 const TocList = styled.ul`
   padding-left: 10px;
+  margin-bottom: 20px;
 `
 
 const TocItem = styled.li`
   line-height: 1.6;
+  margin-bottom: 5px;
 `
 
 const StyledLink = styled(Link)`

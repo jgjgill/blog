@@ -23,7 +23,7 @@ const NotFoundPage = ({ data }: PageProps<Props>) => {
             <HomeButton to={PATH.HOME}>홈으로 이동</HomeButton>
           </Flex>
           <h2>최신 게시물 둘러보기</h2>
-          <Flex flexDirection="column" justifyContent="space-between">
+          <Flex flexDirection="column" gap={80} justifyContent="space-between">
             {data.allMdx.nodes.map((node) => (
               <Post key={node.id} node={node} />
             ))}
