@@ -68,18 +68,12 @@ const AboutPage = () => {
                   </p>
                 </Flex>
 
+                <p></p>
+
                 <Flex flexDirection="column" gap={10}>
-                  <Link
-                    href="https://github.com/toss/slash/pull/335"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    toss/slash
-                  </Link>
-                  <p>
-                    오픈 소스 프로젝트에 참여하면서 코드 분석과 기술적 역량을 향상시키고자
-                    합니다.
-                  </p>
+                  <h3>기타 오픈 소스 활동</h3>
+                  <span>모던 JavaScript 튜토리얼 오타 수정</span>
+                  <span>toss/slash (use-funnel) 코드 개선</span>
                 </Flex>
               </Flex>
 
@@ -100,7 +94,8 @@ const AboutPage = () => {
 
             <h3>데브코스</h3>
 
-            <p></p>
+            <p>함께 성장하고 두려움을 없애는 방법을 고민하고 실천했습니다.</p>
+            <p>&apos;왜&apos;를 중요하게 생각하며 기본기의 중요성을 이해했습니다.</p>
           </Flex>
         </Flex>
       </Layout>
