@@ -20,7 +20,6 @@ export const globalStyles = css`
     --bg-color: #2d3039;
     --text-color: rgba(255, 255, 255, 0.8);
   }
-
   /* Box sizing rules */
   *,
   *::before,
@@ -28,7 +27,6 @@ export const globalStyles = css`
     box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
   }
-
   /* Remove default margin */
   body,
   h1,
@@ -46,36 +44,30 @@ export const globalStyles = css`
     margin: 0;
     padding: 0;
   }
-
   /* list options */
   ul,
   ol {
     list-style-type: none;
   }
-
   /* Set core root defaults */
   html:focus-within {
     scroll-behavior: smooth;
   }
-
   /* Set core body defaults */
   body {
     min-height: 100vh;
     text-rendering: optimizeSpeed;
     line-height: 1.5;
   }
-
   a {
     text-decoration: none;
   }
-
   /* Make images easier to work with */
   img,
   picture {
     max-width: 100%;
     display: block;
   }
-
   /* Inherit fonts for inputs and buttons */
   input,
   button,
@@ -83,7 +75,6 @@ export const globalStyles = css`
   select {
     font: inherit;
   }
-
   button {
     cursor: pointer;
     border: none;
@@ -108,6 +99,12 @@ export const globalStyles = css`
     color: #343434;
   }
 
+  html span > code.language-text {
+    color: #d946ef;
+    transition: 0.3s;
+    padding: 0 5px;
+  }
+
   /* dark mode */
   html {
     background-color: var(--bg-color);
@@ -128,7 +125,6 @@ export const globalStyles = css`
 
   html.dark code.language-text {
     background-color: var(--bg-inline-color);
-    color: var(--text-color);
     text-shadow: none;
   }
 
