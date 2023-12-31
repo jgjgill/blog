@@ -40,7 +40,7 @@ const TocElement = ({ toc }: Props) => {
 
   useEffect(() => {
     const obeserver = new IntersectionObserver(callback)
-    const contents = document.querySelectorAll('h1, h2, h3')
+    const contents = document.querySelectorAll('h1, h2, h3, h4')
 
     contents.forEach((content) => obeserver.observe(content))
 
