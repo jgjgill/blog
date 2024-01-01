@@ -135,7 +135,7 @@ Supabase [Dashboard](https://supabase.com/dashboard/projects)에서 새로운 �
 ```
 
 <Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/project-with-login-button.png"
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-sql-editor.png"
   alt="Supabase SQL Editor"
 />
 
@@ -162,13 +162,15 @@ Supabase [Dashboard](https://supabase.com/dashboard/projects)에서 새로운 �
 그래서 데이터에 대한 접근이 제한될 수 있는데,
 우선 이때는 다음과 같이 `RLS Policy`를 추가해주면 데이터에 대한 접근이 가능해진다.
 
-<video controls height={500}>
+<video controls height={400}>
   <source
     src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/rls-policy.mov"
     type="video/mp4"
   />
   RLS 정책
 </video>
+
+<br />
 
 프로젝트에서 확인하기 위해 `app/notes/page.tsx`에 데이터를 호출한다.
 
@@ -280,9 +282,9 @@ export default async function Index() {
 
 메인 페이지에서 다음과 같이 확인할 수 있다.
 
-<video controls height={500}>
+<video controls height={400}>
   <source
-    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/rls-policy.mov"
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/project-login-logout.mov"
     type="video/mp4"
   />
   프로젝트 로그인/로그아웃 확인
@@ -363,7 +365,7 @@ create trigger insert_profile_for_new_user after insert on auth.users for each r
   alt="Supabase Database Triggers After"
 />
 
-이제 Authentication > Users에 추가된 유저 정보는 삭제하고 `profiles` 테이블을 만든다.
+이제 Authentication > Users에 추가된 기존 유저 정보는 삭제하고 `profiles` 테이블을 만든다.
 `profiles`테이블에는 현재 설정된 값에 따라 `id`, `nickname`으로 열을 구성한다.
 
 이때 `id`(uuid)는 `auth` 스키마의 `users.id`와 외래키(foreign key) 관계를 맺어야 한다.
@@ -387,7 +389,7 @@ create trigger insert_profile_for_new_user after insert on auth.users for each r
 Supabase에 대해 학습해봤으니 하나의 작은 앱을 만들어보자.
 간단하게 프로토타입을 만들어 보면서 프로젝트 세팅부터 배포까지 진행했다.
 
-<video controls height={500}>
+<video controls height={400}>
   <source
     src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/nextjs-with-supabase-playground.mov"
     type="video/mp4"
