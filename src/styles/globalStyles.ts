@@ -123,7 +123,7 @@ export const globalStyles = css`
     transition-property: color;
   }
 
-  html.dark code.language-text {
+  html.dark span > code.language-text {
     background-color: var(--bg-inline-color);
     text-shadow: none;
   }
