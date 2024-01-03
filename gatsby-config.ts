@@ -92,8 +92,8 @@ const config: GatsbyConfig = {
                   title: node.frontmatter.title,
                   description: node.frontmatter.description,
                   date: new Date(node.frontmatter.date),
-                  url: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
-                  guid: `${site.siteMetadata.siteUrl}/blog/${node.frontmatter.slug}`,
+                  url: `${site.siteMetadata.siteUrl}/post/${node.frontmatter.slug}`,
+                  guid: `${site.siteMetadata.siteUrl}/post/${node.frontmatter.slug}`,
                   custom_elements: [{ 'content:encoded': node.body }],
                 })
               })
