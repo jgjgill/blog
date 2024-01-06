@@ -21,12 +21,11 @@ export const globalStyles = css`
     --text-color: rgba(255, 255, 255, 0.8);
   }
   /* Box sizing rules */
-  *,
-  *::before,
-  *::after {
+  * {
     box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
   }
+
   /* Remove default margin */
   body,
   h1,
@@ -82,14 +81,6 @@ export const globalStyles = css`
   }
 
   /* custom code */
-  body code {
-    word-break: break-all;
-    font-family: 'Pretendard', sans-serif !important;
-  }
-
-  body div.gatsby-highlight {
-    margin: 25px 0;
-  }
 
   body .token.operator {
     background-color: transparent;
@@ -98,11 +89,11 @@ export const globalStyles = css`
   body span.token {
     color: #343434;
   }
-
-  html span > code.language-text {
+  span > code.language-text {
     color: #d946ef;
     transition: 0.3s;
     padding: 0 5px;
+    font-family: 'Pretendard', sans-serif;
   }
 
   /* dark mode */
@@ -128,14 +119,11 @@ export const globalStyles = css`
     text-shadow: none;
   }
 
-  html.dark .token.operator {
-    background-color: transparent;
+  html blockquote {
+    transition: 0.3s;
   }
 
   html.dark blockquote {
-    background-color: var(--bg-inline-color);
-  }
-  html.light blockquote {
     background-color: var(--bg-inline-color);
   }
 
