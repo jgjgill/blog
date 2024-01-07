@@ -14,6 +14,12 @@ const Anchor = ({ ...props }) => <StyledAnchor {...props} />
 const Blockquote = ({ ...props }) => <StyledBlockquote {...props} />
 const Image = ({ ...props }) => <StyledImage {...props} />
 const Callout = ({ ...props }) => <StyledCallout {...props} />
+const Video = ({ ...props }) => (
+  <StyledVideo height={400} controls {...props}>
+    <source src={props.src} type="video/mp4" />
+    {props.alt}
+  </StyledVideo>
+)
 
 export default Mdx
 Mdx.H1 = H1
@@ -26,6 +32,7 @@ Mdx.ANCHOR = Anchor
 Mdx.BLOCKQUOTE = Blockquote
 Mdx.IMAGE = Image
 Mdx.CALLOUT = Callout
+Mdx.VIDEO = Video
 
 const StyledH1 = styled.h1`
   line-height: 2;
@@ -94,4 +101,8 @@ const StyledCallout = styled.aside`
   p {
     color: ${({ theme }) => theme.colors.black};
   }
+`
+
+const StyledVideo = styled.video`
+  margin: 20px 0;
 `

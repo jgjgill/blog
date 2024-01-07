@@ -1,8 +1,7 @@
 import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
-import { Comment, Mdx, Seo, Toc } from 'components'
+import { Comment, Mdx, Toc } from 'components'
 import { Flex } from 'components/@shared'
-import { HeadProps } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
 import { Blog } from 'types/content'
@@ -41,6 +40,7 @@ const BlogPost = ({ mdx, children }: Props) => {
           blockquote: Mdx.BLOCKQUOTE,
           Image: Mdx.IMAGE,
           Callout: Mdx.CALLOUT,
+          Video: Mdx.VIDEO,
         }}
       >
         {children}
