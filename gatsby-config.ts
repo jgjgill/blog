@@ -90,10 +90,10 @@ const config: GatsbyConfig = {
               return allMdx.nodes.map((node: any) => {
                 return Object.assign({}, node.frontmatter, {
                   title: node.frontmatter.title,
-                  description: node.frontmatter.description,
+                  description: node.frontmatter.description ?? node.frontmatter.title,
                   date: new Date(node.frontmatter.date),
-                  url: `${site.siteMetadata.siteUrl}/post/${node.frontmatter.slug}`,
-                  guid: `${site.siteMetadata.siteUrl}/post/${node.frontmatter.slug}`,
+                  url: `${site.siteMetadata.siteUrl}/${node.frontmatter.type}/${node.frontmatter.slug}`,
+                  guid: `${site.siteMetadata.siteUrl}/${node.frontmatter.type}/${node.frontmatter.slug}`,
                   custom_elements: [{ 'content:encoded': node.body }],
                 })
               })
@@ -107,6 +107,7 @@ const config: GatsbyConfig = {
                       date
                       description
                       slug
+                      type
                     }
                     body
                   }
@@ -141,7 +142,7 @@ const config: GatsbyConfig = {
                 siteUrl
               }
             }
-            allMdx(sort: {frontmatter: {date: DESC}} filter: { fields: { source: { eq: "contents" } } }) {
+            allMdx(sort: {frontmatter: {date: DESC}}) {
               group(field: {frontmatter: {category: SELECT}}) {
                 fieldValue
               }
@@ -149,6 +150,7 @@ const config: GatsbyConfig = {
                 frontmatter {
                   slug
                   date
+                  type
                 }
               }
             }
@@ -159,12 +161,14 @@ const config: GatsbyConfig = {
           allMdx: { nodes, group },
         }: {
           allMdx: {
-            nodes: { frontmatter: { date: string; slug: string } }[]
+            nodes: {
+              frontmatter: { date: string; slug: string; type: 'post' | 'road' }
+            }[]
             group: { fieldValue: string }[]
           }
         }) => {
           const posts = nodes.map((node) => ({
-            path: `/post/${node.frontmatter.slug}`,
+            path: `/${node.frontmatter.type}/${node.frontmatter.slug}`,
             lastmod: node.frontmatter.date,
           }))
 

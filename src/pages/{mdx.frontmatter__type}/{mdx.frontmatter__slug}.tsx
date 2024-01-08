@@ -57,7 +57,7 @@ export const Head = ({
   return (
     <Seo
       title={pageContext.frontmatter.title}
-      description={pageContext.frontmatter.description}
+      description={pageContext.frontmatter.description ?? pageContext.frontmatter.title}
       siteUrl={`https://jgjgill-blog.netlify.app${location.pathname}`}
       ogImage={
         pageContext.frontmatter.type === 'post'
