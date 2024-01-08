@@ -33,6 +33,7 @@ const BlogPost = ({ mdx, children }: Props) => {
           h1: Mdx.H1,
           h2: Mdx.H2,
           h3: Mdx.H3,
+          h4: Mdx.H4,
           p: Mdx.P,
           ul: Mdx.UL,
           li: Mdx.LI,

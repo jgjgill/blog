@@ -7,6 +7,7 @@ const Mdx = ({ children }: StrictPropsWithChildren) => children
 const H1 = ({ ...props }) => <StyledH1 {...props} />
 const H2 = ({ ...props }) => <StyledH2 {...props} />
 const H3 = ({ ...props }) => <StyledH3 {...props} />
+const H4 = ({ ...props }) => <StyledH4 {...props} />
 const P = ({ ...props }) => <StyledP {...props} />
 const Ul = ({ ...props }) => <StyledUl {...props} />
 const Li = ({ ...props }) => <StyledLi {...props} />
@@ -25,6 +26,7 @@ export default Mdx
 Mdx.H1 = H1
 Mdx.H2 = H2
 Mdx.H3 = H3
+Mdx.H4 = H4
 Mdx.P = P
 Mdx.UL = Ul
 Mdx.LI = Li
@@ -44,6 +46,11 @@ const StyledH2 = styled.h2`
   margin: 15px 0;
 `
 const StyledH3 = styled.h3`
+  line-height: 1.8;
+  margin: 10px 0;
+`
+
+const StyledH4 = styled.h4`
   line-height: 1.8;
   margin: 10px 0;
 `
