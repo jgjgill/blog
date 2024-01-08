@@ -177,12 +177,17 @@ const config: GatsbyConfig = {
             lastmod: posts[0].lastmod,
           }
 
+          const about = {
+            path: '/about',
+            lastmod: posts[0].lastmod,
+          }
+
           const categories = group.map((node) => ({
             path: `/post/category/${node.fieldValue}`,
             lastmod: posts[posts.length - 1].lastmod,
           }))
 
-          return [...posts, ...categories, home]
+          return [...posts, ...categories, about, home]
         },
         serialize: ({ path, lastmod }: { path: string; lastmod: string }) => {
           return {
