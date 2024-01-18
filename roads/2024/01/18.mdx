@@ -1,0 +1,91 @@
+---
+title: '타입스크립트에서 사용되는 지시어 주석 알아보기'
+date: '2024-01-18'
+slug: '2024-01-18'
+type: 'road'
+---
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/typescript-directive-annotation.png"
+  alt="TypeScript 지시어 주석"
+/>
+
+타입스크립트에서 사용되는 지시어 주석들을 알아보자.
+
+## 파일 전체 타입 체크하기
+
+### // @ts-check
+
+- 파일에서 타입 검사를 사용할 수 있게 한다.
+- 파일의 최상단에 있어야 한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-check-error.png"
+  alt="// @ts-check 에러 예제"
+/>
+
+## 파일 전체 타입 무시하기
+
+### // @ts-nocheck
+
+- 파일에서 타입 검사를 사용할 수 없도록 한다.
+- 파일의 최상단에 있어야 한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/type-error-code.png"
+  alt="타입 에러 코드"
+/>
+
+타입 에러가 발생하는 예제 코드이다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-nocheck-code.png"
+  alt="// @ts-nocheck 사용 예제"
+/>
+
+`// @ts-nocheck` 사용하면 타입 에러가 사라진다.
+
+## 특정 코드 라인 타입 에러 무시하기
+
+### // @ts-ignore
+
+- 다음 줄에서 타입 에러를 무시한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-ignore-code.png"
+  alt="// @ts-ignore 사용 예제"
+/>
+
+### // @ts-expect-error
+
+- 다음 줄에서 타입 에러를 무시한다.
+- 에러가 하나 이상 존재할 것으로 예상한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-expect-error-code.png"
+  alt="// @ts-expect-error 사용 예제"
+/>
+
+동일한 코드에서 `// @ts-ignore`와 동일하게 동작한다.
+
+<br />
+
+하지만 타입 에러가 발생하지 않는 코드에서는 차이점이 존재한다.
+
+올바른 타입으로 수정해보자.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/unused-ts-expect-error-code.png"
+  alt="// Unused @ts-expect-error 사용 예제"
+/>
+
+주석의 제거를 유도한다.
+
+이를 통해 오류가 발생할지 여부를 확인하여 타입을 테스트할 수 있다.
+
+## 참고 문서
+
+- [@ts-check](https://www.typescriptlang.org/docs/handbook/intro-to-js-ts.html#ts-check)
+- [// @ts-expect-error Comments](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-9.html#-ts-expect-error-comments)
+- [How to use @ts-expect-error](https://www.totaltypescript.com/concepts/how-to-use-ts-expect-error)
+- [Use "@ts-expect-error" over "@ts-ignore" in TypeScript](https://dev.to/maafaishal/ts-expect-error-over-ts-ignore-in-typescript-5140)
