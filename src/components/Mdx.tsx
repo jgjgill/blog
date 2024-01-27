@@ -38,26 +38,26 @@ Mdx.VIDEO = Video
 
 const StyledH1 = styled.h1`
   line-height: 2;
-  margin: 20px 0;
+  margin: 28px 0;
 `
 
 const StyledH2 = styled.h2`
   line-height: 1.9;
-  margin: 15px 0;
+  margin: 24px 0;
 `
 const StyledH3 = styled.h3`
   line-height: 1.8;
-  margin: 10px 0;
+  margin: 20px 0;
 `
 
 const StyledH4 = styled.h4`
   line-height: 1.8;
-  margin: 10px 0;
+  margin: 16px 0;
 `
 
 const StyledP = styled.p`
   line-height: 1.7;
-  margin: 5px 0;
+  margin: 4px 0;
 `
 
 const StyledUl = styled.ul`
