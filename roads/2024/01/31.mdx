@@ -6,9 +6,9 @@ type: 'road'
 ---
 
 내가 작성한 코드가 아닌 전혀 배경 지식이 없는 코드를 파악할 일이 많아졌다.
-아무런 배경 지식없이 방대한 코드를 이해하기에는 매우 힘든 일이다.
+아무런 배경 지식없이 방대한 코드를 이해하는 것은 매우 힘든 일이다.
 
-이때 데이터가 어떻게 형성되는지 머리에서 연산하는 것이 아닌 **시각적으로, 특히 직관적으로 표현**하면 훨씬 문제에 접근하기 용이해진다.
+이때 데이터가 어떻게 형성되는지를 머리에서만 연산하는 것보다 **시각적으로, 특히 직관적으로 표현**하면 훨씬 문제에 접근하기 용이해진다.
 
 ## console.log에서 쉽게 확인하기
 
@@ -47,15 +47,18 @@ const complexData = {
   alt="console.log 결과"
 />
 
+전체 데이터 구조를 파악하기에는 어려움이 있다.
+
 ### JSON.stringify 활용하기
 
 `JSON.stringify`을 활용해서 좀 더 가독성을 높이자.
 
 `JSON.stringify`는 JavaScript 값을 `JSON` 문자열로 변환해준다.
 
-여기서 `JSON.stringify(복잡한 데이터, null, 2)`을 활용하면 다음과 같이 값을 출력한다.
-
+여기서 `JSON.stringify(복잡한 데이터, null, 2)`을 활용할 수 있다.
 순서대로 `value`, `replacer`, `space`이다.
+
+그러면 다음과 같이 값을 출력한다.
 
 <Image
   src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/json-stringify-console-log-result.png"
@@ -70,7 +73,7 @@ const complexData = {
 계속 콘솔값을 확인하는 것도 귀찮다.
 아예 화면에 그려내자.
 
-하지만 단순히 `JSON.stringify`만 사용한 형태는 가독성이 안좋다.
+하지만 단순히 `JSON.stringify`만 사용하면 가독성이 나쁘다.
 
 ```tsx
 <div>{JSON.stringify(complexData, null, 2)}</div>
@@ -81,9 +84,9 @@ const complexData = {
   alt="JSON.stringify 화면 결과"
 />
 
-스타일을 추가하자.
-
 ### whiteSpace 이해하기
+
+스타일을 추가하자.
 
 <Image
   src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/white-space-table.png"
@@ -104,7 +107,7 @@ const complexData = {
   width="500"
 />
 
-한눈에 보기 쉽게 화면에 그려졌다.
+한눈에 보기 쉽게 화면에 그려졌다..! 🧐
 
 ## 참고 문서
 
