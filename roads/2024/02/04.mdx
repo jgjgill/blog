@@ -1,0 +1,62 @@
+---
+title: 'yarn Monorepo 에러 삽질기 - cannot find module'
+date: '2024-02-04'
+slug: '2024-02-04'
+type: 'road'
+---
+
+오픈소스 라이브러리를 이해하려고 코드를 클론했다.
+
+해당 레포는 `yarn`으로 모노레포가 구성된 것 같았는데 코드를 파악하려고 할 때 다음과 같은 에러가 발생했다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/yarn-monorepo-cannot-find-module-error.png"
+  alt="yarn 모노레포 cannot find module 에러"
+/>
+
+## 공식 문서에서는...
+
+우선 해당 에러 관련해서 공식 문서에서는 다음과 같이 설명한다.
+
+- [ZipFS](https://marketplace.visualstudio.com/items?itemName=arcanis.vscode-zipfs) 확장 프로그램 설치
+- 다음 명령어 실행 -> `.vscode/settings.json` 파일이 생성
+
+```shell
+yarn dlx @yarnpkg/sdks vscode
+```
+
+- `VSCode`에서 사용자 지정 TS 설정 활성화
+  - `ctrl+shift+p` 입력
+  - `Select TypeScript Version` 선택
+  - `Use Workspace Version` 선택
+
+하지만 공식 문서와 별개로 나는 이미 설정이 되어 있었다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/use-workspace-version.png"
+  alt="Use Workspace Version"
+/>
+
+그럼에도 불구하고 에러는 사라지지 않는 상황... 😇
+
+## 허무하게 해결...
+
+뭐가 문제인지 전혀 알 수 없는 상황에서 관련 문서들을 뒤적이다가 다음 코멘트를 발견했다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/typescript-restart-ts-server-comment.png"
+  alt="Typescript: Restart TS Server 코멘트"
+/>
+
+느낌이 싸했는데 `Typescript: Restart TS Server`을 했더니 바로 해결됐다..
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/yarn-monorepo-cannot-find-module-resolution.png"
+  alt="yarn 모노레포 cannot find module 해결"
+/>
+
+들인 시간이 너무 아까웠다.. 😥
+
+## 참고 문서
+
+- [Editor SDKs](https://yarnpkg.com/getting-started/editor-sdks)
