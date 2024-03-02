@@ -1,0 +1,75 @@
+---
+title: '위트있게 구조 분해 할당 사용하기'
+date: '2024-03-02'
+slug: '2024-03-02'
+type: 'road'
+---
+
+## 구조 분해 할당
+
+최근 구조 분해 할당과 관련해서 재밌는 코드를 공유받아 관련 학습 내용을 남겨두고자 한다.
+
+### 기본값 갖는 새로운 이름의 변수에 할당하기
+
+새로운 이름의 변수와 기본값을 함께 사용할 수도 있다.
+
+```js
+const { a: nickname = 'jg', b: test = 'nah' } = { a: 'jgjgill' }
+
+console.log(nickname) // jgjgill
+console.log(test) // nah
+```
+
+조금 낮설어 보이지만 **변수명과 기본값을 한 번에 할당**할 수 있어서 유용하게 느껴진다.
+
+### 중첩의 복잡함을 없애서 가독성 높이기
+
+하지만 중첩된 객체 형태에서는 어떨까?
+
+```js
+const test = { a: { b: 'jgjgill' } }
+```
+
+<br />
+
+보통 다음과 같이 그대로 구조 분해 할당을 하려고 할 것이다.
+
+```js
+const test = { a: { b: 'jgjgill' } }
+
+const {
+  a: { b: nickname = 'jg', c: nah = 'nah' },
+} = test
+
+console.log(nickname) // jgjgill
+console.log(nah) // nah
+```
+
+복잡해 보인다.
+하나의 중첩만 생겼음에도 굉장히 실수할 가능성이 높아진다.
+
+<br />
+
+중첩을 없애보자.
+
+```js
+const test = { a: { b: 'jgjgill' } }
+
+const { b: nickname = 'jg', c: nah = 'nah' } = test.a
+
+console.log(nickname) // jgjgill
+console.log(nah) // nah
+```
+
+훨씬 가독성이 좋아졌고 실수할 가능성 또한 현저히 낮아질 것이다.
+
+이와 관련해서 몇몇 오픈 소스에서도 인사이트를 얻을 수 있다.
+
+- [openAI](https://github.com/openai/democratic-inputs/blob/708efe6849154ac7e6bfebadcfc26f7c0c4bcc9a/projects/Aligned-Platform-EnergizeAI/app/src/pages/s/%5Bshortened_url%5D.tsx#L14)
+- [Next.js](https://github.com/vercel/next.js/blob/bc943405a7d9f80c3ab80c50d4beaac07a54d7ea/examples/blog/pages/tags/%5Btag%5D.mdx#L9)
+
+<br />
+
+별거 아니면서 간단한 코드이지만 굉장히 많은 것을 느꼈다.
+
+평소 아무 생각없이 관성적으로 써온 코드에 대해 생각의 틀을 벗어날 수 있었다.
