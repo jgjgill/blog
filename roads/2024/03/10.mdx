@@ -1,0 +1,42 @@
+---
+title: 'any 타입에서도 디테일 챙기기'
+date: '2024-03-10'
+slug: '2024-03-10'
+type: 'road'
+---
+
+## 아쉬운 코드
+
+이렇게 `any` 타입을 사용하면 자동 완성이 제대로 잡히지 않는다.
+
+```ts
+function temp({ a, b }: any) {
+  return { a, b }
+}
+
+temp({})
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/before-any-type.png"
+  alt="아쉬운 코드의 any 타입"
+/>
+
+## 개선 코드
+
+각각의 매개변수에 `any` 타입을 지정해주자.
+
+그러면 제대로 자동 완성 기능을 사용할 수 있다.
+
+```ts
+function temp({ a, b }: { a: any; b: any }) {
+  return { a, b }
+}
+
+temp({})
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/after-any-type.png"
+  alt="개선 코드의 any 타입"
+/>
