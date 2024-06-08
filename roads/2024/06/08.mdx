@@ -1,0 +1,111 @@
+---
+title: '마법같은 Prettify 타입'
+date: '2024-06-08'
+slug: '2024-06-08'
+type: 'road'
+---
+
+## Prettify Type
+
+타입스크립트 관련 공부를 하다가 굉장히 유용한 유틸리티 타입을 알게 되었다. 🧐
+
+```TypeScript
+type Prettify<T> = {
+  [K in keyof T]: T[K]
+} & {};
+```
+
+## 상황 1
+
+타입을 확장할 때 `Intersection`을 활용한다.
+
+```TypeScript
+type Temp = {
+  test1: string
+  test2: number
+} & {
+  test3: boolean
+} & {
+  test4: undefined | null
+};
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/prettify-problem-example-1.png"
+  alt="Prettify 문제 예제 1"
+/>
+
+코드를 읽기 어려워서 디버깅하기 불편하다.
+
+<br />
+
+`Prettify`를 사용하면 깔끔하게 정보를 얻을 수 있다.
+
+```TypeScript
+type Temp = Prettify<{
+  test1: string
+  test2: number
+} & {
+  test3: boolean
+} & {
+  test4: undefined | null
+}>;
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/prettify-solve-example-1.png"
+  alt="Prettify 해결 예제 1"
+/>
+
+### 상황 2
+
+`extend` 키워드로 타입을 확장해서 사용하고자 한다.
+
+```ts
+interface BaseInfo {
+  name: string
+}
+
+interface AdditionalInfo extends BaseInfo {
+  nickname: string
+}
+
+const jg: AdditionalInfo = {
+  name: 'lee jonggil',
+  nickname: 'jgjgill',
+}
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/prettify-problem-example-2.png"
+  alt="Prettify 문제 예제 2"
+/>
+
+내부 코드는 알 수 없어서 확인이 필요할 때 직접 코드를 찾아야 한다.
+
+<br />
+
+`Prettify`를 통해 얻고자 하는 정보를 바로 알 수 있다.
+
+```ts
+const jg: Prettify<AdditionalInfo> = {
+  name: 'lee jonggil',
+  nickname: 'jgjgill',
+}
+```
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/prettify-solve-example-2.png"
+  alt="Prettify 해결 예제 2"
+/>
+
+<br />
+
+이런 마법같은 기능은 다들 어떻게 찾아내는지.. 😇
+
+앞으로 정말 많이 쓸 것 같다..! 😆
+
+### 참고 문서
+
+- [Prettify for Classes](https://www.youtube.com/watch?v=2lCCKiWGlC0)
+- [The `Prettify` Helper](https://www.totaltypescript.com/concepts/the-prettify-helper)
