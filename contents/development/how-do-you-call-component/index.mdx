@@ -224,7 +224,7 @@ function App() {
 
 ## Component Tree 비교하기
 
-`JSX`와 `일반 함수`로 호출 헀을 때 생성된 `Component Tree`를 살펴보자.
+`JSX`와 `일반 함수`로 호출 했을 때 생성된 `Component Tree`를 살펴보자.
 
 <br />
 
@@ -246,22 +246,22 @@ function App() {
 import { useState } from "react";
 
 function App() {
-	const temp = <Temp />; // JSX 방식으로 호출
+  const temp = <Temp />; // JSX 방식으로 호출
 
-	return (
-		<div>
-			<h2>컴포넌트 어떻게 호출하세요? - JSX 방식</h2>
-			{temp} // 추가된 코드
-		</div>
-	);
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - JSX 방식</h2>
+      {temp} // 추가된 코드
+    </div>
+  );
 }
 
 function Temp() {
-	const [temp, setTemp] = useState("temp");
+  const [temp, setTemp] = useState("temp");
 
-	console.log("나는 Temp에서 호출");
+  console.log("나는 Temp에서 호출");
 
-	return <div>나는 {temp}</div>;
+  return <div>나는 {temp}</div>;
 }
 
 export default App;
@@ -278,7 +278,7 @@ export default App;
 
 하지만 `일반 함수`는 `App` 컴포넌트 내에서 트리가 구성된다.
 
-자식으로 구성되지 않는 것이다.
+자식 컴포넌트로 구성되지 않는 것이다.
 
 <br />
 
@@ -385,9 +385,9 @@ export default App;
 
 > So don't call function components. Render them.
 
-React가 컴포넌트 호출 및 구성에 관여하도록 하는 것이 중요한 것 같다.
+React가 컴포넌트 호출 및 구성에 관여하도록 하는 것이 중요하다.
 
-`일반 함수`로 호출하지 말고 `JSX` 방식으로 렌더링을 시키자. 🧐
+`일반 함수`로 호출하지 말고 `JSX` 방식으로 호출해서 렌더링을 시키자. 🧐
 
 ## 참고 문서
 
