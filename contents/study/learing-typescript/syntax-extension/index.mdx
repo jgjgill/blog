@@ -33,7 +33,7 @@ type: 'post'
 속성은 클래스 생성자의 시작 부분에 동일한 타입의 멤버 속성으로 할당됩니다.
 생성자의 매개변수 앞에 `readonly` 또는 `public`, `protected`, `private` 제한자 중 하나를 배치하면 타입스크립트가 동일한 이름과 타입의 속성도 선언하도록 지시합니다.
 
-```js
+```ts
 class Engineer {
   constructor(readonly area: string) {
     console.log(`I work in the ${area} area.`)
@@ -58,7 +58,7 @@ class NamedEngineer {
 
 매개변수 속성이 없을 시에는 `area`를 명시적으로 할당하기 위해 코드가 몇 줄 추가됩니다.
 
-```js
+```ts
 class NamedEngineer {
   fullName: string
   area: string
@@ -81,7 +81,7 @@ class NamedEngineer {
 
 클래스를 포함하는 많은 다른 언어에서는 클래스와 클래스의 멤버를 수정하기 위한 일종의 런타임 로직으로 **주석을 달거나 데코레이팅**할 수 있습니다.
 
-```js
+```ts
 @myDecorator
 class MyClass {
   /* ... */
@@ -95,7 +95,7 @@ class MyClass {
 그리고 속성을 설명하는 `descriptor` 객체를 받습니다.
 `Greeter` 클래스에서 원래의 `greet` 메서드를 호출하기 전에 `descriptor.value`를 수정해 `greet` 메서드를 데코레이팅합니다.
 
-```js
+```ts
 function logOnCall(target: any, key: string, descriptor: PropertyDescriptor) {
   const original = descriptor.value
   console.log('[logOnCall] I am decorating', target.constructor.name)
@@ -130,11 +130,11 @@ new Greeter().greet('you')
 
 자바스크립트는 열거형 구문을 포함하지 않으므로 열거형을 배치해야 하는 곳에 일반적인 객체를 사용합니다.
 
-```js
+```ts
 const StatusCodes = {
   InternalServerError: 500,
   NotFound: 404,
-  Ok: 200
+  Ok: 200,
 } as const
 
 StatusCodes.InternalServerError // 500
@@ -144,11 +144,11 @@ StatusCodes.InternalServerError // 500
 한 가지 일반적인 방법은 `keyof`와 `typeof` 타입 제한자를 함께 사용해 하나의 값을 해킹하는 것이지만,
 이는 상당한 양의 구문을 입력해야 합니다.
 
-```js
+```ts
 const StatusCodes = {
   InternalServerError: 500,
   NotFound: 404,
-  Ok: 200
+  Ok: 200,
 } as const
 
 // 타입: 200 | 404 | 500
@@ -163,11 +163,11 @@ statusCodeValue = -1
 
 타입스크립트는 타입이 `number` 또는 `string`인 리터럴 값들을 갖는 객체를 생성하기 위한 `enum`구문을 제공합니다.
 
-```js
+```ts
 enum StatusCode {
   InternalServerError = 500,
   NotFound = 404,
-  Ok = 200
+  Ok = 200,
 }
 
 StatusCode.InternalServerError // 500
@@ -177,7 +177,7 @@ StatusCode.InternalServerError // 500
 
 `enum StatusCode`는 대략 다음과 같은 자바스크립트 코드를 생성합니다.
 
-```js
+```ts
 var StatusCode
 ;(function (StatusCode) {
   StatusCode[(StatusCode['InternalServerError'] = 500)] = 'InternalServerError'
@@ -194,11 +194,11 @@ var StatusCode
 열거형의 멤버는 명시적인 초깃값을 가질 필요가 없습니다.
 값이 생략되면 첫번째 값을 0으로 시작하고 후속 값을 1씩 증가시킵니다.
 
-```js
+```ts
 enum VisualTheme {
   Dark, // 0
   Light, // 1
-  System // 2
+  System, // 2
 }
 ```
 
@@ -206,10 +206,10 @@ enum VisualTheme {
 
 열거형은 멤버로 숫자 대신 문자열 값을 사용할 수 있습니다.
 
-```js
+```ts
 enum LoadStyle {
   AsNeeded = 'as-needed',
-  Eager = 'eager'
+  Eager = 'eager',
 }
 ```
 
@@ -218,13 +218,13 @@ enum LoadStyle {
 문자열 값의 단점은 타입스크립트에 따라 자동으로 계산할 수 없다는 것입니다.
 숫자값이 있는 멤버 뒤에 오는 열거형 멤버만 자동으로 계산할 수 있습니다.
 
-```js
+```ts
 enum Wat {
   FirstString = 'first',
   SomeNumber = 9000,
   ImplicitNumber, // OK (value 9001)
   AnotherString = 'another',
-  NotAllowed
+  NotAllowed,
   // Error: Enum member must have initializer.
 }
 ```
@@ -234,11 +234,11 @@ enum Wat {
 열거형은 런타임 객체를 생성하므로 리터럴 값 유니언을 사용하는 일반적인 전략보다 더 많은 코드를 생성합니다.
 타입스크립트는 `const` 제한자로 열거형을 선언해 컴파일된 자바스크립트 코드에서 객체 정의와 속성 조회를 생략하도록 지시합니다.
 
-```js
+```ts
 const enum DisplayHint {
   Opaque = 0,
   Semitransparent,
-  Transparent
+  Transparent,
 }
 
 let displayHint = DisplayHint.Transparent
@@ -246,7 +246,7 @@ let displayHint = DisplayHint.Transparent
 
 컴파일된 자바스크립트 코드에는 열거형 선언이 모두 누락되고 열거형의 값에 대한 주석을 사용합니다.
 
-```js
+```ts
 let displayHint = 2 /* DisplayHint.Transparent */
 ```
 
@@ -261,7 +261,7 @@ ECMA스크립트 모듈이 승인되기 전에는 웹 애플리케이션이 출�
 
 타입스크립트 언어는 지금은 네임스페이스라 부르는 **내부 모듈** 개념을 가진 하나의 해결책을 제공했습니다.
 
-```js
+```ts
 namespace Randomized {
   const value = Math.random()
   console.log(`My value is ${value}`)
@@ -272,7 +272,7 @@ namespace Randomized {
 
 콘텐츠를 네임스페이스 객체의 멤버로 만들어 내보내는 기능 덕분에 코드의 다른 영역에서 네임스페이스 이름으로 해당 멤버를 참조할 수 있습니다.
 
-```js
+```ts
 namespace Settings {
   export const name = 'My Application'
   export const version = '1.2.3'
@@ -290,7 +290,7 @@ console.log('Initialized', Settings.describe())
 
 다음 두 개의 네임스페이스 선언은 동일하게 작동합니다.
 
-```js
+```ts
 namespace Root.Nested {
   export const value1 = true
 }
@@ -318,7 +318,7 @@ namespace Root {
 
 타입 전용 가져오기와 내보내기는 자바스크립트 출력에 어떠한 복잡성도 추가하지 않습니다.
 
-```js
+```ts
 // index.ts
 import { type TypeOne, value } from 'my-example-types'
 import type { TypeTwo } from 'my-example-types'
@@ -335,7 +335,7 @@ export { value }
 가져오기가 타입 전용으로 표시된 경우,
 이를 런타임 값으로 사용하려고 하면 타입스크립트 오류가 발생합니다.
 
-```js
+```ts
 import { ClassOne, type ClassTwo } from 'my-example-types'
 new ClassOne() // OK
 

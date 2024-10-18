@@ -22,7 +22,7 @@ type: 'post'
 
 매개변수 괄호 바로 앞 홑화살괄호로 묶인 타입 매개변수에 별칭을 배치해 함수를 제네릭으로 만듭니다.
 
-```js
+```ts
 function identity<T>(input: T) {
   return input
 }
@@ -32,7 +32,7 @@ function identity<T>(input: T) {
 
 때로는 타입 인수를 해석하기 위해 타입스크립트에 알려줘야 하는 함수 호출 정보가 충분하지 않을 수도 있습니다.
 
-```js
+```ts
 function logWrapper<Input>(callback: (input: Input) => void) {
   return (input: Input) => {
     console.log('Input: ', input)
@@ -72,7 +72,7 @@ logWrapper<string>((input) => {
 인터페이스도 제네릭으로 선언할 수 있습니다.
 내장 Array 메서드는 제네릭 인터페이스로 정의됩니다.
 
-```js
+```ts
 inteface Array<T> {
   // ...
 
@@ -95,7 +95,7 @@ inteface Array<T> {
 클래스도 나중에 멤버에서 사용할 임의의 수의 타입 매개변수를 선언할 수 있습니다.
 클래스의 각 인스턴스는 타입 매개변수로 각자 다른 타입 인수 집합을 가집니다.
 
-```js
+```ts
 class Secret<Key, Value> {
   key: Key
   value: Value
@@ -154,7 +154,7 @@ new CurriedCallback<string>((input) => {
 
 클래스 메서드는 클래스 인스턴스와 별개로 자체 제네릭 타입을 선언할 수 있습니다.
 
-```js
+```ts
 class CreatePairFactory<Key> {
   key: Key
 
@@ -183,7 +183,7 @@ const stringPair = factory.createPair('Sophie')
 클래스의 정적 멤버는 클래스 인스턴스에 접근할 수 없거나 타입 정보를 지정할 수 없습니다.
 따라서 정적 클래스 메서드는 자체 타입 매개변수를 선언할 수 있지만 클래스에 선언된 어떤 타입 매개변수에도 접근할 수 없습니다.
 
-```js
+```ts
 class BothLogger<OnInstance> {
   instanceLog(value: OnInstance) {
     console.log(value)
@@ -199,7 +199,7 @@ class BothLogger<OnInstance> {
   }
 }
 
-const logger = new BothLogger<number[]>
+const logger = new BothLogger<number[]>()
 logger.instanceLog([1, 2, 3]) // 타입: number[]
 
 // 유추된 OnStatic 타입 인수: boolean[]
@@ -213,7 +213,7 @@ BothLogger.staticLog<string>("You can't change the music of your soul")
 
 **제네릭 타입 별칭**은 일반적으로 제네릭 함수의 타입을 셜명하는 함수와 함께 사용됩니다.
 
-```js
+```ts
 type CreatesValue<Input, Output> = (input: Input) => Output
 
 let creator: CreatesValue<string, number>
@@ -227,7 +227,7 @@ creator = (text) => text.toUpperCase()
 
 판별된 유니언 사용법을 통해 데이터의 성공 또는 오류로 인한 실패를 나타내는 제네릭 '결과' 타입을 만들 수 있습니다.
 
-```js
+```ts
 type Result<Data> = FailureResult | SuccessfulResult<Data>
 
 interface FailureResult {
@@ -266,7 +266,7 @@ function handleResult(result: Result<string>) {
 
 모든 기본 타입 매개변수는 기본 함수 매개변수처럼 선언 목록의 제일 **마지막**에 와야 합니다.
 
-```js
+```ts
 function inTheEnd<First, Second, Third = number, Fourth = string>() {} // OK
 ```
 
@@ -275,7 +275,7 @@ function inTheEnd<First, Second, Third = number, Fourth = string>() {} // OK
 일부 함수는 제한된 타입에서만 작동해야 합니다.
 타입 매개변수를 제한하는 구문은 매개변수 이름 뒤에 `extends` 키워드를 배치하고 그 뒤에 이를 제한할 타입을 배치합니다.
 
-```js
+```ts
 interface WithLength {
   length: number
 }
@@ -299,14 +299,14 @@ logWithLength(new Date())
 `keyof` 연산자는 제한된 타입 매개변수와도 잘 작동합니다.
 앞서 살펴본 `extends` 와 `keyof` 를 함께 사용하여 타입 매개변수를 이전 타입 매개변수의 키로 제한합니다.
 
-```js
+```ts
 function get<T, Key extends keyof T>(container: T, key: Key) {
   return container[key]
 }
 
 const roles = {
   favorite: 'Fargo',
-  others: ['Almost Famous', 'Burn After Reading', 'Nomadland']
+  others: ['Almost Famous', 'Burn After Reading', 'Nomadland'],
 }
 
 const favorite = get(roles, 'favorite') // 타입: string
@@ -327,7 +327,7 @@ Promise 생성자는 단일 매개변수를 받도록 작성됩니다.
 해당 매개변수의 타입은 제네릭 Promise 클래스에 선언된 타입 매개변수에 의존합니다.
 축소된 형식은 대략 다음과 같습니다.
 
-```js
+```ts
 class PromiseLike<Value> {
   constructor(
     executor: (
@@ -360,7 +360,7 @@ const resolvesString = new Promise<string>((resolve) => {
 `async` 함수에 따라서 반환된 값이 `Thenable` (.then() 메서드가 있는 객체, 실제로는 거의 항상 Promise)이 아닌 경우,
 promise.resolve가 호출된 것처럼 Promise로 래핑됩니다.
 
-```js
+```ts
 // 타입: (text: string) => Promise<number>
 async function lengthAfterSecond(text: string) {
   await new Promise((resolve) => setTimeout(resolve, 1000))
@@ -398,7 +398,7 @@ async function lengthImmediately(text: string) {
 따라서 타입이 사용되는 용도를 가리키는 설명적인 제네릭 타입 이름을 사용하는 것이 가장 좋습니다.
 가독성을 위해 완전히 작성된 이름을 사용하도록 합니다.
 
-```js
+```ts
 function labelBox<Label, Value>(label: Label, value: Value) {
   /* ... */
 }

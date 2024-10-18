@@ -21,7 +21,7 @@ export const globalStyles = css`
     --text-color: rgba(255, 255, 255, 0.8);
   }
   /* Box sizing rules */
-  * {
+  *:not(pre):not(pre *) {
     box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
   }
@@ -92,7 +92,7 @@ export const globalStyles = css`
   span > code.language-text {
     color: #d946ef;
     transition: 0.3s;
-    padding: 0 5px;
+    padding: 2px 6px;
     font-family: 'Pretendard', sans-serif;
   }
 

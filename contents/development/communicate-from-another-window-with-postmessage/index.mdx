@@ -60,7 +60,7 @@ PASS 인증을 구현해야 했다.
 
 **main.tsx**
 
-```ts
+```tsx
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
@@ -90,7 +90,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 **parent.tsx**
 
-```ts
+```tsx
 import { useEffect, useState } from 'react'
 
 export default function Parent() {
@@ -149,7 +149,7 @@ export default function Parent() {
 
 **child.tsx**
 
-```ts
+```tsx
 export default function Child() {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     window.opener.postMessage({ type: 'child', payload: e.target.value }, '*')
@@ -213,7 +213,7 @@ export default function Child() {
 
 **child.tsx**
 
-```ts
+```tsx
 const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   window.opener.postMessage({ type: 'child', payload: e.target.value }, '*')
 }
@@ -248,7 +248,7 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 **parent.tsx**
 
-```ts
+```tsx
 useEffect(() => {
   const childMessage = (e: MessageEvent) => {
     if (e.data.type !== 'child' || !e.source) {
@@ -275,7 +275,7 @@ useEffect(() => {
 
 **child.tsx**
 
-```ts
+```tsx
 useEffect(() => {
   const childMessage = (e: MessageEvent) => {
     if (e.data.type !== 'parent') {

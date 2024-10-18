@@ -25,7 +25,7 @@ type: 'post'
 매개변수 타입에 타입이나 기본값을 지정하지 않으면 `any`타입을 기본으로 갖습니다.
 메서드를 호출하려면 허용 가능한 수의 인수가 필요하고, 재귀 함수가 아니라면 대부분 반환 타입을 유추할 수 있습니다.
 
-```js
+```ts
 class Greeter {
   greet(name: string) {
     console.log(`${name}, do tour stuff!`)
@@ -40,7 +40,7 @@ new Greeter().greet()
 
 **클래스 생성자**(constructor)는 매개변수와 관련하여 전형적인 클래스 메서드처럼 취급됩니다.
 
-```js
+```ts
 class Greeted {
   constructor(message: string) {
     console.log('As I always say: ${message}!')
@@ -58,7 +58,7 @@ new Greeted()
 타입스크립트에서 클래스의 속성을 읽거나 쓰려면 **클래스에 명시적으로 선언**해야 합니다.
 타입스크립트는 **생성자 내 할당**에 대해서 그 멤버가 클래스에 존재하는 멤버인지 추론하려고 시도하지 않습니다.
 
-```js
+```ts
 class FieldTrip {
   destination: string
 
@@ -75,7 +75,7 @@ class FieldTrip {
 클래스 속성을 명시적으로 선언하면 타입스크립트는 클래스 인스턴스에서 무엇이 허용되고,
 허용되지 않는지 빠르게 이해할 수 있습니다.
 
-```js
+```ts
 const trip = new FieldTrip('planetarium')
 
 trip.destination // OK
@@ -92,7 +92,7 @@ trip.nonexistent
 
 다음 `WithMethod` 클래스는 **모든 인스턴스가 참조**할 수 있는 `myMethod`메서드를 선언합니다.
 
-```js
+```ts
 class WithMethod {
   myMethod() {}
 }
@@ -106,7 +106,7 @@ new WithMethod().myMethod === new WithMethod().myMethod // true
 
 `WithProperty`클래스는 이름이 `myProperty`인 단일 속성을 포함하며 각 클래스 인스턴스에 대해 다시 생성되는 `() => void` 타입입니다.
 
-```js
+```ts
 class WithProperty {
   myProperty: = () => {}
 }
@@ -117,7 +117,7 @@ new WithProperty().myProperty === new WithProperty().myProperty // false
 함수 속성에는 클래스 메서드와 독립 함수의 동일한 구문을 사용해 매개변수와 반환 타입을 지정할 수 있습니다.
 결국 함수 속성은 **클래스 멤버로 할당된 값**이고, 그 값은 **함수**입니다.
 
-```js
+```ts
 class WithPropertyParameters {
   takesParameters = (input: boolean) => (input ? 'Yes' : 'No')
 }
@@ -135,7 +135,7 @@ instance.takesParameters(123)
 `undefined` 타입으로 선언된 각 속성이 생성자에서 할당되었는지 확인합니다.
 엄격한 초기화 검사를 통해 클래스 속성에 값을 할당하지 않는 실수를 예방할 수 있습니다.
 
-```js
+```ts
 class WithValue {
   immediate = 0 // OK
   later: number // OK (constructor에서 할당)
@@ -156,7 +156,7 @@ class WithValue {
 이름 뒤에 `!`를 추가해 검사를 비활성화하도록 설정합니다.
 이렇게 하면 타입스크립트에 속성이 처음 사용되기 전에 `undefined` 값이 할당됩니다.
 
-```js
+```ts
 class ActivitiesQueue {
   pending!: string[] // OK
 
@@ -179,7 +179,7 @@ activities.next()
 
 클래스에서도 `?`를 추가해 속성을 옵션으로 선언할 수 있습니다.
 
-```js
+```ts
 class MissingInitializer {
   property?: string
 }
@@ -192,7 +192,7 @@ new MissingInitializer().property?.length // OK
 `readonly` 키워드를 통해 속성을 **읽기 전용**으로 선언합니다.
 `readonly`는 타입 시스템에만 존재하며 자바스크립트로 컴파일할 때 삭제됩니다.
 
-```js
+```ts
 class Quote {
   readonly text: string
 
@@ -217,7 +217,7 @@ quote.text = 'Ha!'
 
 타입시스템에서의 클래스는 클래스 선언이 **런타임 값**(클래스 자체)과 **타입 애너테이션에서 사용할 수 있는 타입**을 모두 생성한다는 점에서 독특합니다.
 
-```js
+```ts
 class Teacher {
   sayHello() {
     console.log('Take chances, make mistakes, get messy!')
@@ -233,7 +233,7 @@ teacher = new Teacher() // OK
 
 타입스크립트는 클래스 이름 뒤에 `implements` 키워드와 인터페이스 이름을 추가함으로써 클래스의 해당 인스턴스가 인터페이스를 준수한다고 선언할 수 있습니다.
 
-```js
+```ts
 interface Learner {
   name: string
   study(hours: number): void
@@ -263,7 +263,7 @@ class Student implements Learner {
 
 타입스크립트는 **다른 클래스를 확장**하거나 **하위 클래스**를 만드는 자바스크립트 개념에 타입 검사를 추가합니다.
 
-```js
+```ts
 class Teacher {
   teach() {
     console.log('teach')
@@ -287,7 +287,7 @@ teacher.learn() // OK (하위 클래스에 정의됨)
 하위 클래스도 **기본 클래스의 멤버를 상속**합니다.
 하위 클래스의 인스턴스는 기본 클래스의 모든 멤버를 가지므로 기본 클래스의 인스턴스가 필요한 모든 곳에서 사용할 수 있습니다.
 
-```js
+```ts
 class Lesson {
   // ~~~
 }
@@ -323,7 +323,7 @@ lesson = new OnlineLesson() // OK
 대신 하위 클래스가 해당 메서드를 제공할 것을 예상하고 기본 클래스를 만드는 방법이 유용할 수 있습니다.
 추상화하려는 클래스 이름과 메서드 앞에 타입스크립트의 `abstract` 키워드를 추가합니다.
 
-```js
+```ts
 abstract class School {
   readonly name: string
 
@@ -358,7 +358,7 @@ class PreSchool extends School {
 이러한 키워드는 순수하게 타입 시스템 내에 존재합니다.
 코드가 컴파일되면 다른 모든 타입 시스템 구문과 함께 키워드도 제거됩니다.
 
-```js
+```ts
 class Base {
   isPublicImplicit = 0
   public isPublicExplicit = 1

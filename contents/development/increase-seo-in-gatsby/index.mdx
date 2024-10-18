@@ -81,7 +81,7 @@ Gastby에서는 SEO 컴포넌트를 통해 검색엔진이 컨텐츠를 이해�
 
 **Seo.tsx**
 
-```js
+```tsx
 import React from 'react'
 
 interface Props {
@@ -122,7 +122,7 @@ export default Seo
 
 이렇게 만들어진 SEO 컴포넌트는 페이지별로 `Head`에서 불러오면 됩니다.
 
-```js
+```tsx
 import React from 'react'
 import { SEO } from 'components'
 
@@ -169,7 +169,7 @@ yarn add gatsby-plugin-sitemap
 
 **gatsby-config.ts**
 
-```js
+```ts
 {
   resolve: 'gatsby-plugin-sitemap',
   options: {
@@ -286,7 +286,7 @@ name에는 URL이나 slug 같은 유니크한 값으로 지정해줍니다.
 
 **gatsby-config.ts**
 
-```js
+```ts
 {
   resolve: 'gatsby-plugin-feed',
   options: {

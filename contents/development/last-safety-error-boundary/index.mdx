@@ -29,7 +29,7 @@ type: 'post'
 
 **\_error.tsx**
 
-```ts
+```tsx
 function Error({ statusCode }) {
 	... // statusCode에 따라 에러 화면을 구성합니다.
 }
@@ -81,7 +81,7 @@ export default Error
 
 **ErrorBoundary 예제 코드**
 
-```js
+```jsx
 class ErrorBoundary extends React.Component {
   constructor(props) {
     super(props)
@@ -189,7 +189,7 @@ export default ErrorBoundary
 
 **ErrorBoundary 코드**
 
-```ts
+```tsx
 import React, { Component, ErrorInfo, FunctionComponent, ReactNode } from 'react'
 
 interface ErrorBoundaryFallbackProops<TError extends Error = Error> {

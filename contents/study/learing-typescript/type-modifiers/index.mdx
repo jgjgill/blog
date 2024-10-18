@@ -29,7 +29,7 @@ type: 'post'
 다만, any는 타입스크립트가 해당 값에 대한 할당 가능성 또는 멤버에 대해 **타입 검사를 수행하지 않도록 명시적으로 지시**한다는 문제점을 갖습니다.
 이러한 안정성 부족은 타입스크립트의 유용성을 줄입니다.
 
-```js
+```ts
 function greetComedian(name: any) {
   // 타입 오류 없음
   console.log(`Announcing ${name.toUpperCase()}!`)
@@ -52,7 +52,7 @@ unknown 타입과 any 타입의 주요 차이점은 **unknown 타입의 값을 �
 
 다음 코드는 unknown 타입 값의 속성에 접근하려고 시도하는 경우입니다.
 
-```js
+```ts
 function greetComedian(name: unknown) {
   console.log(`Announcing ${name.toUpperCase()}!`)
   // Error: Object is of type 'unknown'.
@@ -61,7 +61,7 @@ function greetComedian(name: unknown) {
 
 타입스크립트가 unknown 타입인 name에 접근할 수 있는 유일한 방법은 **instanceof** 나 **typeof** 또는 **타입 어서션**을 사용하는 것처럼 **값의 타입이 제한된 경우**입니다.
 
-```js
+```ts
 function greetComedianSafety(name: unknown) {
   if (typeof name === 'string') {
     console.log(`Announcing ${name.toUpperCase()}!`) // OK
@@ -75,7 +75,7 @@ function greetComedianSafety(name: unknown) {
 
 앞서 살펴본 방식으로 타입을 좁힐 수 있지만 로직을 함수로 감싸면 타입을 좁힐 수 없게 됩니다.
 
-```js
+```ts
 function isNumberOrString(value: unknown) {
   return ['number', 'string'].includes(typeof value)
 }
@@ -100,13 +100,13 @@ function logValueIfExists(value: number | string | null | undefined) {
 
 타입 서술어의 반환 타입은 **매개변수의 이름, is 키워드, 특정 타입**으로 선언할 수 있습니다.
 
-```js
-function typePredicate(input: WideType): input is NarrowType;
+```ts
+function typePredicate(input: WideType): input is NarrowType
 ```
 
 `isNumberOrString`에 활용하면 다음과 같습니다.
 
-```js
+```ts
 function isNumberOrString(value: unknown): value is number | string {
   return ['number', 'string'].includes(typeof value)
 }
@@ -126,13 +126,13 @@ function logValueIfExists(value: number | string | null | undefined) {
 
 타입 서술어는 이미 한 인터페이스의 인스턴스로 알려진 객체가 **더 구체적인 인터페이스의 인스턴스인지 여부를 검사**하는데 자주 사용됩니다.
 
-```js
+```ts
 interface Comedian {
-  funny: boolean;
+  funny: boolean
 }
 
 interface StandupComedian extends Comedian {
-  routine: string;
+  routine: string
 }
 
 function isStandupComedian(value: Comedian): value is StandupComedian {
@@ -162,7 +162,7 @@ function workWithComedian(value: Comedian) {
 자바스크립트 객체는 일반적으로 string 타입인 동적값을 사용하여 검색된 멤버를 갖습니다.
 이러한 키를 타입 시스템에서 표현하려면 유효하지 않은 키도 허용할 수 있어 상당히 까다로울 수 있습니다.
 
-```js
+```ts
 interface Ratings {
   audience: number
   critics: number
@@ -183,7 +183,7 @@ getRating(ratings, 'not valid') // 허용되지만 사용하면 안 됨
 
 이에 **리터럴 유니언 타입**을 사용하여 컨테이너 값에 존재하는 키를 적절하게 제한할 수 있습니다.
 
-```js
+```ts
 interface Ratings {
   audience: number
   critics: number
@@ -206,7 +206,7 @@ getRating(ratings, 'not valid')
 대신 타입스크립트에서는 기존에 존재하는 타입을 사용하고,
 해당 타입에 허용되는 모든 키의 조합을 반환하는 `keyof` 연산자를 제공합니다.
 
-```js
+```ts
 interface Ratings {
   audience: number
   critics: number
@@ -240,10 +240,10 @@ getRating(ratings, 'not valid')
 `keyof`는 **타입에 허용된 키를 검색**합니다.
 두 키워드를 연결해 값의 타입에 허용된 키를 간결하게 검색할 수 있습니다.
 
-```js
+```ts
 const ratings = {
   imdb: 8.4,
-  metacritic: 82
+  metacritic: 82,
 }
 
 function logRating(key: keyof typeof ratings) {
@@ -264,7 +264,7 @@ logRating('invalid')
 타입스크립트는 값의 타입에 대한 타입 시스템의 이해를 재정의하기 위한 구문으로 **타입 어서션**(type assertion)을 제공합니다.
 `as` 키워드를 통해 값을 해당 타입으로 처리합니다.
 
-```js
+```ts
 const rawData = '["grace", "frankie"]'
 
 // 타입: any
@@ -277,7 +277,7 @@ JSON.parse(rawData) as string[]
 JSON.parse(rawData) as [string, string]
 
 // 타입: ["grace", "frankie"]
-JSON.parse(rawData) as ["grace", "frankie"]
+JSON.parse(rawData) as ['grace', 'frankie']
 ```
 
 타입 어서션은 타입 시스템에만 존재하며 자바스크립트로 컴파일될 때 다른 타입 시스템 구문과 함께 제거됩니다.
@@ -289,7 +289,7 @@ JSON.parse(rawData) as ["grace", "frankie"]
 
 **오류를 처리**할 때 타입 어서션이 매우 유용할 수 있습니다.
 
-```js
+```ts
 try {
   // 오류 발생 코드
 } catch (error) {
@@ -299,7 +299,7 @@ try {
 
 발생된 오류가 예상된 오류 타입인지 확인하기 위해 `instanceof`와 같은 타입 내로잉을 사용할 수 있습니다.
 
-```js
+```ts
 try {
   // 오류 발생 코드
 } catch (error) {
@@ -311,11 +311,9 @@ try {
 
 실제로는 아니고 이론적으로만 `null` 또는 `undefined`를 포함할 수 있는 변수에서 `null`과 `undefined`를 제거할 때 타입 어서션을 주로 사용합니다.
 
-```js
+```ts
 // 타입 유추: Date | undefined
-let maybeDate = Math.random() > 0.5
-    ? undefined
-    : new Date()
+let maybeDate = Math.random() > 0.5 ? undefined : new Date()
 
 // 타입이 Date라고 간주됨
 maybeDate as Date
@@ -331,7 +329,7 @@ any 타입과 마찬가지로 타입 어서션은 타입 시스템에 필요한 
 
 변수 타입을 선언하기 위해 **타입 애너테이션**을 사용하는 것과 초깃값으로 변수 타입을 변경하기 위해 **타입 어서션**을 사용하는 것 사이에는 차이가 있습니다.
 
-```js
+```ts
 interface Entertainer {
   acts: string[]
   name: string
@@ -339,11 +337,11 @@ interface Entertainer {
 
 const declared: Entertainer = {
   // Error: Property 'acts' is missing in type '{ name: string; }' but required in type 'Entertainer'.
-  name: 'Moms Mabley'
+  name: 'Moms Mabley',
 }
 
 const asserted = {
-  name: 'Moms Mabley'
+  name: 'Moms Mabley',
 } as Entertainer // 허용되지만 런타임 시 오류 발생
 ```
 
@@ -352,14 +350,14 @@ const asserted = {
 타입 어서션은 일부 값의 타입이 약간 잘못된 상황에서 필요한 작은 도피 수단입니다.
 완전히 서로 관련없는 타입에서는 오류가 감지됩니다.
 
-```js
+```ts
 let myValue = 'Stella!' as number
 ```
 
 **이중 타입 어서션**을 사용할 수도 있지만,
 이는 위험한 방법입니다.
 
-```js
+```ts
 let myValueDouble = '1337' as unknown as number // 허용되지만 이렇게 사용하면 안 됨
 ```
 
@@ -372,19 +370,19 @@ let myValueDouble = '1337' as unknown as number // 허용되지만 이렇게 사
 - 리터럴은 일반적인 원시 타입과 동등하지 않고 **리터럴**로 취급
 - 객체의 속성은 **읽기 전용**으로 간주
 
-```js
+```ts
 // 타입: (number | string)[]
-[0, '']
-
-// 타입: readonly [0, '']
-[0, ''] as const
+;[0, ''][
+  // 타입: readonly [0, '']
+  (0, '')
+] as const
 ```
 
 ### 리터럴에서 원시 타입으로
 
 타입 시스템이 리터럴 값을 일반적인 원시 타입으로 확장하기보다 **특정 리터럴**로 이해하는 것이 유용할 수 있습니다.
 
-```js
+```ts
 // 타입: () => string
 const getName = () => 'Maria Bamford'
 
@@ -399,7 +397,7 @@ const getNameConst = () => 'Maria Bamford' as const
 리터럴은 고유한 타입으로 간주되며,
 배열은 읽기 전용 튜플이 됩니다.
 
-```js
+```ts
 function describePreference(preference: 'maybe' | 'no' | 'yes') {
   switch (preference) {
     case 'maybe':
@@ -414,7 +412,7 @@ function describePreference(preference: 'maybe' | 'no' | 'yes') {
 // 타입 { movie: string, standup: string }
 const preferencesMutable = {
   movie: 'maybe',
-  standup: 'yes'
+  standup: 'yes',
 }
 
 describePreference(preferencesMutable.movie)
@@ -425,7 +423,7 @@ preferencesMutable.movie = 'no' // OK
 // 타입 { readonly movie: 'maybe', readonly standup: 'yes' }
 const preferencesReadonly = {
   movie: 'maybe',
-  standup: 'yes'
+  standup: 'yes',
 } as const
 
 describePreference(preferencesReadonly.movie) // OK

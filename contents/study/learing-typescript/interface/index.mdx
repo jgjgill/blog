@@ -49,7 +49,7 @@ interface Poet {
 객체 타입과 마찬가지로 모든 객체가 필수적으로 인터페이스 속성을 가질 필요는 없습니다.
 타입 애너테이션 `:` 앞에 `?`를 사용해 선택적 속성임을 나타낼 수 있습니다.
 
-```js
+```ts
 interface Book {
   author?: string
   pages: number
@@ -106,7 +106,7 @@ function read(page: Page) {
 
 두 가지 선언 방법은 자바스크립트에서 객체를 함수로 선언하는 방법과 동일합니다.
 
-```js
+```ts
 interface HasBothFunctionTypes {
   property: () => string
   method(): string
@@ -116,7 +116,7 @@ const hasBoth: HasBothFunctionTypes = {
   property: () => '',
   method() {
     return ''
-  }
+  },
 }
 
 hasBoth.property() // OK
@@ -141,11 +141,11 @@ hasBoth.method() // OK
 호출 시그니처는 **값을 함수처럼 호출하는 방식**에 대한 타입 시스템의 설명입니다.
 호출 시그니처가 선언한 방식으로 호출되는 값만 인터페이스에 할당할 수 있습니다.
 
-```js
+```ts
 type FunctionAlias = (input: string) => number
 
 interface CallSignature {
-  (input: string): number;
+  (input: string): number
 }
 
 // 타입: (input: string) => number
@@ -158,7 +158,7 @@ const typedCallSignature: CallSignature = (input) => input.length // OK
 호출 시그니처는 **사용자 정의 속성을 추가로 갖는 함수**를 설명하는 데 사용할 수 있습니다.
 타입스크립트는 함수 선언에 추가된 속성을 해당 함수 선언의 타입에 추가하는 것으로 인식합니다.
 
-```js
+```ts
 interface FunctionWithCount {
   count: number
   (): void
@@ -192,9 +192,9 @@ hasCallCount = doesNotHaveCount
 이때 타입스크립트는 **인덱스 시그니처** 구문을 제공해 인터페이스의 객체가 임의의 키를 받고, 해당 키 아래의 특정 타입을 반환할 수 있음을 나타냅니다.
 인덱스 시그니처는 일반적으로 `{[i: string]: ... }`와 같은 형태를 지닙니다.
 
-```js
+```ts
 interface WordCounts {
-  [i: string]: number;
+  [i: string]: number
 }
 
 const counts: WordCounts = {}
@@ -210,7 +210,7 @@ counts.cherry = false
 
 인덱스 시그니처는 객체가 어떤 속성에 접근하든 간에 **값을 반환**해야 함을 나타냅니다.
 
-```js
+```ts
 interface DatesByName {
   [i: string]: Date
 }
@@ -240,7 +240,7 @@ console.log(publishDates.Beloved.toString())
 
 속성과 인덱스 시그니처를 혼합해서 사용하는 일반적인 타입 시스템 기법 중 하나는 인덱스 시그니처의 원시 속성보다 명명된 속성에 대해 더 구체적인 속성 타입 리터럴을 사용하는 것입니다.
 
-```js
+```ts
 interface ChapterStarts {
   preface: 0
   [i: string]: number
@@ -249,11 +249,11 @@ interface ChapterStarts {
 const correctPreface: ChapterStarts = {
   preface: 0,
   night: 1,
-  shopping: 5
+  shopping: 5,
 }
 
 const wrongPreface: ChapterStarts = {
-  preface: 1
+  preface: 1,
   // Error: Type '1' is not assignable to type '0'.
 }
 ```
@@ -265,7 +265,7 @@ const wrongPreface: ChapterStarts = {
 타입스크립트 인덱스 시그니처는 키로 `string` 대신 `number` 타입을 사용할 수 있지만,
 명명된 속성은 그 타입을 포괄적인 용도의 `string` 인덱스 시그니처의 타입으로 할당할 수 있어야 합니다.
 
-```js
+```ts
 // OK
 interface MoreNarrowNumbers {
   [i: number]: string
@@ -276,7 +276,7 @@ interface MoreNarrowNumbers {
 const mixesNumbersAndStrings: MoreNarrowNumbers = {
   0: '',
   key1: '',
-  key2: undefined
+  key2: undefined,
 }
 
 interface MoreNarrowStrings {
@@ -291,7 +291,7 @@ interface MoreNarrowStrings {
 
 객체 타입이 다른 객체 타입의 속성으로 중첩될 수 있는 것처럼 인터페이스 타입도 자체 인터페이스 타입 혹은 객체 타입을 속성으로 가질 수 있습니다.
 
-```js
+```ts
 interface Novel {
   author: {
     name: string
@@ -312,13 +312,13 @@ interface Setting {
 확장할 인터페이스의 이름 뒤에 `extends` 키워드를 추가해서 다른 인터페이스를 확장한 인터페이스라는 걸 표시합니다.
 이렇게 하면 파생 인터페이스를 준수하는 모든 객체가 기본 인터페이스의 모든 멤버도 가져야 한다는 것을 타입스크립트에 알려줍니다.
 
-```js
+```ts
 interface Writing {
-  title: string;
+  title: string
 }
 
 interface Novella extends Writing {
-  pages: number;
+  pages: number
 }
 
 // OK
@@ -339,13 +339,13 @@ let myNovella: Novella = {
 
 속성을 재선언하는 대부분의 파생 인터페이스는 해당 속성을 **유니언 타입의 더 구체적인 하위 집합**으로 만들거나 속성을 **기본 인터페이스의 타입에서 확장된 타입**으로 만들기 위해 사용합니다.
 
-```js
+```ts
 interface WithNullableName {
-  name: string | null;
+  name: string | null
 }
 
 interface WithNonNullableName extends WithNullableName {
-  name: string;
+  name: string
 }
 
 interface WithNumericName extends WithNullableName {
@@ -353,7 +353,7 @@ interface WithNumericName extends WithNullableName {
   // Types of property 'name' are incompatible.
   // Type 'string | number' is not assignable to type 'string | null'.
   // Type 'number' is not assignable to type 'string'.
-  name: number | string;
+  name: number | string
 }
 ```
 
@@ -362,17 +362,17 @@ interface WithNumericName extends WithNullableName {
 인터페이스는 여러 개의 다른 인터페이스를 확장해서 선언할 수 있습니다.
 파생 인터페이스는 모든 기본 인터페이스의 모든 멤버를 받습니다.
 
-```js
+```ts
 interface GivesNumber {
-  giveNumber(): number;
+  giveNumber(): number
 }
 
 interface GivesString {
-  giveString(): string;
+  giveString(): string
 }
 
 interface GivesBothAndEither extends GivesNumber, GivesString {
-  giveEither(): number | string;
+  giveEither(): number | string
 }
 
 function useGivesBoth(instance: GivesBothAndEither) {
@@ -387,13 +387,13 @@ function useGivesBoth(instance: GivesBothAndEither) {
 인터페이스의 중요한 특징 중 하나는 **서로 병합하는 능력**입니다.
 두 개의 인터페이스가 동일한 이름으로 동일한 스코프에 선언된 경우, 선언된 모든 필드를 포함하는 더 큰 인터페이스가 코드에 추가됩니다.
 
-```js
+```ts
 interface Merged {
-  fromFirst: string;
+  fromFirst: string
 }
 
 interface Merged {
-  fromSecond: number;
+  fromSecond: number
 }
 
 // interface Merged {
@@ -406,9 +406,9 @@ interface Merged {
 
 그러나 인터페이스 병합은 외부 패키지 또는 `Window` 같은 내장된 전역 인터페이스를 보강하는 데 유용합니다.
 
-```js
+```ts
 interface Window {
-  myEnvironmentVariable: string;
+  myEnvironmentVariable: string
 }
 
 window.myEnvironmentVariable // 타입: string
@@ -419,7 +419,7 @@ window.myEnvironmentVariable // 타입: string
 병합된 인터페이스는 타입이 다른 동일한 이름의 속성을 여러 번 선언할 수 없습니다.
 속성이 이미 인터페이스에 선언되어 있다면 나중에 병합된 인터페이스에서도 동일한 타입을 사용해야 합니다.
 
-```js
+```ts
 interface MergedProperties {
   same: (input: boolean) => string
   different: (input: string) => string
@@ -437,13 +437,13 @@ interface MergedProperties {
 그러나 병합된 인터페이스는 동일한 이름과 다른 시그니처를 가진 메서드는 정의할 수 있습니다.
 이렇게 하면 메서드에 대한 **함수 오버로드**가 발생합니다.
 
-```js
+```ts
 interface MergedMethods {
-  different(input: string): string;
+  different(input: string): string
 }
 
 interface MergedMethods {
-  different(input: number): string; // OK
+  different(input: number): string // OK
 }
 ```
 

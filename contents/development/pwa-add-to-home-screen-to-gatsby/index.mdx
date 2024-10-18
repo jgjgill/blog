@@ -119,7 +119,7 @@ gatsby에서는 manifest 구성을 도와주는 **gatsby-plugin-manifest** 플�
 
 BeforeInstallPromptEvent은 아직 타입이 정의되어 있지 않아서 MDN에 정의되어 있는 [문서](https://developer.mozilla.org/en-US/docs/Web/API/BeforeInstallPromptEvent)를 확인하며 타입 인터페이스를 구성해주셔야 합니다.
 
-```js
+```ts
 export interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[]
   readonly userChoice: Promise<{
@@ -142,7 +142,7 @@ export interface BeforeInstallPromptEvent extends Event {
 
 **useA2HS.ts**
 
-```js
+```ts
 import { useEffect, useState } from 'react'
 import { BeforeInstallPromptEvent } from 'types/custom'
 
@@ -180,7 +180,7 @@ export default function useA2HS() {
 
 **A2HS.tsx**
 
-```js
+```tsx
 import useA2HS from 'hooks/useA2HS'
 import React from 'react'
 
@@ -221,7 +221,7 @@ export default A2HS
 
 **a2hs.ts**
 
-```js
+```ts
 export class a2hs {
   // localStorage 키값
   private static HIDE_INSTALL_A2HS = 'hide_install_a2hs'
@@ -251,7 +251,7 @@ export class a2hs {
 
 **useA2HS.ts**
 
-```js
+```ts
 import { useEffect, useState } from 'react'
 import { BeforeInstallPromptEvent } from 'types/custom'
 import { a2hs } from 'utils/a2hs'
@@ -311,7 +311,7 @@ A2HS 창에서 아무런 애니메이션이 없으니 밋밋하네요.
 
 **useUnmountAnimation.ts**
 
-```js
+```ts
 import { useEffect, useState } from 'react'
 
 export default function useUnmountAnimation(codition: boolean) {
@@ -337,7 +337,7 @@ export default function useUnmountAnimation(codition: boolean) {
 
 **A2HS.tsx**
 
-```js
+```tsx
 import styled from '@emotion/styled'
 import useA2HS from 'hooks/useA2HS'
 import useUnmountAnimation from 'hooks/useUnmountAnimation'
@@ -366,10 +366,7 @@ const A2HS = () => {
 
 export default A2HS
 
-const Container =
-  styled.div <
-  { $isAnimation: boolean } >
-  `
+const Container = styled.div<{ $isAnimation: boolean }>`
   transform: ${({ $isAnimation }) => !$isAnimation && 'translateY(500px)'};
   animation: mountAnimation 1s;
   transition: background-color 0.3s, color 0.3s, transform 1s;
@@ -393,7 +390,7 @@ mount에서의 애니메이션도 useUnmountAnimation훅을 활용하여 처리�
 그래서 컴포넌트가 다 그려진 뒤에는 애니메이션 조건이 변경되지 않아 애니메이션이 일어나지 않는 것 같았습니다.
 이에 `setTimeout`을 활용하여 `setIsCompleted`를 `true`로 변경하는 걸 일부러 늦추는 시도를 했습니다.
 
-```js
+```tsx
 useEffect(() => {
   let timeoutId: any
 

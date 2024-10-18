@@ -71,7 +71,7 @@ gatsby.config.ts에 플러그인을 추가해줍니다.
 
 **Toc.tsx**
 
-```js
+```tsx
 export interface TableItem {
   url: string
   title: string
@@ -79,11 +79,11 @@ export interface TableItem {
 }
 ```
 
-```js
+```tsx
 interface Props {
   toc: {
-    items?: TableItem[],
-  };
+    items?: TableItem[]
+  }
 }
 
 const Toc = ({ toc }: Props) => {
@@ -95,7 +95,7 @@ const Toc = ({ toc }: Props) => {
 }
 ```
 
-```js
+```tsx
 const TocElement = ({ toc }: Props) => {
   return (
     <TocList>
@@ -117,7 +117,7 @@ Heading 태그가 TOC를 나누는 기준이기 때문에 해당 태그들을 �
 이를 위해 `TocElement` 컴포넌트에 관련 작업을 수행합니다.
 추가된 코드는 다음과 같습니다.
 
-```js
+```tsx
 const Toc = ({ toc }: Props) => {
   return (
     <Aside>

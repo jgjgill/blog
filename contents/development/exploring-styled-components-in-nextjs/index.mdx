@@ -36,7 +36,7 @@ type: 'post'
 
 **pages/index.tsx**
 
-```ts
+```tsx
 import styled from 'styled-components'
 
 export default function Home() {
@@ -148,7 +148,7 @@ export default nextConfig
 
 **pages/\_documents.tsx**
 
-```ts
+```tsx
 import Document, { DocumentContext, DocumentInitialProps } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
@@ -209,7 +209,7 @@ export default class MyDocument extends Document {
 
 우선 서버 시트를 생성한다.
 
-```ts
+```tsx
 const sheet = new ServerStyleSheet()
 ```
 
@@ -217,7 +217,7 @@ const sheet = new ServerStyleSheet()
 
 해당 로직에서는 `sheet.collectStyles`을 통해 컴포넌트에서 작성했던 스타일들을 수집한다.
 
-```ts
+```tsx
 // Next.js에서 제공하는 기본 페이지 렌더링 메서드
 ctx.renderPage = () =>
   // Next.js 기본 렌더링 로직을 참조하는 변수
@@ -233,7 +233,7 @@ ctx.renderPage = () =>
 
 여기서 `sheet.getStyleElement`을 통해 수집했던 스타일을 `React` `Element`로 반환하게 해준다.
 
-```ts
+```tsx
 return {
   ...initialProps,
   styles: [initialProps.styles, sheet.getStyleElement()], // 수집된 스타일을 React Element로 반환
@@ -272,7 +272,7 @@ return {
 
 **collectStyles**
 
-```ts
+```tsx
 collectStyles(children: any): JSX.Element {
   if (this.sealed) {
     throw styledError(2);
@@ -292,7 +292,7 @@ collectStyles(children: any): JSX.Element {
 
 **StyleSheetManager**
 
-```ts
+```tsx
 export function StyleSheetManager(props: IStyleSheetManager): JSX.Element {
   const [plugins, setPlugins] = useState(props.stylisPlugins);
   const { styleSheet } = useStyleSheetContext();
@@ -332,7 +332,7 @@ export function StyleSheetManager(props: IStyleSheetManager): JSX.Element {
 
 **getStyleElement**
 
-```ts
+```tsx
 getStyleElement = () => {
   if (this.sealed) {
     throw styledError(2)

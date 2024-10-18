@@ -18,7 +18,7 @@ type: 'post'
 
 다음과 같은 문제 상황에 직면했다.
 
-```js
+```ts
 // 코드의 세부 내용들은 임의로 변경했다.
 
 const rootMenu = [
@@ -52,16 +52,16 @@ const rootMenu = [
 
 요구 사항에 따라 타입을 정리하면 다음과 같다.
 
-```TypeScript
+```ts
 // 공통적으로 사용되는 타입
-type RootMenuBase = { key: string; label: string; index: number; };
+type RootMenuBase = { key: string; label: string; index: number }
 
 // path 타입
-type RootMenuPath = { path: string };
+type RootMenuPath = { path: string }
 
 // subMenu 타입
-type RootMenuSubMenu = { subMenu: SubMenu[] };
-type SubMenu = { label: string; key: string; path: string };
+type RootMenuSubMenu = { subMenu: SubMenu[] }
+type SubMenu = { label: string; key: string; path: string }
 ```
 
 이를 어떻게 적절하게 사용할 수 있을까?
@@ -72,17 +72,17 @@ type SubMenu = { label: string; key: string; path: string };
 
 처음에 떠오른 방식은 **옵셔널 프로퍼티**였다.
 
-```TypeScript
+```ts
 // 공통적으로 사용되는 타입
-type RootMenuBase = { key: string; label: string; icon: JSX.Element; };
+type RootMenuBase = { key: string; label: string; icon: JSX.Element }
 
 // subMenu 타입
-type SubMenu = { label: string; key: string; path: string };
+type SubMenu = { label: string; key: string; path: string }
 
 type RootMenu = RootMenuBase & {
   path?: string
   subMenu?: SubMenu[]
-};
+}
 ```
 
 <Image
@@ -115,19 +115,19 @@ type RootMenu = RootMenuBase & {
 
 유니온 타입으로 구성해보자.
 
-```TypeScript
+```ts
 // 공통적으로 사용되는 타입
-type RootMenuBase = { key: string; label: string; index: number; };
+type RootMenuBase = { key: string; label: string; index: number }
 
 // path 타입
-type RootMenuPath = { path: string };
+type RootMenuPath = { path: string }
 
 // subMenu 타입
-type RootMenuSubMenu = { subMenu: SubMenu[] };
-type SubMenu = { label: string; key: string; path: string };
+type RootMenuSubMenu = { subMenu: SubMenu[] }
+type SubMenu = { label: string; key: string; path: string }
 
 // 유니언 타입 활용
-type RootMenu = RootMenuBase & (RootMenuPath | RootMenuSubMenu);
+type RootMenu = RootMenuBase & (RootMenuPath | RootMenuSubMenu)
 ```
 
 <Image
@@ -170,7 +170,7 @@ type RootMenu = RootMenuBase & (RootMenuPath | RootMenuSubMenu);
 
 문제가 되는 상황에 집중하면 다음과 같이 단순화시킬 수 있다.
 
-```TypeScript
+```ts
 type A = { a: string }
 type B = { b: string }
 
@@ -193,7 +193,7 @@ const result: 결과_타입 = {
 
 `XOR`타입을 만들어보자.
 
-```TypeScript
+```ts
 type A = { a: string; b?: never }
 type B = { b: string; a?: never }
 type 결과_타입 = A | B
@@ -212,8 +212,8 @@ const result: 결과_타입 = { a: 'a', b: 'b' } // 에러 발생
 
 조금 더 나아가서 추상화를 시켜보자.
 
-```TypeScript
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
+```ts
+type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
 type XOR<T, U> = (Without<T> & U) | (Without<U> & T)
 
 type A = { a: string }
@@ -232,7 +232,7 @@ const result: 결과_타입 = { a: 'a', b: 'b' } // 에러 발생
 
 이를 적용하여 다시 문제를 해결하자.
 
-```TypeScript
+```ts
 type Without<T> = { [P in keyof T]?: undefined }
 type XOR<T, U> = (Without<T> & U) | (Without<U> & T)
 

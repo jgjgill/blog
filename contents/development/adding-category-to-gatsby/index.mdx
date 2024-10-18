@@ -54,7 +54,7 @@ category: 'development'
 
 이렇게 만들어진 Template은 `/category/{category-name}`와 같은 경로로 활용될 것입니다.
 
-```js
+```tsx
 import App from 'App'
 import { Author, PostList, Seo } from 'components'
 import Flex from 'components/@shared/Flex'
@@ -239,7 +239,7 @@ categories.forEach((category) => {
 이와 관련해서 Graphql에서 지원해주는 기능이 있었습니다.
 `useStaticQuery`를 사용하면 페이지 단위가 아닌 Category 컴포넌트에서도 데이터 처리가 가능합니다.
 
-```js
+```tsx
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
 import { graphql, Link, useStaticQuery } from 'gatsby'

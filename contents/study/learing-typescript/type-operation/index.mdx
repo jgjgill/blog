@@ -279,14 +279,14 @@ type OnlyStringEventData = OnlyStringProperties<AllEventData>
 그러나 경우에 따라 문자열이 일부 문자열 패턴과 일치함을 나타내고 싶을 수 있습니다.
 이때 타입스크립트 구문으로 **템플릿 리터럴 타입**을 사용할 수 있습니다.
 
-```js
+```ts
 type Greeting = `Hello${string}`
 let matches: Greeting = 'Hello, world' // OK
 ```
 
 템플릿 리터럴 타입을 **더 좁은 문자열 패턴으로 제한**하기 위해 포괄적인 `string` 원시 타입 대신 문자열 리터럴 타입과 유니언을 타입 보간법에 사용할 수 있습니다.
 
-```js
+```ts
 type Brightness = 'dark' | 'light'
 type Color = 'blue' | 'red'
 
@@ -309,7 +309,7 @@ let colorOk: BrightnessAndColor = 'dark-blue' // OK
 템플릿 리터럴 타입은 원시 문자열 타입과 문자열 리터럴 사이의 중간 지점이므로 여전히 **문자열**입니다.
 템플릿 리터럴 타입은 문자열 리터럴을 사용할 수 있는 모든 위치에서 사용 가능합니다.
 
-```js
+```ts
 type DataKey = 'location' | 'name' | 'year'
 
 type ExistenceChecks = {
@@ -367,7 +367,7 @@ type TurnIntoGettersDirect<T> = {
 이러한 제한 사항을 피하기 위해 `string`과 교차 타입(&)을 사용하여 **문자열이 될 수 있는 타입만 사용하도록 강제**합니다.
 `string & symbol`은 `never`가 되므로 전체 템플릿 문자열은 `never`가 되고 타입스크립트는 이를 무시하게 됩니다.
 
-```js
+```ts
 const someSymbol = Symbol('')
 
 interface HasStringAndSymbol {

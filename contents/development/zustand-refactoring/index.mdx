@@ -99,7 +99,7 @@ type: 'post'
 
 **rootStore.tsx**
 
-```ts
+```tsx
 import { createContext, useContext, useLayoutEffect } from 'react'
 import { create } from 'zustand'
 import { useStoreTest1 } from './store.test1'
@@ -219,7 +219,7 @@ export function useCreateStore(initialState: any) {
 
 **\_app.tsx**
 
-```ts
+```tsx
 import { StoreProvider, initializeStore, useCreateStore } from '@/store/rootStore'
 import type { AppProps } from 'next/app'
 
@@ -285,7 +285,7 @@ export const useStoreTest1 = (set: any) => ({
 
 **useTest1.tsx**
 
-```ts
+```tsx
 import { useStoreSSR } from './rootStore'
 
 const useTest1 = () => useStoreSSR((state) => state.test1)
@@ -301,7 +301,7 @@ export default useTest1
 
 **사용 예시**
 
-```ts
+```tsx
 import useTest1 from '@/store/useTest1'
 
 export default function Home() {
@@ -389,7 +389,7 @@ export default function Home() {
 
 **rootStore.tsx**
 
-```ts
+```tsx
 import { create } from 'zustand'
 import { createTest1Slice } from './store.test1.ts'
 
@@ -438,7 +438,7 @@ export const createTest1Slice: StateCreator<Test1Slice, [], [], Test1Slice> = (s
 
 **rootStore.tsx**
 
-```ts
+```tsx
 import { createContext, useContext, useRef } from 'react'
 import { StoreApi, create, useStore } from 'zustand'
 
@@ -506,7 +506,7 @@ export const InitStoreProvider = ({
 
 **\_app.tsx**
 
-```ts
+```tsx
 import { InitStoreProvider, getStore } from '@/store/rootStore'
 import type { AppProps } from 'next/app'
 
@@ -570,7 +570,7 @@ export default useTest1
 
 **사용 예시**
 
-```ts
+```tsx
 import useTest1 from '@/store/useTest1'
 
 export default function Home() {
@@ -621,7 +621,7 @@ export default function Home() {
 
 **rootStore.tsx**
 
-```ts
+```tsx
 import { createContext, useContext, useRef } from 'react'
 import { StoreApi, create, useStore } from 'zustand'
 import { Test1Slice, createTest1Slice } from './store.test1'
@@ -701,7 +701,7 @@ export const createTest1Slice: StateCreator<Test1Slice, [], [], Test1Slice> = (s
 
 **\_app.tsx**
 
-```ts
+```tsx
 import { InitStoreProvider, getStore } from '@/store/rootStore'
 import type { AppProps } from 'next/app'
 
@@ -728,7 +728,7 @@ App.getInitialProps = async () => {
 
 **useTest1.tsx**
 
-```ts
+```tsx
 import { useInitStore } from './rootStore'
 
 const useTest1 = () => useInitStore((state) => state.test1)

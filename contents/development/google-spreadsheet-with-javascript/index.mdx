@@ -198,7 +198,7 @@ pnpm i google-spreadsheet google-auth-library dotenv
 
 다음은 **계정에 대한 접근 및 간단하게 시트 제목을 출력**하는 예시 코드이다.
 
-```javascript
+```js
 import { JWT } from 'google-auth-library'
 import { GoogleSpreadsheet } from 'google-spreadsheet'
 import 'dotenv/config'
@@ -228,7 +228,7 @@ console.log(doc.title) // google-spreadsheet-playground
 
 그때는 다음과 같이 비동기 함수를 래핑하는 형식으로 사용해야 한다.
 
-```javascript
+```js
 ;(async function () {
   await someAsyncFunction()
 })()
@@ -256,7 +256,7 @@ URL에서 봤던 gid=sheetId 부분이다.
 
 새로운 시트를 추가한다.
 
-```javascript
+```js
 await doc.addSheet({ title: '새로운 시트' })
 ```
 
@@ -275,7 +275,7 @@ await doc.addSheet({ title: '새로운 시트' })
 
 삭제는 `delete` 메서드를 통해 이루어진다.
 
-```javascript
+```js
 const newSheet = doc.sheetsByTitle['새로운 시트']
 await newSheet.delete()
 ```
@@ -301,7 +301,7 @@ await newSheet.delete()
 
 `setHeaderRow`을 활용할 수 있다.
 
-```javascript
+```js
 sheet.setHeaderRow(['nickname', 'blog'])
 ```
 

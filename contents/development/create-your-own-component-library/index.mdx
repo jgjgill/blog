@@ -67,7 +67,7 @@ npx storybook@latest init
 
 설치된 스토리북 관련 파일들에서 `preview.ts`에 `Tailwind` 스타일을 추가한다.
 
-```ts
+```tsx
 import type { Preview } from '@storybook/react'
 // add next line
 import '../src/index.css'
@@ -109,7 +109,7 @@ export default JGButton
 
 **루트 경로**
 
-```ts
+```tsx
 export { default as JGButton } from './src/components/buttons/JGButton'
 ```
 
@@ -196,7 +196,7 @@ export default defineConfig({
 
 **tsconfig.json**
 
-```ts
+```json
 {
   "compilerOptions": {
     // ... other compiler options
@@ -214,13 +214,13 @@ export default defineConfig({
 
 해당 코드가
 
-```js
+```ts
 export let helloWorld = 'hi'
 ```
 
 아래와 같은 `index.ts` 파일의 생성과 함께
 
-```js
+```ts
 export let helloWorld = 'hi'
 ```
 
@@ -234,13 +234,13 @@ export declare let helloWorld: string
 
 해당 `import`를
 
-```ts
+```tsx
 import React from 'react'
 ```
 
 다음과 같이 사용하는 것을 허용한다.
 
-```ts
+```tsx
 import * as React from 'react'
 ```
 
@@ -373,7 +373,7 @@ yarn add off-design-system
 
 여기서 만들어진 `index.css`를 사용하기 위해 프로젝트에 해당 스타일을 추가하는 코드가 필요하다.
 
-```ts
+```tsx
 import 'off-design-system/dist/index.css'
 ```
 

@@ -147,7 +147,7 @@ gatsby-plugin-fusejs에서는 **react-use-fusejs**와 함께 사용할 것을 �
 내부 코드를 살펴봤을 때 `useGatsbyPluginFusejs` 함수만 사용하는 것 같았습니다.
 이 정도면 제가 커스텀해서 사용해도 괜찮겠다는 생각을 하게 되었습니다.
 
-```js
+```tsx
 export function useGatsbyPluginFusejs<T>(
   query: string,
   fusejs: { data: T[]; index: string },
@@ -198,17 +198,19 @@ yarn add fuse.js
 
 **useSearch.ts**
 
-```js
+```ts
 import Fuse from 'fuse.js'
 import { useMemo } from 'react'
 
 export default function useSearch<T>(
   query: string,
-  fusejs: { data: T[], index: string },
+  fusejs: { data: T[]; index: string },
 ) {
   const fuse = useMemo(() => {
-    return (
-      new Fuse() < T > (fusejs.data, undefined, Fuse.parseIndex(JSON.parse(fusejs.index)))
+    return new Fuse()<T>(
+      fusejs.data,
+      undefined,
+      Fuse.parseIndex(JSON.parse(fusejs.index)),
     )
   }, [fusejs])
 
@@ -222,7 +224,7 @@ export default function useSearch<T>(
 
 **search.tsx**
 
-```js
+```tsx
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post, PostList } from 'components'

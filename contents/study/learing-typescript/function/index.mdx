@@ -15,7 +15,7 @@ type: 'post'
 
 ## 함수 매개변수
 
-```js
+```ts
 function sing(song) {
   console.log(`Singing: ${song}!);
 }
@@ -24,7 +24,7 @@ function sing(song) {
 sing 함수에서 song 매개변수를 제공하기 위해 의도한 값의 타입은 무엇일까요?
 명시적 타입 정보가 선언되지 않으면 절대 타입을 알 수 없습니다.
 
-```js
+```ts
 function sing(song: string) {
   console.log(`Singing: ${song}!);
 }
@@ -43,7 +43,7 @@ function sing(song: string) {
 
 그래서 함수가 잘못된 수의 인수로 호출되면 타입 오류를 발생시킵니다.
 
-```js
+```ts
 function singTwo(first: string, second: string) {
   console.log(`${first} / ${second}`)
 }
@@ -73,7 +73,7 @@ singTwo('I Will Survive', 'Higher Love') // OK
 타입 애너테이션의 :앞에 ?를 추가해 매개변수가 선택적이라고 표시합니다.
 선택적 매개변수에는 항상 `| undefined`가 유니언 타입으로 추가됩니다.
 
-```js
+```ts
 function announceSong(song: string, singer?: string) {
   console.log(`Song: ${song}`)
 
@@ -92,7 +92,7 @@ announceSong('Greensleeves', 'Sia') // OK
 선택적 매개변수는 `| undefined`를 포함하는 유니언 타입 매개변수와는 다릅니다.
 ?으로 표시된 선택적 매개변수가 아닌 유니언 타입 매개변수는 값이 명시적으로 `undefined`일지라도 항상 제공되어야 합니다.
 
-```js
+```ts
 function announceSongBy(song: string, singer: string | undefined) {
   /* ... */
 }
@@ -104,7 +104,7 @@ announceSongBy('Greensleeves')
 함수에서 사용되는 모든 선택적 매개변수는 마지막 매개변수여야 합니다.
 필수 매개변수 전에 선택적 매개변수를 위치시키면 타입스크립트 구문 오류가 발생합니다.
 
-```js
+```ts
 function announceSinger(singer?: string, song: string) {}
 // Error: A required parameter cannot follow an optional parameter.
 ```
@@ -118,7 +118,7 @@ function announceSinger(singer?: string, song: string) {}
 
 다음 rateSong 함수에서 rating은 `number`타입으로 유추되지만, 함수를 호출하는 코드에서는 선택적 `number | undefined`가 됩니다.
 
-```js
+```ts
 function rateSong(song: string, rating = 0) {
   console.log(`${song} gets ${rating}/5 starts!`)
 }
@@ -136,7 +136,7 @@ rateSong('At Last!', '100')
 타입스크립트는 나머지 매개변수의 타입을 일반 매개변수와 유사하게 선언할 수 있습니다.
 단, 인수 배열을 나타내기 위해 끝에 **[] 구문이 추가**된다는 점만 다릅니다.
 
-```js
+```ts
 function singAllTheSongs(singer: string, ...songs: string[]) {
   for (const song of songs) {
     console.log(`${song}, by ${singer}`)
@@ -152,7 +152,7 @@ singAllTheSongs('Lady Gaga', 'Bad Romance', 'Just Dance', 'Poker Face') // OK
 타입스크립트는 **지각적**입니다.
 함수가 반환할 수 있는 가능한 모든 값을 이해하면 함수가 반환하는 타입을 알 수 있습니다.
 
-```js
+```ts
 // 타입: (songs: string[]) => number
 function singSongs(songs: string[]) {
   for (const song of songs) {
@@ -179,7 +179,7 @@ function getSongAt(songs: string[], index: number) {
 
 다음 getSongRecordingDate 함수는 `Date | undefined`를 반환하도록 명시적으로 선언되었지만, 반환문 중 하나가 `string`을 반환하도록 잘못 제공하고 있습니다.
 
-```js
+```ts
 function getSongRecordingDate(song: string): Date | undefined {
   switch (song) {
     case 'Strange Fruit':
@@ -202,13 +202,13 @@ function getSongRecordingDate(song: string): Date | undefined {
 
 **함수 타입** 구문은 화살표 함수와 유사하지만 함수 본문 대신 타입이 있습니다.
 
-```js
+```ts
 let nothingInGiveString: () => string
 ```
 
 함수 타입은 **콜백 매개변수** (함수로 호출되는 매개변수)를 설명하는 데 자주 사용합니다.
 
-```js
+```ts
 const songs = ['Juice', 'Shake It Off', "What's Up"]
 
 function runOnSongs(getSongAt: (index: number) => string) {
@@ -253,7 +253,7 @@ runOnSongs(logSong)
 
 유니언 타입의 애니테이션에서 함수 반환 위칠르 나타내거나 유니언 타입을 감싸는 부분을 표시할 때 괄호를 사용합니다.
 
-```js
+```ts
 // 타입은 string | undefined 유니언을 반환하는 함수
 let returnsStringOrUndefined: () => string | undefined
 
@@ -265,7 +265,7 @@ let maybeReturnsString: (() => string) | undefined
 
 타입스크립트는 선언된 타입의 위치에 제공된 함수의 매개변수 타입을 유추할 수 있습니다.
 
-```js
+```ts
 let singer: (song: string) => string
 
 singer = function (song) {
@@ -278,7 +278,7 @@ singer = function (song) {
 
 타입 별칭은 함수 타입에 유용합니다. 반복적으로 작성하는 매개변수와 반환 타입을 갖는 코드 공간을 많이 절약할 수 있습니다.
 
-```js
+```ts
 type StringToNumber = (input: string) => number
 
 let StringToNumber: StringToNumber
@@ -297,7 +297,7 @@ void를 반환하도록 선언한 함수는 값 반환을 허용하지 않습니
 
 함수 타입 선언 시 voide 반환 타입은 매우 유용합니다. void를 사용하면 함수에서 반환되는 모든 값은 무시됩니다.
 
-```js
+```ts
 let songLogger: (song: string) => void
 
 songLogger = (song) => {
@@ -313,7 +313,7 @@ void는 **함수의 반환 타입이 무시된다는 것**을 의미합니다.
 
 `undefined`는 **반환되는 리터럴 값**입니다.
 
-```js
+```ts
 function returnsVoid() {
   return
 }
@@ -339,7 +339,7 @@ void 타입은 함수의 반환값이 자체적으로 반환될 수 있는 값�
 명시적 `: never` 타입 애너테이션을 추가해 해당 함수를 호출한 후 모든 코드가 실행되지 않음을 나타낼 수 있습니다.
 다음 fail 함수는 오류만 발생시키므로 param의 타입을 `string`으로 좁혀 타입스크립트의 제어 흐름 분석을 도와줍니다.
 
-```js
+```ts
 function fail(message: string): never {
   throw new Error(`Invairant failure: ${message}`)
 }
@@ -367,7 +367,7 @@ never는 **절대 반환하지 않는 함수**를 위한 것입니다.
 오버로드된 함수 호출에 대해 구문 오류를 생성할지 여부를 결정할 때 타입스크립트는 함수의 오버로드 시그니처만 확인합니다.
 구현 시그니처는 함수의 내부 로직에서만 사용됩니다.
 
-```js
+```ts
 function createDate(time: number): Date // 오버로드 시그니처
 function createDate(month: number, day: number, year: number): Date // 오버로드 시그니처
 function createDate(monthOrTimestamp: number, day?: number, year?: number) {
