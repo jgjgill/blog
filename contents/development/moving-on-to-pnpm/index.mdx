@@ -223,7 +223,12 @@ pnpm은 최상단 `node_moduels`에 모든 것을 이동시키지 않는다.
 
 <br />
 
-엄격한 의존성 관리와 겪은 개인적인 사례는 `antd`를 버전을 4 → 5로 마이그레이션할 때 경험했다.
+엄격한 의존성 관리와 겪은 개인적인 사례는 `antd` 버전을 4 → 5로 마이그레이션할 때 경험했다.
+
+(관련 작성글: [날짜 라이브러리 리팩터링 (Antd V5 migration)](https://jgjgill-blog.netlify.app/post/date-library-refactoring/))
+
+<br />
+
 이때 날짜 라이브러리 `moment`가 제거되었는데 빌드 에러가 발생했다.
 원인은 `package.json`에 설치하지 않고 `antd` 4버전에 `moment` 의존성을 참조하여 사용하고 있었던 것이다.
 
