@@ -16,6 +16,12 @@ type: 'post'
   환영입니다:)
 </Callout>
 
+> 10월 25일 글을 추가 작성했어요.
+>
+> 잘못 구성된 코드의 수정이 이루어졌고 관련 정보가 추가되었어요.
+>
+> 부족한 글임에도 읽어주셔서 감사해요.
+
 처음 프로젝트 코드를 파악하고 분석하는 과정에서 가장 많은 시간을 소요한 부분은 `Zustand` 관련 로직이었다.
 
 해당 로직은 공식 문서를 기반으로 코드가 작성되지 않았고 임의로 코드가 구성되어 있었다.
@@ -217,6 +223,20 @@ export function useCreateStore(initialState: any) {
 
 <br />
 
+**서버를 고려하지 못한 스토어 정의 (10.25)**
+
+> 10월 25일 추가 작성된 내용입니다.
+>
+> 서버에서 스토어는 호출마다 생성해야 하는 부분을 상기시킵니다.
+
+기존 코드를 보면 전역 변수로 `let store` 부분이 존재한다.
+
+서버를 고려하면 요청마다 스토어를 생성하는 것이 필요하다.
+
+이에 현재 코드는 메모리가 계속 유지되어 데이터가 공유되는 문제가 발생할 수 있다.
+
+<br />
+
 **\_app.tsx**
 
 ```tsx
@@ -253,6 +273,12 @@ App.getInitialProps = async () => {
 
 `_app.tsx` 내 `getInitialProps` 부분에서 생성한 스토어들을 호출한다.
 이는 서버에서 호출하는 것으로 클라이언트 이전에 미리 상태를 정의하는 역할을 한다.
+
+> 10월 25일 추가 작성된 내용입니다.
+>
+> `getInitialProps`에 대한 설명을 보충합니다.
+
+**`getInitialProps`는 기본적으로 초기 페이지 로드 시 서버에서 호출됩니다.**
 
 <br />
 
@@ -345,6 +371,20 @@ export default function Home() {
   alt="useTest1 타입 에러"
 />
 
+> 10월 25일 추가 작성된 내용입니다.
+>
+> 서버에서 상태를 정의하는 로직이 존재하는 것 자체가 근본적으로 문제라는 생각을 가지게 되었습니다.
+>
+> 비즈니스 로직으로 이해해주시길 바랍니다.
+
+`prefetch`라는 함수로 서버에서 미리 상태를 정의하고자 하는 행위 자체가 위험하게 느껴진다.
+
+서버에서 다른 사용자와 데이터가 공유되는 위험이 발생할 것 같다.
+
+다행히도 현재 클라이언트에서 `Context`에서 방어 로직이 존재해서 실제로 큰 문제는 발생하지 않은 것 같다.
+
+하지만 서버에서 상태를 정의하는 것 자체는 문제로 보인다.
+
 ## 상황 분석
 
 ### 프로젝트 내에서 Zustand는 어떻게 쓰고 있는가?
@@ -361,6 +401,10 @@ export default function Home() {
 <br />
 
 서버에서 사용되는 스토어내 상태들을 정의하기 위해 서버에서 호출한다.
+
+(**10월 25일: 이 행위 자체가 서버를 존중하지 못한 행위라는 생각을 가지게 되었다.**)
+
+<br />
 
 클라어언트로 넘어오면 컨텍스트를 활용해서 서버에서 정의된 스토어를 다시 호출한다.
 
@@ -390,7 +434,7 @@ export default function Home() {
 **rootStore.tsx**
 
 ```tsx
-import { create } from 'zustand'
+import { createStore } from 'zustand'
 import { createTest1Slice } from './store.test1.ts'
 
 export type BaseStore = Test1Slice
@@ -398,12 +442,18 @@ export type BaseStore = Test1Slice
 // & Test3Slice
 // 기타 Slice 타입들...
 
-export const useBoundStore = create<BaseStore>()((...a) => ({
-  ...createTest1Slice(...a),
-  // createTest2Slice(...a)
-  // createTest3Slice(...a)
-  // 기타 createSlice 정의들...
-}))
+// 10월 25일: 코드 수정이 이루어졌습니다.
+// create가 아닌 createStore를 활용합니다.
+// 함수로 구성해서 요청이 생길 때마다 스토어를 생성하도록 변경합니다.
+export const createBoundStore = (initialState = {}) => {
+  return createStore<BaseStore>()((...a) => ({
+    ...createTest1Slice(...a),
+    // createTest2Slice(...a)
+    // createTest3Slice(...a)
+    // 기타 createSlice 정의들...
+    ...initialState,
+  }))
+}
 ```
 
 **store.test1.ts**
@@ -434,19 +484,17 @@ export const createTest1Slice: StateCreator<Test1Slice, [], [], Test1Slice> = (s
 
 변경된 `Slice` 패턴에 맞추어 `Store` 및 `Context` 관련 코드도 타입 적용 및 로직 개선을 진행해보자.
 
+(10월 25일: 요청마다 스토어를 생성한다는 문구가 더 적절한 것 같습니다.)
+
 <br />
 
 **rootStore.tsx**
 
 ```tsx
 import { createContext, useContext, useRef } from 'react'
-import { StoreApi, create, useStore } from 'zustand'
+import { StoreApi, createStore, useStore } from 'zustand'
 
 // Slice 적용 코드 생략
-
-export const getStore = () => {
-  return useBoundStore.getState()
-}
 
 export const InitStoreContext = createContext<StoreApi<BaseStore> | null>(null)
 
@@ -460,12 +508,6 @@ export const useInitStore = <T, _>(selector: (store: BaseStore) => T) => {
   return useStore(initStoreContext, selector)
 }
 
-export const initStore = (initialState: BaseStore) => {
-  useBoundStore.setState(() => initialState)
-
-  return useBoundStore
-}
-
 export const InitStoreProvider = ({
   children,
   initialState,
@@ -476,7 +518,7 @@ export const InitStoreProvider = ({
   const storeRef = useRef<StoreApi<BaseStore>>()
 
   if (!storeRef.current) {
-    storeRef.current = initStore(initialState)
+    storeRef.current = createBoundStore(initialState)
   }
 
   return (
@@ -507,7 +549,7 @@ export const InitStoreProvider = ({
 **\_app.tsx**
 
 ```tsx
-import { InitStoreProvider, getStore } from '@/store/rootStore'
+import { InitStoreProvider, createBoundStore } from '@/store/rootStore'
 import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -519,13 +561,15 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 
 App.getInitialProps = async () => {
-  const { test1Prefetch } = getStore()
+  const store = createBoundStore()
+
+  const { test1Prefetch } = store.getState()
 
   test1Prefetch()
 
   return {
     pageProps: {
-      initialZustandState: getStore(),
+      initialZustandState: store.getState(),
     },
   }
 }
@@ -533,9 +577,7 @@ App.getInitialProps = async () => {
 
 <br />
 
-`getStore` 함수는 `rootStore.tsx`에서 정의한 함수이다.
-
-서버에서 스토어에 접근할 때 주의할 점은 **스토어 액션없이 접근이 가능**해야 한다.
+서버에서 스토어에 접근할 때 주의할 점은 **`getState` 함수를 통해 스토어 액션없이 접근이 가능**해야 한다.
 
 `Zustand`는 외부 스토어와 상태간에 동기화를 위해 `usesyncexternalstore`를 사용한다.
 
@@ -615,6 +657,38 @@ export default function Home() {
 
 여기서 우리가 `Context`로 넘기는 것은 `Store`라는 점이 핵심이다.
 
+> 10월 25일 추가 작성된 내용입니다.
+>
+> Next.js에서 서버의 환경을 고려헀을 때 `Context`를 사용하지 않은 `Zustand`의 모듈 상태는 위험한 행동입니다.
+>
+> 글을 처음 작성했을 당시에는 서버에 대한 이해도가 전혀 없었던 상황이었습니다.
+
+[Setup with Next.js](https://zustand.docs.pmnd.rs/guides/nextjs) 문서에서 관련 내용을 확인할 수 있다.
+
+- Next.js 서버는 다수의 요청을 동시에 처리한다.
+- 스토어의 공유를 막기 위해 스토어는 요청할 때마다 생성되어야 한다.
+- 이때 `Context`는 매우 유용한 도구가 된다.
+
+### 번외 - create와 createStore의 차이는? (10.25)
+
+> 10월 25일 추가 작성된 내용입니다.
+
+문서와 내부 코드에서 `create`는 `React`로, `createStore`는 `Vanilla`로 안내한다.
+
+처음 코드를 구성할 때는 아무 생각없이 `create`로 구성했다.
+
+<br />
+
+하지만 `Next.js`와의 세팅 문서를 살펴봤을 때는 `createStore`를 사용한다.
+
+[관련 논의](https://github.com/pmndrs/zustand/discussions/1975#discussioncomment-6638278)를 통해서 알게 된 내용은 `Context`에서 활용할 때 `create`는 `bad practice`로 여긴다.
+
+왜냐하면 훅의 규칙을 위반할 수 있기 때문이다.
+
+<br />
+
+그래서 지금도 `createStore`로 구성하는게 더 적절하다는 생각을 하게 되었다.
+
 ## 최종 코드
 
 최종 코드는 다음과 같다.
@@ -623,7 +697,7 @@ export default function Home() {
 
 ```tsx
 import { createContext, useContext, useRef } from 'react'
-import { StoreApi, create, useStore } from 'zustand'
+import { StoreApi, createStore, useStore } from 'zustand'
 import { Test1Slice, createTest1Slice } from './store.test1'
 
 export type BaseStore = Test1Slice
@@ -631,15 +705,14 @@ export type BaseStore = Test1Slice
 // & Test3Slice
 // 기타 Slice 타입들...
 
-export const useBoundStore = create<BaseStore>()((...a) => ({
-  ...createTest1Slice(...a),
-  // createTest2Slice(...a)
-  // createTest3Slice(...a)
-  // 기타 createSlice 정의들...
-}))
-
-export const getStore = () => {
-  return useBoundStore.getState()
+export const createBoundStore = (initialState = {}) => {
+  return createStore<BaseStore>()((...a) => ({
+    ...createTest1Slice(...a),
+    // createTest2Slice(...a)
+    // createTest3Slice(...a)
+    // 기타 createSlice 정의들...
+    ...initialState,
+  }))
 }
 
 export const InitStoreContext = createContext<StoreApi<BaseStore> | null>(null)
@@ -654,12 +727,6 @@ export const useInitStore = <T, _>(selector: (store: BaseStore) => T) => {
   return useStore(initStoreContext, selector)
 }
 
-export const initStore = (initialState: BaseStore) => {
-  useBoundStore.setState(() => initialState)
-
-  return useBoundStore
-}
-
 export const InitStoreProvider = ({
   children,
   initialState,
@@ -670,7 +737,7 @@ export const InitStoreProvider = ({
   const storeRef = useRef<StoreApi<BaseStore>>()
 
   if (!storeRef.current) {
-    storeRef.current = initStore(initialState)
+    storeRef.current = createBoundStore(initialState)
   }
 
   return (
@@ -702,7 +769,7 @@ export const createTest1Slice: StateCreator<Test1Slice, [], [], Test1Slice> = (s
 **\_app.tsx**
 
 ```tsx
-import { InitStoreProvider, getStore } from '@/store/rootStore'
+import { InitStoreProvider, createBoundStore } from '@/store/rootStore'
 import type { AppProps } from 'next/app'
 
 export default function App({ Component, pageProps }: AppProps) {
@@ -714,13 +781,15 @@ export default function App({ Component, pageProps }: AppProps) {
 }
 
 App.getInitialProps = async () => {
-  const { test1Prefetch } = getStore()
+  const store = createBoundStore()
+
+  const { test1Prefetch } = store.getState()
 
   test1Prefetch()
 
   return {
     pageProps: {
-      initialZustandState: getStore(),
+      initialZustandState: store.getState(),
     },
   }
 }
