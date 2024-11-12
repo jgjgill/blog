@@ -12,12 +12,10 @@ type: 'post'
 # getInitialProps는 도대체 뭐야?
 
 <Callout>
-  💡 Next.js의 getInitialProps에 대해 알아봅니다. 피드백은 언제나 환영입니다:) 11월 12일:
-  getInitialProps에서 호출 순서를 잘못 파악한 부분을 파악하여 수정 예정입니다. 죄송합니다.
-  😅
+  💡 Next.js의 getInitialProps에 대해 알아봅니다. 피드백은 언제나 환영입니다:)
 </Callout>
 
-> Good to know: **getInitialProps** is a legacy API.
+> Good to know **getInitialProps** is a legacy API.
 > We recommend using **getStaticProps** or **getServerSideProps** instead.
 
 <br />
@@ -193,10 +191,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 }
 
 MyApp.getInitialProps = async (context: AppContext): Promise<AppInitialProps> => {
-  const ctx = await App.getInitialProps(context)
-
-  console.log('각 페이지의 getInitialProps에서 주입된 context', ctx)
   console.log(isServer() ? '나는 서버' : '나는 클라이언트', 'App - getInitialProps 호출')
+
+  const ctx = await App.getInitialProps(context)
+  console.log('각 페이지의 getInitialProps에서 주입된 context', ctx)
 
   return { ...ctx }
 }
@@ -204,11 +202,11 @@ MyApp.getInitialProps = async (context: AppContext): Promise<AppInitialProps> =>
 
 <br />
 
-이때의 동작을 보면 페이지 이동 시 각 페이지의 `getInitialProps` 호출 이후 `_app`의 `getInitialProps`가 호출되는 것을 볼 수 있다.
+이때의 동작을 보면 페이지 이동 시 `_app`의 `getInitialProps` 호출 이후 `App.getInitialProps`을 통해 각 페이지의 `getInitialProps`가 호출되는 것을 볼 수 있다.
 
 <br />
 
-그래서 `_app`에서는 각 페이지의 `getInitialProps`에서 주입된 `context`를 받을 수 있다.
+그리고 `ctx`에서는 각 페이지의 `getInitialProps`에서 추가한 데이터를 받을 수 있다.
 
 <Video
   src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/the-great-legacy-getinitialprops/videos/app-getinitialprops-example-1.mov"
@@ -388,6 +386,15 @@ export default MyDocument
 
 `_document`는 `HTML` 구조를 정의하는데에만 사용하기에 오직 **페이지 로드 시 서버에서만 동작**한다.
 
+<br />
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/the-great-legacy-getinitialprops/videos/document-getinitialprops-example.mov"
+  alt="document getInitialProps 예제"
+/>
+
+<br />
+
 ## 호출 순서
 
 전체적으로 `getinitialProps`가 호출되는 방식에 대해 알아봤다.
@@ -477,7 +484,7 @@ export default MyDocument
 
 ## 어떻게 덜어낼 수 있을까?
 
-다국어의 기능이 도입되면서 프로젝트의 서버 동작이 많아지고 있는 상황이다.
+다국어 기능이 도입되면서 프로젝트의 서버 동작이 많아지고 있는 상황이다.
 그래서 `getInitialProps`와 `getServerSideProps`가 혼재되어 있다.
 여기서 `getInitialProps`로 불필요한 서버의 호출이 발생하고 있다고 생각한다.
 
