@@ -1959,10 +1959,10 @@
     "@types/yargs" "^17.0.8"
     chalk "^4.0.0"
 
-"@jgjgill/interaction@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@jgjgill/interaction/-/interaction-1.0.7.tgz#38d6ec5ae7dd13bc6358049a88bd7a6075997254"
-  integrity sha512-EIPndKUmcuzXaGrgHMMExfsi48ueqrRwPiQi5lj6L6ThLFsx9IsZ2yx3rzYJen8voN+rPs+QY9jHq4CTFQb7Cg==
+"@jgjgill/interaction@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@jgjgill/interaction/-/interaction-1.0.8.tgz#137cfca7202ba1cdc38c3d1e909184d5faee9a1f"
+  integrity sha512-wHGpypTM8qRaoKFtbOTzBueCjwjxWtIvf5YdaUOARK7dVvDn6qf/e3G6IeMVBwXE4TthL8bGgYcCNXzLR0SzZA==
   dependencies:
     "@react-three/drei" "^9.120.4"
     "@react-three/rapier" "^1.5.0"
