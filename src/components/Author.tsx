@@ -4,6 +4,8 @@ import { PATH } from 'constants/path'
 import { StaticImage } from 'gatsby-plugin-image'
 import React from 'react'
 
+import TouchGuide from './TouchGuide'
+
 const Author = () => {
   return (
     <Container>
@@ -18,14 +20,17 @@ const Author = () => {
               alt="main-image"
             />
           </ImageWrapper>
-          <Link
-            aria-label="posts-link"
-            href={PATH.NAMEPLATE}
-            target="_blank"
-            rel="noreferrer"
-          >
-            Card
-          </Link>
+
+          <TouchGuide>
+            <Link
+              aria-label="posts-link"
+              href={PATH.NAMEPLATE}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Business Card
+            </Link>
+          </TouchGuide>
         </Flex>
 
         <Flex flexDirection="column" gap={20}>
