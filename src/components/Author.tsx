@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import { Flex, Text } from 'components/@shared'
+import { PATH } from 'constants/path'
 import { StaticImage } from 'gatsby-plugin-image'
 import React from 'react'
 
@@ -7,15 +8,25 @@ const Author = () => {
   return (
     <Container>
       <Profile>
-        <ImageWrapper>
-          <StaticImage
-            width={150}
-            height={150}
-            objectFit="cover"
-            src="../images/main-image.jpg"
-            alt="main-image"
-          />
-        </ImageWrapper>
+        <Flex flexDirection="column" alignItems="center" gap={20}>
+          <ImageWrapper>
+            <StaticImage
+              width={150}
+              height={150}
+              objectFit="cover"
+              src="../images/main-image.jpg"
+              alt="main-image"
+            />
+          </ImageWrapper>
+          <Link
+            aria-label="posts-link"
+            href={PATH.NAMEPLATE}
+            target="_blank"
+            rel="noreferrer"
+          >
+            Card
+          </Link>
+        </Flex>
 
         <Flex flexDirection="column" gap={20}>
           <Text as="h2">프론트엔드 개발자 이종길입니다.</Text>

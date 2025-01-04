@@ -6,4 +6,5 @@ export const PATH = {
   SEARCH: '/search/',
   ABOUT: '/about/',
   ROAD: '/road/',
+  NAMEPLATE: '/nameplate/',
 }
