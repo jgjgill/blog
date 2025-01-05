@@ -36,7 +36,13 @@ const NotFoundPage = ({ data }: PageProps<Props>) => {
 
 export default NotFoundPage
 
-export const Head: HeadFC = () => <Seo />
+export const Head: HeadFC = () => (
+  <Seo
+    title="jgjgill - 404 페이지"
+    description="잘못된 경로입니다."
+    siteUrl={`https://jgjgill-blog.netlify.app/404`}
+  />
+)
 
 export const query = graphql`
   query {
