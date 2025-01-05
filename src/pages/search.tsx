@@ -1,8 +1,9 @@
 import styled from '@emotion/styled'
 import App from 'App'
-import { Layout, Post, PostList } from 'components'
+import { Layout, Post, PostList, Seo } from 'components'
 import { Flex, Text } from 'components/@shared'
-import { graphql, useStaticQuery } from 'gatsby'
+import { PATH } from 'constants/path'
+import { graphql, HeadFC, useStaticQuery } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import useSearch from 'hooks/useSearch'
 import React, { useState } from 'react'
@@ -57,6 +58,14 @@ const Search = () => {
 }
 
 export default Search
+
+export const Head: HeadFC = () => (
+  <Seo
+    title="jgjgill - Search"
+    description="블로그 글 검색 기능"
+    siteUrl={`https://jgjgill-blog.netlify.app${PATH.SEARCH}`}
+  />
+)
 
 const Input = styled.input`
   border-radius: 10px;

@@ -1,6 +1,7 @@
 import App from 'App'
 import { Category, Layout, Post, PostList, Seo } from 'components'
 import { Flex } from 'components/@shared'
+import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
 import React from 'react'
@@ -69,6 +70,12 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC = () => <Seo />
+export const Head: HeadFC = () => (
+  <Seo
+    title="jgjgill - Post"
+    description="글을 통해 기록과 공유를 실천합니다."
+    siteUrl={`https://jgjgill-blog.netlify.app${PATH.POST}`}
+  />
+)
 
 export default BlogPage

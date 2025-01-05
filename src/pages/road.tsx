@@ -68,7 +68,13 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC = () => <Seo />
+export const Head: HeadFC = () => (
+  <Seo
+    title="jgjgill - Road"
+    description="삶의 인상 깊은 순간들을 메모합니다."
+    siteUrl={`https://jgjgill-blog.netlify.app${PATH.ROAD}`}
+  />
+)
 
 export default LoadPage
 

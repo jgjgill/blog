@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Seo } from 'components'
 import { Flex, Text } from 'components/@shared'
+import { PATH } from 'constants/path'
 import { HeadFC } from 'gatsby'
 import React from 'react'
 
@@ -127,7 +128,13 @@ const AboutPage = () => {
   )
 }
 
-export const Head: HeadFC = () => <Seo />
+export const Head: HeadFC = () => (
+  <Seo
+    title="jgjgill - About"
+    description="저의 삶과 가치관을 공유합니다."
+    siteUrl={`https://jgjgill-blog.netlify.app${PATH.ABOUT}`}
+  />
+)
 
 export default AboutPage
 
