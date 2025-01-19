@@ -93,9 +93,9 @@ if (Math.random()) {
 
 반면 `ES Modules` 방식에서는 **정적 구조를 통해 컴파일 시점에 `import`, `export`를 결정**할 수 있다.
 
-번들 형식이 조건부로 로드되는 모듈을 고려할 필요가 없고,
+조건부로 로드되는 모듈을 고려할 필요가 없다.
 
-`import`는 `export`를 복사할 필요 없이 직접 참조가 가능하다.
+그리고 `import`는 `export`를 복사할 필요 없이 직접 참조가 가능해진다고 한다.
 
 <br />
 
@@ -129,7 +129,9 @@ console.log(foo())
 
 `Next.js`에서는 `optimizePackageImports`를 통해 특정 패키지들의 `import`를 자동으로 최적화한다.
 
-여기서 `lodash-es`는 이 최적화 대상 라이브러리 중 하나로,
+<br />
+
+여기서 `lodash-es`는 최적화 대상 라이브러리 중 하나로,
 
 별도의 설정 없이도 트리쉐이킹이 효과적으로 동작한다.
 
@@ -139,7 +141,7 @@ console.log(foo())
 
 ## lodash와 lodash-es 비교
 
-두 라이브러리는 **모듈 포맷**이 다르다는 것이 가장 큰 차이점이다.
+두 라이브러리는 **모듈 포맷이 다르다는 것**이 가장 큰 차이점이다.
 
 라이브러리 교체에 앞서 두 라이브러리를 비교해보자.
 
@@ -154,7 +156,7 @@ console.log(foo())
     alt="Bundlephobia lodash 지표"
   />
 
-[Bundlephobia 기준 lodash 지표](https://bundlephobia.com/package/lodash@4.17.21)
+([Bundlephobia 기준 lodash 지표](https://bundlephobia.com/package/lodash@4.17.21))
 
 <br />
 
@@ -163,7 +165,7 @@ console.log(foo())
   alt="import lodash"
 />
 
-(import 시 `lodash` 번들 지표)
+(import 시 파악되는 `lodash` 지표)
 
 <br />
 
@@ -187,7 +189,7 @@ console.log(foo())
   alt="import lodash-es"
 />
 
-(import 시 `lodash-es` 지표)
+(import 시 파악되는 `lodash-es` 지표)
 
 <br />
 
