@@ -28,21 +28,24 @@ type: 'post'
 
 SEO를 중요하게 다루는 프로젝트에서는 다음과 같이 프론트엔드 개발자들이 지표를 파악해서 스레드에서 정보를 공유했다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-thread-list.png"
-  alt="Search Console 스레드 목록"
-/>
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <div>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-thread-list.png"
+      alt="Search Console 스레드 목록"
+    />
+  </div>
+  <div>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-thread-content.png"
+      alt="Search Console 스레드 내용"
+    />
+  </div>
+</div>
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-thread-content.png"
-  alt="Search Console 스레드 내용"
-/>
-
-<br />
-
-해당 플로우를 경험해보니 다음과 같은 점들을 느끼게 되었다.
+해당 과정을 겪어보니 다음과 같은 점들을 느끼게 되었다.
 
 <br />
 
@@ -363,17 +366,20 @@ testSearchConsole()
 
 대략 다음과 같은 데이터들을 확인할 수 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-code-data-1.png"
-  alt="Search Console 코드 지표 1"
-/>
-
-<br />
-
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-code-data-2.png"
-  alt="Search Console 코드 지표 2"
-/>
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <div>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-code-data-1.png"
+      alt="Search Console 코드 지표 1"
+    />
+  </div>
+  <div>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-code-data-2.png"
+      alt="Search Console 코드 지표 2"
+    />
+  </div>
+</div>
 
 <br />
 
@@ -677,10 +683,59 @@ dayjs().tz().subtract(3, 'day')
 
 크게 변경된 부분으로 다음 2가지이다.
 
+<br />
+
 - 프로젝트별로 정보를 구성할 수 있는 스키마 구성
 - 프로젝트별 스레드를 구성하기 위해 슬랙 관련 라이브러리 교체 (`@slack/webhook` → `@slack/web-api`)
   - `Features → OAuth & Permissions` 에서 OAuth Tokens 및 Scopes 구성
   - 채널에 앱 추가
+
+<br />
+
+**스키마 형식**
+
+```ts
+export const schema = [
+  {
+    serviecName: '서비스명을 입력해주세요',
+    clientEmail: process.env.GOOGLE_CLIENT_EMAIL!,
+    privateKey: process.env.GOOGLE_PRIVATE_KEY!,
+    projects: [
+      {
+        siteUrl: '프로젝트 주소를 입력해주세요',
+        searchConsoleUrl: '서치 콘솔 URL을 입력해주세요',
+        projectName: '프로젝트명을 입력해주세요',
+      },
+      {
+        siteUrl: '프로젝트 주소를 입력해주세요',
+        searchConsoleUrl: '서치 콘솔 URL을 입력해주세요',
+        projectName: '프로젝트명을 입력해주세요',
+      },
+    ],
+  },
+  {
+    serviecName: '서비스명을 입력해주세요',
+    clientEmail: process.env.GOOGLE_CLIENT_EMAIL!,
+    privateKey: process.env.GOOGLE_PRIVATE_KEY!,
+    projects: [
+      {
+        siteUrl: '프로젝트 주소를 입력해주세요',
+        searchConsoleUrl: '서치 콘솔 URL을 입력해주세요',
+        projectName: '프로젝트명을 입력해주세요',
+      },
+      {
+        siteUrl: '프로젝트 주소를 입력해주세요',
+        searchConsoleUrl: '서치 콘솔 URL을 입력해주세요',
+        projectName: '프로젝트명을 입력해주세요',
+      },
+    ],
+  },
+]
+```
+
+<br />
+
+**슬랙 변경 과정**
 
 <Image
   src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/search-console-automation/images/search-console-slack-4.png"
@@ -743,9 +798,9 @@ dayjs().tz().subtract(3, 'day')
 
 <br />
 
-- 개발자의 시간 절약
-- 데이터의 정확성 향상
-- 확장 가능한 시스템 구축
+- **개발자의 시간 절약**
+- **데이터의 정확성 향상**
+- **확장 가능한 시스템 구축**
 
 <br />
 
