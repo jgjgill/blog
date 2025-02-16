@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 declare global {
   interface Window {
@@ -13,13 +13,21 @@ interface GoogleAdsenseProps {
 }
 
 const GoogleAdsense = ({ slot, width = '728x', height = '90px' }: GoogleAdsenseProps) => {
+  const [isClient, setIsClient] = useState(false)
+
   useEffect(() => {
+    setIsClient(true)
+
     try {
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
     } catch (error) {
       console.error('AdSense 초기화 중 에러 발생:', error)
     }
   }, [])
+
+  if (!isClient) {
+    return <div style={{ width, height }}>No Filled</div>
+  }
 
   return (
     <>
