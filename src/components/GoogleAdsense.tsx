@@ -47,7 +47,7 @@ const GoogleAdsense = ({
   }, [])
 
   return (
-    <AdContainer height={height} width={width}>
+    <AdContainer height={height}>
       <ins
         ref={advertRef}
         className="adsbygoogle"
@@ -63,8 +63,8 @@ const GoogleAdsense = ({
 
 export default GoogleAdsense
 
-const AdContainer = styled.div<{ width: string; height: string }>`
-  width: ${(props) => props.width};
+const AdContainer = styled.div<{ height: string }>`
+  width: 100%;
   height: ${(props) => props.height};
 
   .adsbygoogle span {
