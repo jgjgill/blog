@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Seo } from 'components'
+import GoogleAdsense from 'components/GoogleAdsense'
 import DateToc from 'components/slug/DateToc'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, navigate, PageProps } from 'gatsby'
@@ -23,6 +24,9 @@ const LoadPage = ({ data }: PageProps<Props>) => {
         <DateToc contents={data.allMdx.nodes} />
 
         <MyRoad>My Road</MyRoad>
+
+        <GoogleAdsense slot="3739597744" />
+
         <RoadCard>
           {data.allMdx.nodes.map((node) => (
             <li key={node.id}>

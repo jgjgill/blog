@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Post, PostList, Seo } from 'components'
 import { Flex, Text } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, useStaticQuery } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
@@ -33,6 +34,8 @@ const Search = () => {
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
+          <GoogleAdsense slot="4538432263" />
+
           <Input
             placeholder="Search"
             value={query}

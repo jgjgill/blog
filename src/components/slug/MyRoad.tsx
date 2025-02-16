@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import { Mdx } from 'components'
 import { Flex } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { graphql, navigate, useStaticQuery } from 'gatsby'
 import BackSpace from 'images/back-space.inline.svg'
 import React from 'react'
@@ -65,6 +66,8 @@ const MyRoad = ({ mdx, children }: Props) => {
 
         <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
       </Flex>
+
+      <GoogleAdsense slot="3520864068" />
 
       <MDXProvider
         components={{

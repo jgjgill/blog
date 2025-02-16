@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Seo } from 'components'
 import { Flex, Text } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { HeadFC } from 'gatsby'
 import React from 'react'
@@ -21,7 +22,7 @@ const AboutPage = () => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={40}>
+        <Flex flexDirection="column" gap={8}>
           <Flex flexDirection="column" gap={20}>
             <h2>Careers</h2>
 
@@ -37,6 +38,8 @@ const AboutPage = () => {
             </Description>
           </Flex>
 
+          <GoogleAdsense slot="9375067805" />
+
           <Flex flexDirection="column" gap={20}>
             <h2>Values</h2>
 
@@ -46,6 +49,8 @@ const AboutPage = () => {
               </Description>
             ))}
           </Flex>
+
+          <GoogleAdsense slot="6154008098" />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Activities</h2>
@@ -123,6 +128,7 @@ const AboutPage = () => {
             </Flex>
           </Flex>
         </Flex>
+        <GoogleAdsense slot="4840926425" />
       </Layout>
     </App>
   )

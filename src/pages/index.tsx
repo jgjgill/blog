@@ -1,6 +1,7 @@
 import App from 'App'
 import { Author, Layout, Post, Seo } from 'components'
 import { Flex } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
@@ -20,8 +21,10 @@ const IndexPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={40}>
+        <Flex flexDirection="column" gap={8}>
           <Author />
+
+          <GoogleAdsense slot="4730003951" />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Recent Posts</h2>

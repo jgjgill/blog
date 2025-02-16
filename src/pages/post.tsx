@@ -1,6 +1,7 @@
 import App from 'App'
 import { Category, Layout, Post, PostList, Seo } from 'components'
 import { Flex } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
@@ -26,6 +27,9 @@ const BlogPage = ({ data }: PageProps<Props>) => {
       <Layout>
         <Flex flexDirection="column" gap={20}>
           <Category selectedCategory="all" />
+
+          <GoogleAdsense slot="3931169437" />
+
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (
               <Post key={node.id} node={node} />
