@@ -8,9 +8,11 @@ declare global {
 
 interface GoogleAdsenseProps {
   slot: string
+  width?: string
+  height?: string
 }
 
-const GoogleAdsense = ({ slot }: GoogleAdsenseProps) => {
+const GoogleAdsense = ({ slot, width = '728x', height = '90px' }: GoogleAdsenseProps) => {
   useEffect(() => {
     try {
       ;(window.adsbygoogle = window.adsbygoogle || []).push({})
@@ -28,11 +30,9 @@ const GoogleAdsense = ({ slot }: GoogleAdsenseProps) => {
       />
       <ins
         className="adsbygoogle"
-        style={{ display: 'block' }}
+        style={{ display: 'inline-block', width, height }}
         data-ad-client="ca-pub-2173037699636228"
         data-ad-slot={slot}
-        data-ad-format="auto"
-        data-full-width-responsive="true"
       />
       <script>{`(adsbygoogle = window.adsbygoogle || []).push({});`}</script>
     </>

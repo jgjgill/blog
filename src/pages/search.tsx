@@ -34,7 +34,7 @@ const Search = () => {
     <App>
       <Layout>
         <Flex flexDirection="column" gap={20}>
-          <GoogleAdsense slot="4538432263" />
+          <GoogleAdsense slot="4538432263" height="280px" />
 
           <Input
             placeholder="Search"

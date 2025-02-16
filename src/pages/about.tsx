@@ -128,7 +128,7 @@ const AboutPage = () => {
             </Flex>
           </Flex>
         </Flex>
-        <GoogleAdsense slot="4840926425" />
+        <GoogleAdsense slot="4840926425" height="280px" />
       </Layout>
     </App>
   )
