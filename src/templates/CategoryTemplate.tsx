@@ -2,6 +2,7 @@ import App from 'App'
 import { PostList, Seo } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
+import GoogleAdsense from 'components/GoogleAdsense'
 import Layout from 'components/Layout'
 import Post from 'components/Post'
 import { PATH } from 'constants/path'
@@ -34,6 +35,8 @@ const CategoryTemplate = ({
       <Layout>
         <Flex flexDirection="column" gap={20}>
           <Category selectedCategory={pageContext.category} />
+
+          <GoogleAdsense slot="3931169437" />
 
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (
