@@ -12,20 +12,20 @@ interface Props {
 const DateToc = ({ contents }: Props) => {
   return (
     <Aside>
-      <h2>Recent Posts</h2>
-      <ul>
+      <UlTag>
         {contents.map((content) => (
-          <li key={content.id}>
-            <StyledButton
+          <LiTag key={content.id}>
+            <AnchorTag
               onClick={() =>
                 viewTransition(() => navigate(`${PATH.ROAD}${content.frontmatter.date}`))
               }
             >
-              {content.frontmatter.date.replaceAll('-', '.')}
-            </StyledButton>
-          </li>
+              <b>{content.frontmatter.date.replaceAll('-', '.')}</b>
+              <p>{content.frontmatter.title}</p>
+            </AnchorTag>
+          </LiTag>
         ))}
-      </ul>
+      </UlTag>
     </Aside>
   )
 }
@@ -39,7 +39,7 @@ const Aside = styled.aside`
   border-left: 3px solid ${({ theme }) => theme.colors.primary.base};
   width: 300px;
   height: calc(100vh - 128px);
-  padding: 0 10px;
+  padding: 32px 10px;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 3px;
@@ -59,8 +59,29 @@ const Aside = styled.aside`
   }
 `
 
-const StyledButton = styled.button`
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary.base};
+const UlTag = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+`
+
+const LiTag = styled.li`
+  p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
+  &:hover {
+    b {
+      color: ${({ theme }) => theme.colors.primary.base};
+    }
+    p {
+      color: ${({ theme }) => theme.colors.primary.base};
+    }
+  }
+`
+
+const AnchorTag = styled.a`
+  cursor: pointer;
 `

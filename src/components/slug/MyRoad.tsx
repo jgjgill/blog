@@ -44,6 +44,7 @@ const MyRoad = ({ mdx, children }: Props) => {
           body
           frontmatter {
             date
+            title
           }
         }
       }
