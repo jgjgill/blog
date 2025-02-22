@@ -16,6 +16,7 @@ const Seo = ({
   return (
     <>
       <title>{title}</title>
+      <link rel="canonical" href={siteUrl} />
       <meta name="description" content={description} />
       <meta name="keywords" content="development" />
       <meta name="author" content="jgjgill" />

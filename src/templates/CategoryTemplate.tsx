@@ -1,5 +1,5 @@
 import App from 'App'
-import { PostList, Seo } from 'components'
+import { PostList } from 'components'
 import Flex from 'components/@shared/Flex'
 import Category from 'components/Category'
 import GoogleAdsense from 'components/GoogleAdsense'
@@ -53,13 +53,27 @@ const CategoryTemplate = ({
 export default CategoryTemplate
 
 export const Head: HeadFC = ({ location }) => {
+  const title = 'jgjgill - Post'
+  const description = '글을 통해 기록과 공유를 실천합니다.'
+  const siteUrl = `https://jgjgill-blog.netlify.app${location.pathname}`
+  const ogImage =
+    'https://raw.githubusercontent.com/jgjgill/blog/main/src/images/og-image.png'
+
   return (
     <>
-      <Seo
-        title="jgjgill - Post"
-        description="글을 통해 기록과 공유를 실천합니다."
-        siteUrl={`https://jgjgill-blog.netlify.app${location.pathname}`}
-      />
+      <title>{title}</title>
+      <meta name="description" content={description} />
+      <meta name="keywords" content="development" />
+      <meta name="author" content="jgjgill" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content={siteUrl} />
+      <meta property="og:title" content={title} />
+      <meta property="og:description" content={description} />
+      <meta property="og:site_name" content="jgjgill-blog" />
+      <meta property="og:locale" content="ko_KR" />
+      <meta property="og:image" content={ogImage} />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="630" />
       <link rel="canonical" href={`https://jgjgill-blog.netlify.app${PATH.POST}`} />
     </>
   )
