@@ -69,6 +69,41 @@ export const query = graphql`
   }
 `
 
-export const Head: HeadFC = () => <Seo />
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  itemListElement: [
+    {
+      '@type': 'SiteNavigationElement',
+      position: 1,
+      name: 'Post',
+      description: '글을 통해 기록과 공유를 실천합니다.',
+      url: 'https://jgjgill-blog.netlify.app/post/',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      position: 2,
+      name: 'About',
+      description: '저의 삶과 가치관을 공유합니다.',
+      url: 'https://jgjgill-blog.netlify.app/about/',
+    },
+    {
+      '@type': 'SiteNavigationElement',
+      position: 3,
+      name: 'Road',
+      description: '삶의 인상 깊은 순간들을 메모합니다.',
+      url: 'https://jgjgill-blog.netlify.app/road/',
+    },
+  ],
+}
+
+const schemaAsString = JSON.stringify(schema, null, 2)
+
+export const Head: HeadFC = () => (
+  <>
+    <Seo />
+    <script type="application/ld+json">{schemaAsString}</script>
+  </>
+)
 
 export default IndexPage
