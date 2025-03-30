@@ -1,6 +1,6 @@
 ---
-title: '어느 날 사라진 styled-compoennts의 theme 타입 (w/ Type vs Interface)'
-description: 'styled-compoennts의 theme 타입과 관련된 Type과 Interface 이슈 상황을 다룹니다.'
+title: '어느 날 사라진 styled-components의 theme 타입 (w/ Type vs Interface)'
+description: 'styled-components의 theme 타입과 관련된 Type과 Interface 이슈 상황을 다룹니다.'
 date: '2025-03-30'
 slug: 'styled-components-theme-type-issue'
 thumbnail: './images/styled-components-theme-type-issue-thumbnail.png'
@@ -10,7 +10,7 @@ type: 'post'
 ---
 
 <Callout>
-  💡 styled-compoennts의 theme 타입과 관련된 Type과 Interface 이슈 상황을 다룹니다.
+  💡 styled-components의 theme 타입과 관련된 Type과 Interface 이슈 상황을 다룹니다.
   피드백은 언제나 환영입니다:)
 </Callout>
 
@@ -21,13 +21,13 @@ type: 'post'
   alt="theme any issue"
 />
 
-처음에는 VSCode 설정이 잘못되었나.. styled-comopnents 버전과 styled-components 플러그인 버전이 맞지 않아서 발생한건가.. 등등.. 여러 삽질을 했지만 원인을 찾지 못했었다.. 🫠
+처음에는 VSCode 설정이 잘못되었나.. styled-components 버전과 styled-components 플러그인 버전이 맞지 않아서 발생한 건가.. 등등.. 여러 삽질을 했지만 원인을 찾지 못했었다.. 🫠
 
 ## 범인은 선언 병합을 고려하지 못한 DefaultTheme 정의
 
 더 과거로 돌아가서...
 
-기존 코드에서 별다른 컨벤션없이 interface와 type이 혼용해서 사용되고 있었다.
+기존 코드에서 별다른 컨벤션 없이 interface와 type이 혼용해서 사용되고 있었다.
 
 (누구는 interface, 누구는 type, ...)
 
@@ -35,7 +35,7 @@ type: 'post'
 
 이에 코드 일관성을 위해 [consistent-type-definitions](https://typescript-eslint.io/rules/consistent-type-definitions/) 린트 규칙을 추가했다.
 
-interface와 type 중 어느 것을 사용할 지 팀원들과 논의한 뒤 type으로 정해졌다.
+interface와 type 중 어느 것을 사용할지 팀원들과 논의한 뒤 type으로 정해졌다.
 
 <br />
 
@@ -69,7 +69,7 @@ declare module 'styled-components' {
 
 <br />
 
-styled-compoponents 모듈의 `DefaultTheme` 코드 부분을 살펴보면 다음과 같다.
+styled-components 모듈의 `DefaultTheme` 코드 부분을 살펴보면 다음과 같다.
 
 <Image
   src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/default-theme-interface.png"
@@ -168,7 +168,7 @@ declare module 'styled-components' {
   alt="당근 테크 밋업 타입"
 />
 
-(출처: [내 타입스크립트 코드가 이렇게 느릴 리 없어! | 2024 당근 테크 밋업]())
+(출처: [내 타입스크립트 코드가 이렇게 느릴 리 없어! | 2024 당근 테크 밋업](https://www.youtube.com/watch?v=g9FL8hKoNqE))
 
 <br />
 
@@ -213,7 +213,7 @@ type은 `암시적인 (implicit) 인덱스 시그니처`를 가진다.
 
 <br />
 
-반면 interface 나중에 확장될 가능성이 존재한다.
+반면 interface는 나중에 확장될 가능성이 존재한다.
 
 그래서 `명시적인 (explicit) 인덱스 시그니처`를 추가해주어야 한다.
 
