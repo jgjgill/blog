@@ -213,7 +213,7 @@ const result: 결과_타입 = { a: 'a', b: 'b' } // 에러 발생
 조금 더 나아가서 추상화를 시켜보자.
 
 ```ts
-type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never }
+type Without<T> = { [P in keyof T]?: undefined }
 type XOR<T, U> = (Without<T> & U) | (Without<U> & T)
 
 type A = { a: string }
