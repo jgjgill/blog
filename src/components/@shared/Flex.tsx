@@ -41,7 +41,9 @@ const Flex: FlexComponent = React.forwardRef(
 
     return (
       <Element
+        {...rest}
         style={{
+          ...rest.style,
           display: 'flex',
           flexDirection,
           justifyContent,
@@ -49,7 +51,6 @@ const Flex: FlexComponent = React.forwardRef(
           gap,
         }}
         ref={ref}
-        {...rest}
       >
         {children}
       </Element>
