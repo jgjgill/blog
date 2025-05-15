@@ -1,0 +1,47 @@
+---
+title: '레포에 따라 여러 깃허브 계정 사용하기 - Remote Repository set-url'
+date: '2025-05-15'
+slug: '2025-05-15'
+type: 'road'
+---
+
+한 컴퓨터에서 여러 깃허브 계정을 사용해야 할 때가 있다.
+
+매번 할 때마다 검색해서 관련 내용을 한 번 정리해두려고 한다.
+
+우선 `Settings`에서 `Developer settings`로 들어간다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/set-url-1.png"
+  alt="set-url 과정 1"
+/>
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/set-url-2.png"
+  alt="set-url 과정 2"
+/>
+
+<br />
+
+사용하고자 하는 설정에 맞게 토큰을 생성한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/set-url-3.png"
+  alt="set-url 과정 3"
+/>
+
+<br />
+
+생성된 토큰과 함께 다음 명령어를 입력하면 된다.
+
+```shell
+git remote set-url origin https://깃허브_아이디:YOUR_PERSONAL_ACCESS_TOKEN@github.com/깃허브_아이디/깃허브_저장소_이름.git
+```
+
+## 참고 문서
+
+- [Changing a remote repository's URL](https://docs.github.com/en/get-started/git-basics/managing-remote-repositories#changing-a-remote-repositorys-url)
