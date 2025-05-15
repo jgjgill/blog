@@ -7,7 +7,7 @@ const TouchGuide = ({ children }: StrictPropsWithChildren) => {
   const [showGuide, setShowGuide] = useState(false)
 
   useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisitedCard')
+    const hasVisited = Boolean(localStorage.getItem('hasVisited'))
     if (!hasVisited) {
       const timer = setTimeout(() => {
         setShowGuide(true)
@@ -21,7 +21,7 @@ const TouchGuide = ({ children }: StrictPropsWithChildren) => {
 
   const handleClose = () => {
     setShowGuide(false)
-    localStorage.setItem('hasVisitedCard', 'true')
+    localStorage.setItem('hasVisited', 'true')
   }
 
   return (
