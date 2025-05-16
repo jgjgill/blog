@@ -25,7 +25,7 @@ const BlogPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={20}>
+        <Flex flexDirection="column">
           <Category selectedCategory="all" />
 
           <GoogleAdsense slot="3931169437" />
