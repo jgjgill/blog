@@ -33,26 +33,28 @@ const Search = () => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={20}>
+        <Flex flexDirection="column">
           <GoogleAdsense slot="4538432263" height="280px" />
 
-          <Input
-            placeholder="Search"
-            value={query}
-            onChange={(e) => setQuery(e.currentTarget.value)}
-          />
+          <Flex flexDirection="column" gap={20} style={{ width: '100%' }}>
+            <Input
+              placeholder="Search"
+              value={query}
+              onChange={(e) => setQuery(e.currentTarget.value)}
+            />
 
-          {query !== '' && (
-            <Text>
-              &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}개)
-            </Text>
-          )}
+            {query !== '' && (
+              <Text>
+                &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}개)
+              </Text>
+            )}
 
-          <PostList
-            render={nodes.slice(0, page).map((node) => (
-              <Post key={node.refIndex} node={node.item} />
-            ))}
-          />
+            <PostList
+              render={nodes.slice(0, page).map((node) => (
+                <Post key={node.refIndex} node={node.item} />
+              ))}
+            />
+          </Flex>
           <div ref={ref} />
         </Flex>
       </Layout>
