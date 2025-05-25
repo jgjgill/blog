@@ -3,10 +3,9 @@ import App from 'App'
 import { Layout, Seo } from 'components'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
-import { graphql, HeadFC, navigate, PageProps } from 'gatsby'
+import { graphql, HeadFC, Link, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
-import { viewTransition } from 'utils/view-transition'
 
 interface Props {
   allMdx: {
@@ -27,14 +26,10 @@ const LoadPage = ({ data }: PageProps<Props>) => {
         <RoadCard>
           {data.allMdx.nodes.map((node) => (
             <li key={node.id}>
-              <StyledTitleButton
-                onClick={() =>
-                  viewTransition(() => navigate(`${PATH.ROAD}${node.frontmatter.date}`))
-                }
-              >
+              <StyledDateLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
                 <h3>{node.frontmatter.date.replaceAll('-', '.')}</h3>
                 <h2>{node.frontmatter.title}</h2>
-              </StyledTitleButton>
+              </StyledDateLink>
             </li>
           ))}
         </RoadCard>
@@ -85,9 +80,14 @@ const MyRoad = styled.h1`
   margin-bottom: 20px;
 `
 
-const StyledTitleButton = styled.button`
+const StyledDateLink = styled(Link)`
   padding: 0;
+
   &:hover {
+    h3 {
+      color: ${({ theme }) => theme.colors.primary.base};
+    }
+
     h2 {
       color: ${({ theme }) => theme.colors.primary.base};
     }

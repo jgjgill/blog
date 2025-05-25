@@ -1,9 +1,8 @@
 import styled from '@emotion/styled'
 import { PATH } from 'constants/path'
-import { navigate } from 'gatsby'
+import { Link } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
-import { viewTransition } from 'utils/view-transition'
 
 interface Props {
   contents: Content[]
@@ -15,14 +14,10 @@ const DateToc = ({ contents }: Props) => {
       <UlTag>
         {contents.map((content) => (
           <LiTag key={content.id}>
-            <AnchorTag
-              onClick={() =>
-                viewTransition(() => navigate(`${PATH.ROAD}${content.frontmatter.date}`))
-              }
-            >
+            <Link to={`${PATH.ROAD}${content.frontmatter.date}`}>
               <b>{content.frontmatter.date.replaceAll('-', '.')}</b>
               <p>{content.frontmatter.title}</p>
-            </AnchorTag>
+            </Link>
           </LiTag>
         ))}
       </UlTag>
@@ -80,8 +75,4 @@ const LiTag = styled.li`
       color: ${({ theme }) => theme.colors.primary.base};
     }
   }
-`
-
-const AnchorTag = styled.a`
-  cursor: pointer;
 `
