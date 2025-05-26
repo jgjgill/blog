@@ -30,8 +30,7 @@ const Author = () => {
         </Flex>
 
         <Flex flexDirection="column" gap={20}>
-          <Text as="h2">프론트엔드 개발자 이종길입니다.</Text>
-
+          <Text as="h1">프론트엔드 개발자 이종길입니다.</Text>
           <Flex flexDirection="column" gap={10}>
             <Text as="p">
               작은 것부터 한 걸음씩 나아가며 문제를 접근하는 것을 좋아합니다.
@@ -39,7 +38,6 @@ const Author = () => {
             <Text as="p">주변을 먼저 살피며 팀과 함께 성장하는 것을 지향합니다.</Text>
             <Text as="p">가독성과 일관성을 중요하게 생각합니다.</Text>
           </Flex>
-
           <Flex gap={20}>
             <Link href="https://github.com/jgjgill" target="_blank" rel="noreferrer">
               Github
