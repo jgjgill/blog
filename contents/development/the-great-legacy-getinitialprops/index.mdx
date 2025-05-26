@@ -413,7 +413,7 @@ export default MyDocument
 
 <br />
 
-`page getinitialProps`(페이지 로드시) → `_app getinitialProps` → `page getServersideProps` → `_document getInitialProps`(페이지 로드시)
+`_app getinitialProps` → `page getinitialProps`(페이지 로드시) → `page getServersideProps` → `_document getInitialProps`(페이지 로드시)
 
 <br />
 
@@ -430,7 +430,7 @@ export default MyDocument
 
 <br />
 
-`page getinitialProps` → `_app getinitialProps`
+`_app getinitialProps` → `page getinitialProps`
 
 <br />
 
