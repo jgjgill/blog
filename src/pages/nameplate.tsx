@@ -22,11 +22,14 @@ const NameplatePage = () => {
 }
 
 export const Head: HeadFC = () => (
-  <Seo
-    title="jgjgill - Nameplate"
-    description="인터랙션을 더한 3D 명함입니다."
-    siteUrl={`https://jgjgill-blog.netlify.app${PATH.NAMEPLATE}`}
-  />
+  <>
+    <Seo
+      title="jgjgill - Nameplate"
+      description="인터랙션을 더한 3D 명함입니다."
+      siteUrl={`https://jgjgill-blog.netlify.app${PATH.NAMEPLATE}`}
+    />
+    <meta name="robots" content="noindex, nofollow" />
+  </>
 )
 
 export default NameplatePage

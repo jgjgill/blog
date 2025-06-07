@@ -23,7 +23,7 @@ const Author = () => {
             aria-label="posts-link"
             href={PATH.NAMEPLATE}
             target="_blank"
-            rel="noreferrer"
+            rel="nofollow"
           >
             Business Card
           </Link>
