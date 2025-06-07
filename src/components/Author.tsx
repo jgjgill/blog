@@ -2,9 +2,12 @@ import styled from '@emotion/styled'
 import { Flex, Text } from 'components/@shared'
 import { PATH } from 'constants/path'
 import { StaticImage } from 'gatsby-plugin-image'
+import { useAnalytics } from 'hooks/useAnalytics'
 import React from 'react'
 
 const Author = () => {
+  const { trackEvent } = useAnalytics()
+
   return (
     <Container>
       <Profile>
@@ -24,6 +27,9 @@ const Author = () => {
             href={PATH.NAMEPLATE}
             target="_blank"
             rel="nofollow"
+            onClick={() => {
+              trackEvent('click', { event_category: 'nameplate' })
+            }}
           >
             Business Card
           </Link>
@@ -39,13 +45,23 @@ const Author = () => {
             <Text as="p">가독성과 일관성을 중요하게 생각합니다.</Text>
           </Flex>
           <Flex gap={20}>
-            <Link href="https://github.com/jgjgill" target="_blank" rel="noreferrer">
+            <Link
+              href="https://github.com/jgjgill"
+              target="_blank"
+              rel="noreferrer"
+              onClick={() => {
+                trackEvent('click', { event_category: 'github' })
+              }}
+            >
               Github
             </Link>
             <Link
               href="https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/"
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackEvent('click', { event_category: 'linkedin' })
+              }}
             >
               LinkedIn
             </Link>
@@ -53,6 +69,9 @@ const Author = () => {
               href="https://www.figma.com/file/98VNcvYtopATDMoiwx9I80/Resume?type=design&node-id=0%3A1&mode=design&t=8oQGiuNsTIfKiTzv-1"
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackEvent('click', { event_category: 'resume' })
+              }}
             >
               Resume
             </Link>
@@ -60,6 +79,9 @@ const Author = () => {
               href="https://www.figma.com/file/98VNcvYtopATDMoiwx9I80/Resume?type=design&node-id=114%3A2&mode=design&t=PibH4KfMCwQ3mRZD-1"
               target="_blank"
               rel="noreferrer"
+              onClick={() => {
+                trackEvent('click', { event_category: 'portfolio' })
+              }}
             >
               Portfolio
             </Link>
