@@ -28,7 +28,7 @@ const Author = () => {
             target="_blank"
             rel="nofollow"
             onClick={() => {
-              trackEvent('click', { event_category: 'nameplate' })
+              trackEvent('author_click', { event_category: 'nameplate' })
             }}
           >
             Business Card
@@ -50,7 +50,7 @@ const Author = () => {
               target="_blank"
               rel="noreferrer"
               onClick={() => {
-                trackEvent('click', { event_category: 'github' })
+                trackEvent('author_click', { event_category: 'github' })
               }}
             >
               Github
@@ -60,7 +60,7 @@ const Author = () => {
               target="_blank"
               rel="noreferrer"
               onClick={() => {
-                trackEvent('click', { event_category: 'linkedin' })
+                trackEvent('author_click', { event_category: 'linkedin' })
               }}
             >
               LinkedIn
@@ -70,7 +70,7 @@ const Author = () => {
               target="_blank"
               rel="noreferrer"
               onClick={() => {
-                trackEvent('click', { event_category: 'resume' })
+                trackEvent('author_click', { event_category: 'resume' })
               }}
             >
               Resume
@@ -80,7 +80,7 @@ const Author = () => {
               target="_blank"
               rel="noreferrer"
               onClick={() => {
-                trackEvent('click', { event_category: 'portfolio' })
+                trackEvent('author_click', { event_category: 'portfolio' })
               }}
             >
               Portfolio
