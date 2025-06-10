@@ -82,6 +82,7 @@ const MyRoad = ({ mdx, children }: Props) => {
           blockquote: Mdx.BLOCKQUOTE,
           Image: Mdx.IMAGE,
           Callout: Mdx.CALLOUT,
+          Video: Mdx.VIDEO,
         }}
       >
         {children}
