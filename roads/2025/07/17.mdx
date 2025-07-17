@@ -1,0 +1,54 @@
+---
+title: '보안 헤더 알아보기'
+date: '2025-07-17'
+slug: '2025-07-17'
+type: 'road'
+---
+
+## X-Content-Type-Options
+
+- 브라우저가 content-type을 마음대로 추측하지 못하게 막음
+- `nosniff` 옵션을 사용하여 MIME 타입 스니핑을 방지
+
+```http
+X-Content-Type-Options: nosniff
+```
+
+## Strict-Transport-Security (HSTS)
+
+- 브라우저가 항상 HTTPS로 접속하게 강제
+- ex: `max-age=31536000; includeSubDomains; preload` (HTTPS를 강제할 기간, 서브도메인 포함여부, 주요 웹 브라우저의 HSTS 사전 로드 목록에 포함)
+
+## X-Frame-Options
+
+- 다른 사이트에서 우리 사이트를 iframe으로 띄우지 못하게 막음 ([clickjacking](https://developer.mozilla.org/en-US/docs/Web/Security/Attacks/Clickjacking) 방지)
+- 설정: `SAMEORIGIN` 또는 `DENY`
+
+## X-XSS-Protection
+
+- `Non-standard`, `Deprecated`
+- 일부 브라우저에서 XSS 공격 탐지 시 자동 차단
+- `1; mode=block` 설정을 사용하면 XSS 공격이 감지되면 페이지를 차단
+
+## Referrer-Policy
+
+- 브라우저가 요청을 보낼 때 `Referer` 헤더에 어떤 정보를 포함할지 제어
+- 외부 사이트로 이동할 때 최소한의 `referrer` 정보만 전달 → 개인정보 보호 강화
+- `strict-origin-when-cross-origin` 설정을 사용하면 동일 출처 간에는 전체 URL을, 다른 출처 간에는 도메인만 전달
+
+## Content-Security-Policy (CSP)
+
+- 웹 페이지에서 실행되는 콘텐츠의 출처를 제어하여 XSS 공격을 방지
+- 문서에 로드할 수 있는 리소스, 특히 JS 리소스를 제어
+- `default-src`: 다른 directive가 지정되지 않은 경우 기본값
+- `script-src`, `style-src`, `img-src`: 각각 스크립트, 스타일, 이미지의 출처를 지정
+
+## 참고 문서
+
+- [MDN - X-Content-Type-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)
+- [MDN - Strict-Transport-Security](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+- [안전한 웹을 위해 HTTPS 이해하기: ②HTTPS를 강제하는 HSTS 기술](https://yozm.wishket.com/magazine/detail/1862)
+- [MDN - X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+- [MDN - X-XSS-Protection](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+- [MDN - Referrer-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+- [MDN - Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP)
