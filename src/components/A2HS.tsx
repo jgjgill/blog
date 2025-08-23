@@ -22,7 +22,7 @@ const A2HS = () => {
       <Flex alignItems="center" flexDirection="column" gap={20}>
         <Text as="h3">바로가기 추가</Text>
         <Text as="h4">
-          저의 블로그를 방문해주셔서 감사합니다😄 <br /> 바로가기를 추가하시겠습니까?
+          블로그를 방문해주셔서 감사합니다😄 <br /> 바로가기를 추가하시겠습니까?
         </Text>
 
         <ButtonWrapper
