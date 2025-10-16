@@ -1,0 +1,74 @@
+---
+title: 'useMutation 삽질 (무한루프, mutate, mutateAsync)'
+date: '2025-10-16'
+slug: '2025-10-16'
+type: 'road'
+---
+
+## useEffect 내 mutation 의존성 배열 추가시 무한 로딩?
+
+다음과 같이 코드를 구성했을 때 무한 로딩이 발생하는 경우가 있다.
+
+```tsx
+const mutation = useMutation();
+
+useEffect(() => {
+  mutation.mutate();
+}, [mutation]);
+```
+
+`mutation` 객체가 요청에 의해 변경되기 때문에 무한 루프가 발생하는 것이다.
+
+<br />
+
+`mutate` 자체는 호출 이후에도 변경되지 않기 때문에 다음과 같이 작성하면 된다.
+
+```tsx
+  const { mutate } = useMutation();
+
+  useEffect(() => {
+    mutate();
+  }, [mutate]);
+```
+
+## mutation? mutateAsync?
+
+`useMutation`을 사용할 때 `mutate`와 `mutateAsync` 중 어떤 것을 사용해야 할까?
+
+`mutate`는 아무것도 반환하지 않고 `mutateAsync`는 `Promise`를 반환한다.
+
+<br />
+
+`mutate`에서는 콜백을 통해 `data` 혹은 `error`에 접근할 수 있다.
+
+하지만, `mutateAsync`는 `Promise`를 직접 제어할 수 있게 해주어 수동으로 오류를 처리해야 한다.
+
+```tsx
+// mutate: 콜백으로 접근
+mutate(data, {
+  onSuccess: (data) => {
+    console.log(data);
+  },
+  onError: (error) => {
+    console.log(error);
+  }
+});
+
+// mutateAsync: Promise로 직접 제어
+try {
+  const data = await mutateAsync(data);
+  console.log(data);
+} catch (error) {
+  console.log(error);
+}
+```
+
+<br />
+
+메인테이너는 `mutate`을 권장한다.
+
+## 참고 문서
+
+- [eslint error when I don't pass mutation to useEffect dependency](https://github.com/TanStack/query/discussions/3566)
+- [Mutate or MutateAsync](https://tkdodo.eu/blog/mastering-mutations-in-react-query#mutate-or-mutateasync)
+
