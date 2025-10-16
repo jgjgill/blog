@@ -3,7 +3,7 @@ import App from 'App'
 import { Author, Layout, Post, Seo } from 'components'
 import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
-import TouchGuide from 'components/TouchGuide'
+import SideProjects from 'components/SideProjects'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import React from 'react'
 import { Content } from 'types/content'
@@ -28,19 +28,7 @@ const IndexPage = ({ data }: PageProps<Props>) => {
 
           <GoogleAdsense slot="4730003951" />
 
-          <Flex flexDirection="column" alignItems="center" style={{ width: '100%' }}>
-            <TouchGuide>
-              <Link
-                href="https://jgjgill.github.io/gs-i18n/"
-                target="_blank"
-                rel="noreferrer"
-                style={{ textAlign: 'center' }}
-              >
-                gs-i18n
-              </Link>
-            </TouchGuide>
-            <p>라이브러리를 운영하고 있어요. 😎</p>
-          </Flex>
+          <SideProjects />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Recent Posts</h2>
@@ -123,12 +111,3 @@ export const Head: HeadFC = () => (
 )
 
 export default IndexPage
-
-const Link = styled.a`
-  transition: 0.3;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.primary.base};
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary.base};
-  }
-`

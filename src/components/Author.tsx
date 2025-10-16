@@ -21,18 +21,6 @@ const Author = () => {
               alt="main-image"
             />
           </ImageWrapper>
-
-          <Link
-            aria-label="posts-link"
-            href={PATH.NAMEPLATE}
-            target="_blank"
-            rel="nofollow"
-            onClick={() => {
-              trackEvent('author_click', { event_category: 'nameplate' })
-            }}
-          >
-            Business Card
-          </Link>
         </Flex>
 
         <Flex flexDirection="column" gap={20}>
@@ -45,6 +33,18 @@ const Author = () => {
             <Text as="p">가독성과 일관성을 중요하게 생각합니다.</Text>
           </Flex>
           <Flex gap={20}>
+            <Link
+              aria-label="posts-link"
+              href={PATH.NAMEPLATE}
+              target="_blank"
+              rel="nofollow"
+              onClick={() => {
+                trackEvent('author_click', { event_category: 'nameplate' })
+              }}
+            >
+              Business Card
+            </Link>
+
             <Link
               href="https://github.com/jgjgill"
               target="_blank"
@@ -64,26 +64,6 @@ const Author = () => {
               }}
             >
               LinkedIn
-            </Link>
-            <Link
-              href="https://www.figma.com/file/98VNcvYtopATDMoiwx9I80/Resume?type=design&node-id=0%3A1&mode=design&t=8oQGiuNsTIfKiTzv-1"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => {
-                trackEvent('author_click', { event_category: 'resume' })
-              }}
-            >
-              Resume
-            </Link>
-            <Link
-              href="https://www.figma.com/file/98VNcvYtopATDMoiwx9I80/Resume?type=design&node-id=114%3A2&mode=design&t=PibH4KfMCwQ3mRZD-1"
-              target="_blank"
-              rel="noreferrer"
-              onClick={() => {
-                trackEvent('author_click', { event_category: 'portfolio' })
-              }}
-            >
-              Portfolio
             </Link>
           </Flex>
         </Flex>
