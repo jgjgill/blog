@@ -1,0 +1,239 @@
+---
+title: '다형성 컴포넌트 정리'
+date: '2025-11-01'
+slug: '2025-11-01'
+type: 'road'
+---
+
+## 다형성 컴포넌트란?
+
+> `as` props를 통해 렌더링될 HTML 요소나 컴포넌트를 동적으로 변경할 수 있는 컴포넌트
+> 하나의 컴포넌트로 다양한 요소를 표현하면서도 타입 안정성을 유지
+
+<br />
+
+다형성 컴포넌트 관련 코드를 보게 되어 한 번 기본 개념을 정리해보자 한다.
+
+기본적인 타입 코드는 다음과 같이 구성할 수 있다.
+
+<br />
+
+```ts
+import { 
+  ElementType, 
+  ComponentPropsWithRef, 
+  ComponentPropsWithoutRef,
+  ReactElement 
+} from 'react';
+
+export type AsProp<C extends ElementType> = {
+  as?: C;
+};
+
+export type PropsToOmit<C extends ElementType, P> = keyof (AsProp<C> & P);
+
+export type PolymorphicComponentProps<
+  C extends ElementType,
+  Props = {}
+> = Props & 
+  AsProp<C> & 
+  Omit<ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>;
+
+export type PolymorphicRef<C extends ElementType> = 
+  ComponentPropsWithRef<C>['ref'];
+
+export type PolymorphicComponentType<
+  DefaultElement extends ElementType,
+  Props = {}
+> = <C extends ElementType = DefaultElement>(
+  props: PolymorphicComponentProps<C, Props>
+) => ReactElement | null;
+```
+
+## 타입 코드 분석하기
+
+### AsProp
+
+```ts
+export type AsProp<C extends ElementType> = {
+  as?: C;
+};
+```
+
+<br />
+
+`as` prop의 타입을 정의한다.
+
+<br />
+
+```ts
+// C = 'button'일 때
+type ButtonAs = AsProp<'button'>;
+// { as?: 'button' }
+
+// C = 'a'일 때
+type LinkAs = AsProp<'a'>;
+// { as?: 'a' }
+```
+
+### PropsToOmit
+
+```ts
+export type PropsToOmit<C extends ElementType, P> = keyof (AsProp<C> & P);
+```
+
+타입 충돌을 방지하기 위해 제거할 prop 키들을 추출한다.
+
+컴포넌트 고유 props와 HTML 요소의 기본 props가 겹칠 때,
+
+컴포넌트 고유 props를 우선시하기 위해 HTML 요소에서 해당 키를 제거한다.
+
+<br />
+
+```ts
+type ButtonOwnProps = {
+  variant: 'primary' | 'secondary';
+};
+
+// 1단계: AsProp<C> & P를 병합
+AsProp<'button'> & ButtonOwnProps 
+// { as?: 'button'; variant: string }
+
+// 2단계: keyof로 키만 추출
+keyof { as?: 'button'; variant: string }
+// 'as' | 'variant'
+```
+
+### PolymorphicComponentProps
+
+```ts
+export type PolymorphicComponentProps<
+  C extends ElementType,
+  Props = {}
+> = Props & 
+  AsProp<C> & 
+  Omit<ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>;
+```
+
+<br />
+
+다형성 컴포넌트의 최종 props 타입을 생성한다.
+
+앞서 정의한 `Omit<ComponentPropsWithoutRef<C>, PropsToOmit<C, Props>>`을 통해 충돌 키를 제거한다.
+
+<br />
+
+```ts
+Props                                           // 1. 컴포넌트 고유 props
+& AsProp<C>                                     // 2. as prop 추가
+& Omit<ComponentPropsWithoutRef<C>,            // 3. HTML 요소의 기본 props
+       PropsToOmit<C, Props>>                  //    (충돌 키 제거)
+```
+
+<br />
+
+### PolymorphicRef
+
+```ts
+export type PolymorphicRef<C extends ElementType> = 
+  ComponentPropsWithRef<C>['ref'];
+```
+
+<br />
+
+ref 타입을 별로도 추출한다.
+
+<br />
+
+```ts
+// C = 'button'일 때
+PolymorphicRef<'button'>
+// Ref<HTMLButtonElement>
+
+// C = 'a'일 때
+PolymorphicRef<'a'>
+// Ref<HTMLAnchorElement>
+
+// C = 'input'일 때
+PolymorphicRef<'input'>
+// Ref<HTMLInputElement>
+```
+
+### PolymorphicComponentType
+
+```ts
+export type PolymorphicComponentType
+  DefaultElement extends ElementType,
+  Props = {}
+> = <C extends ElementType = DefaultElement>(
+  props: PolymorphicComponentProps<C, Props>
+) => ReactElement | null;
+```
+
+<br />
+
+`forwardRef`와 함께 사용될 컴포넌트의 타입 시그니처를 정의한다.
+
+## 예시: Button 컴포넌트
+
+다형성 컴포넌트는 `forwardRef`와 함께 사용한다.
+
+이는 부모 컴포넌트가 ref를 통해 
+
+<br />
+
+해당 타입을 기반으로 `Button` 컴포넌트를 만들어보면 다음과 같이 사용할 수 있다.
+
+<br />
+
+```tsx
+import { forwardRef, ElementType } from 'react';
+import { 
+  PolymorphicComponentProps, 
+  PolymorphicRef, 
+  PolymorphicComponentType 
+} from './polymorphic.types';
+
+// Step 1: 컴포넌트 고유 Props 정의
+type ButtonOwnProps = {
+  variant?: 'primary' | 'secondary' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  isLoading?: boolean;
+};
+
+// Step 2: 다형성 Props 타입 생성
+type ButtonProps<C extends ElementType = 'button'> = PolymorphicComponentProps<
+  C,
+  ButtonOwnProps
+>;
+
+// Step 3: 컴포넌트 구현
+const Button: PolymorphicComponentType<'button', ButtonOwnProps> = forwardRef(
+  <C extends ElementType = 'button'>(
+    { 
+      as, 
+      variant = 'primary', 
+      size = 'md', 
+      isLoading = false,
+      children,
+      className,
+      ...restProps 
+    }: ButtonProps<C>,
+    ref?: PolymorphicRef<C>
+  ) => {
+    const Component = as || 'button';
+    
+    const buttonClass = `btn btn-${variant} btn-${size} ${className || ''}`;
+
+    return (
+      <Component ref={ref} className={buttonClass} {...restProps}>
+        {isLoading ? 'Loading...' : children}
+      </Component>
+    );
+  }
+);
+
+Button.displayName = 'Button';
+
+export default Button;
+```
