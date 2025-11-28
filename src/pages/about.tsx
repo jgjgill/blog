@@ -23,6 +23,8 @@ const AboutPage = () => {
     <App>
       <Layout>
         <Flex flexDirection="column" gap={8}>
+          <GoogleAdsense slot="9375067805" />
+
           <Flex flexDirection="column" gap={20}>
             <h2>Careers</h2>
 
@@ -37,8 +39,6 @@ const AboutPage = () => {
               에서 프론트엔드 개발자로 일하고 있습니다. 2024.01. ~
             </Description>
           </Flex>
-
-          <GoogleAdsense slot="9375067805" />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Values</h2>
@@ -128,7 +128,6 @@ const AboutPage = () => {
             </Flex>
           </Flex>
         </Flex>
-        <GoogleAdsense slot="4840926425" height="280px" />
       </Layout>
     </App>
   )

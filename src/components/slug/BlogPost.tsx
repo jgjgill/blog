@@ -2,6 +2,7 @@ import styled from '@emotion/styled'
 import { MDXProvider } from '@mdx-js/react'
 import { Comment, Mdx, Toc } from 'components'
 import { Flex } from 'components/@shared'
+import GoogleAdsense from 'components/GoogleAdsense'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
 import { Blog } from 'types/content'
@@ -24,8 +25,12 @@ const BlogPost = ({ mdx, children }: Props) => {
       <time>{mdx.frontmatter.date}</time>
       <span>{readingTime.minutes} min read</span>
       <Toc toc={mdx.tableOfContents} />
-      <Flex justifyContent="center">
-        <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
+      <Flex flexDirection="column" style={{ marginBottom: '8px' }}>
+        <Flex justifyContent="center">
+          <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
+        </Flex>
+
+        <GoogleAdsense slot="6154008098" />
       </Flex>
 
       <MDXProvider
@@ -46,7 +51,6 @@ const BlogPost = ({ mdx, children }: Props) => {
       >
         {children}
       </MDXProvider>
-
       <Comment />
     </>
   )

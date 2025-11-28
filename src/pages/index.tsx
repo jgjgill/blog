@@ -23,12 +23,14 @@ const IndexPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={2}>
+        <Flex flexDirection="column" gap={8}>
           <Author />
 
           <GoogleAdsense slot="4730003951" />
 
           <SideProjects />
+
+          <GoogleAdsense slot="4840926425" />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Recent Posts</h2>
