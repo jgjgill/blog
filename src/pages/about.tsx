@@ -22,9 +22,11 @@ const AboutPage = () => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column" gap={8}>
+        <div style={{ marginBottom: '8px' }}>
           <GoogleAdsense slot="9375067805" />
+        </div>
 
+        <Flex flexDirection="column" gap={40}>
           <Flex flexDirection="column" gap={20}>
             <h2>Careers</h2>
 
