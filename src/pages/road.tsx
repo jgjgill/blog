@@ -1,6 +1,7 @@
 import styled from '@emotion/styled'
 import App from 'App'
 import { Layout, Seo } from 'components'
+import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, Link, PageProps } from 'gatsby'
@@ -19,20 +20,22 @@ const LoadPage = ({ data }: PageProps<Props>) => {
   return (
     <App>
       <Layout>
-        <MyRoad>My Road</MyRoad>
+        <Flex flexDirection="column" gap={8}>
+          <MyRoad>My Road</MyRoad>
 
-        <GoogleAdsense slot="3739597744" />
+          <GoogleAdsense slot="3739597744" />
 
-        <RoadCard>
-          {data.allMdx.nodes.map((node) => (
-            <li key={node.id}>
-              <StyledDateLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
-                <h3>{node.frontmatter.date.replaceAll('-', '.')}</h3>
-                <h2>{node.frontmatter.title}</h2>
-              </StyledDateLink>
-            </li>
-          ))}
-        </RoadCard>
+          <RoadCard>
+            {data.allMdx.nodes.map((node) => (
+              <li key={node.id}>
+                <StyledDateLink to={`${PATH.ROAD}${node.frontmatter.date}`}>
+                  <h3>{node.frontmatter.date.replaceAll('-', '.')}</h3>
+                  <h2>{node.frontmatter.title}</h2>
+                </StyledDateLink>
+              </li>
+            ))}
+          </RoadCard>
+        </Flex>
       </Layout>
     </App>
   )
@@ -77,7 +80,6 @@ export default LoadPage
 const MyRoad = styled.h1`
   font-size: xx-large;
   font-weight: bold;
-  margin-bottom: 20px;
 `
 
 const StyledDateLink = styled(Link)`

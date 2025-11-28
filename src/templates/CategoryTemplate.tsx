@@ -33,7 +33,7 @@ const CategoryTemplate = ({
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" gap={8}>
           <Category selectedCategory={pageContext.category} />
 
           <GoogleAdsense slot="3931169437" />

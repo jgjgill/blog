@@ -33,7 +33,7 @@ const Search = () => {
   return (
     <App>
       <Layout>
-        <Flex flexDirection="column">
+        <Flex flexDirection="column" gap={8}>
           <GoogleAdsense slot="4538432263" height="280px" />
 
           <Flex flexDirection="column" gap={20} style={{ width: '100%' }}>
