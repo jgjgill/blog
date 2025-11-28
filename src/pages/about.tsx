@@ -50,8 +50,6 @@ const AboutPage = () => {
             ))}
           </Flex>
 
-          <GoogleAdsense slot="6154008098" />
-
           <Flex flexDirection="column" gap={20}>
             <h2>Activities</h2>
 
