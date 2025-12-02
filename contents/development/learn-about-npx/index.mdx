@@ -11,11 +11,6 @@ type: 'post'
 
 <Callout>💡 npx와 관련된 개념들을 이해합니다. 피드백은 언제나 환영입니다:)</Callout>
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/[category]/[folder]/images/[image].png"
-  alt="[alt]"
-/>
-
 ## npx란? (Node Package eXecute)
 
 ### npm과의 관계 및 등장 배경
@@ -29,13 +24,13 @@ npm 자체는 패키지를 다운로드하고 관리하는 관리자 역할을 �
 
 <br />
 
-로컬 설치의 경우 설치는 하지만 명령어로 바로 실행이 불가하다. ex) `cowsay "Hello"`
+로컬 설치의 경우 설치는 하지만 명령어로 바로 실행이 불가하다. ex) `gs-i18n "Hello"`
 
-실행하려면 긴 경로를 입력할 필요가 있다. ex) `/node_modules/.bin/cowsay "Hello"`
+실행하려면 긴 경로를 입력할 필요가 있다. ex) `/node_modules/.bin/gs-i18n "Hello"`
 
 <br />
 
-글로벌 설치는 컴퓨터 어디서든 사용이 가능하다. ex) `cowsay "Hello"`
+글로벌 설치는 컴퓨터 어디서든 사용이 가능하다. ex) `gs-i18n "Hello"`
 
 하지만 컴퓨터 전체에 설치해서 용량을 차지하게 된다.
 
@@ -79,10 +74,13 @@ npm 자체는 패키지를 다운로드하고 관리하는 관리자 역할을 �
 
 ### 로컬 node_modules/.bin 우선 탐색
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/node-modules-bin.png"
-  alt="node_modules bin"
-/>
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/node-modules-bin.png"
+    alt="node_modules bin"
+    width="70%"
+  />
+</div>
 
 <br />
 
@@ -100,10 +98,13 @@ npm 자체는 패키지를 다운로드하고 관리하는 관리자 역할을 �
 $ npm list -g --depth=0
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/npm-global-list.png"
-  alt="npm global list"
-/>
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/npm-global-list.png"
+    alt="npm global list"
+    width="70%"
+  />
+</div>
 
 <br />
 
