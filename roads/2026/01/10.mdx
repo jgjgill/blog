@@ -1,0 +1,225 @@
+---
+title: 'React Render And Commit 이란?'
+date: '2026-01-10'
+slug: '2026-01-10'
+type: 'road'
+---
+
+> React가 컴포넌트의 상태 변화를 감지하고 실제 DOM에 반영하는 3단계 프로세스 (Trigger → Render → Commit)
+
+## 기본 개념
+
+### 1. 트리거: 렌더링이 시작되는 지점
+
+- 초기 렌더링 (앱 시작)
+- 상태 업데이트 (setState, useState 등)
+
+### 2. 렌더: 컴포넌트를 호출해서 무엇을 화면에 그려야 할지 계산
+
+- 컴포넌트 함수 실행
+- Virtual DOM 생성 및 비교 (Reconciliation)
+- 순수 함수여야 하며 부수 효과 없음
+
+### 3. 커밋: 계산된 변경사항을 실제 DOM에 적용
+
+- DOM 노드 추가/삭제/수정
+- useLayoutEffect 실행
+- 브라우저 페인팅 후 useEffect 실행
+
+## 등장 배경
+
+### 전통적인 DOM 조작은 비효율적
+
+- 직접 DOM 조작 시 매번 브라우저 리플로우/리페인트 발생
+- 어떤 부분이 변경되었는지 개발자가 직접 추적해야 함
+- 복잡한 UI에서 성능 저하
+
+### Render와 Commit 분리로 효율성 확보
+
+- 메모리에서 먼저 계산 (Render)
+- 변경이 필요한 부분만 실제 DOM에 적용 (Commit)
+- 선언적 UI 프로그래밍 가능
+
+## 동작 원리
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/render-commit-flow.png"
+  alt="render and commit 흐름"
+/>
+
+### Render Phase (렌더 단계)
+
+- React가 컴포넌트 함수를 호출
+- JSX를 React Element(Virtual DOM)로 변환
+- 이전 Virtual DOM과 새로운 Virtual DOM 비교 (Diffing)
+- 변경이 필요한 부분을 표시 (Reconciliation)
+- 이 단계는 순수하며, 중단/재시작 가능 (Concurrent 모드)
+
+### Commit Phase (커밋 단계)
+
+- Render 단계에서 계산된 변경사항을 실제 DOM에 적용
+- DOM 삽입/삭제/속성 변경 일괄 처리
+- useLayoutEffect 동기 실행
+- 브라우저가 화면을 그림 (Paint)
+- useEffect 비동기 실행
+- 이 단계는 중단 불가능하며 동기적으로 실행
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/render-commit-diff.png"
+  alt="render and commit 차이"
+/>
+
+### 관련 개념과 비교
+
+- **Reconciliation**: Render 단계에서 Virtual DOM을 비교하는 알고리즘
+- **Fiber**: React 16+의 새로운 reconciliation 엔진 (작업 단위로 쪼개서 우선순위 관리)
+- **Batching**: 여러 상태 업데이트를 하나의 render로 묶는 최적화 기법
+
+## 예시 코드
+
+```jsx
+import { useState, useEffect, useLayoutEffect } from 'react'
+
+function Counter() {
+  const [count, setCount] = useState(0)
+
+  console.log('1. Render Phase: 컴포넌트 함수 실행')
+
+  useLayoutEffect(() => {
+    console.log('3. Commit Phase: useLayoutEffect (DOM 변경 후, Paint 전)')
+  })
+
+  useEffect(() => {
+    console.log('4. Commit Phase: useEffect (Paint 후)')
+  })
+
+  const handleClick = () => {
+    console.log('0. Trigger: setState 호출')
+    setCount(count + 1)
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={handleClick}>증가</button>
+    </div>
+  )
+}
+
+// 초기 렌더링
+// 1. Render Phase: 컴포넌트 함수 실행
+// 2. Commit Phase: DOM에 적용
+// 3. Commit Phase: useLayoutEffect (DOM 변경 후, Paint 전)
+// 4. Commit Phase: useEffect (Paint 후)
+
+// 버튼 클릭 시
+// 0. Trigger: setState 호출
+// 1. Render Phase: 컴포넌트 함수 실행
+// 3. Commit Phase: useLayoutEffect (DOM 변경 후, Paint 전)
+// 4. Commit Phase: useEffect (Paint 후)
+```
+
+### Render Phase가 여러 번 실행되는 경우
+
+```jsx
+function SearchFilter() {
+  const [query, setQuery] = useState('')
+  const [category, setCategory] = useState('all')
+
+  // Batching: React 18+에서는 자동으로 일괄 처리
+  const handleReset = () => {
+    setQuery('') // Render 1번만!
+    setCategory('all') // 두 업데이트가 배치됨
+  }
+
+  // React 17 이하에서는 setTimeout 내부는 배치 안 됨
+  const handleResetOld = () => {
+    setTimeout(() => {
+      setQuery('') // Render 1번
+      setCategory('all') // Render 1번 더 (총 2번)
+    }, 0)
+  }
+
+  return (
+    <div>
+      <input value={query} onChange={(e) => setQuery(e.target.value)} />
+      <select value={category} onChange={(e) => setCategory(e.target.value)}>
+        <option value="all">전체</option>
+        <option value="tech">기술</option>
+      </select>
+      <button onClick={handleReset}>초기화</button>
+    </div>
+  )
+}
+```
+
+### Commit Phase에서만 가능한 작업
+
+```jsx
+function MeasureExample() {
+  const [height, setHeight] = useState(0)
+  const divRef = useRef(null)
+
+  useLayoutEffect(() => {
+    // ✅ Commit Phase: DOM 조작 후 측정 가능
+    if (divRef.current) {
+      const measuredHeight = divRef.current.getBoundingClientRect().height
+      setHeight(measuredHeight)
+    }
+  }, [])
+
+  // ❌ Render Phase에서 DOM 접근하면 안 됨
+  // const wrongHeight = divRef.current?.getBoundingClientRect().height;
+
+  return (
+    <div ref={divRef}>
+      <p>이 요소의 높이: {height}px</p>
+    </div>
+  )
+}
+```
+
+## 헷갈리기 쉬운 부분
+
+### Rendering vs Render Phase
+
+- ❌ "렌더링 = 화면에 그리기"라고 생각
+- ✅ React에서 Rendering은 컴포넌트 함수를 호출하는 것
+- ✅ 실제 화면에 그리는 건 Commit Phase + Browser Paint
+
+### Re-render vs Re-paint
+
+- Re-render: React가 컴포넌트 함수를 다시 호출 (Render Phase)
+- Re-paint: 브라우저가 화면을 다시 그림 (Browser 작업)
+- Re-render가 항상 Re-paint로 이어지지는 않음 (변경사항 없으면 Commit 단계 스킵)
+
+## 개념 정리
+
+### React의 Render와 Commit이 무엇인가요?
+
+React의 UI 업데이트는 크게 Render Phase와 Commit Phase로 나뉩니다.
+
+**Render Phase**는 컴포넌트 함수를 호출해서 무엇을 화면에 그려야 할지 계산하는 단계입니다.
+이 단계에서 React는 컴포넌트를 실행하고 JSX를 React Element로 변환한 뒤,
+이전 Virtual DOM과 새로운 Virtual DOM을 비교합니다.
+
+이 과정을 Reconciliation이라고 부르며 어느 부분이 변경되었는지 파악하는 과정입니다.
+중요한 점은 이 단계가 순수해야 하며 같은 입력에 같은 출력을 보장해야 하고 외부 시스템을 변경하는 부수 효과가 없어야 합니다.
+
+**Commit Phase**는 Render 단계에서 계산된 변경사항을 실제 DOM에 적용하는 단계입니다.
+React는 변경이 필요한 DOM 노드만 효율적으로 업데이트하고,
+이후 useLayoutEffect를 동기적으로 실행합니다.
+브라우저가 화면을 그린 다음에는 useEffect가 비동기로 실행됩니다.
+
+이렇게 두 단계로 나눈 이유는 성능 최적화 때문입니다.
+메모리에서 먼저 계산을 완료한 후 실제 DOM 조작을 최소화합니다.
+최신 React에서는 Render 단계를 중단하고 우선순위가 높은 작업을 먼저 처리할 수도 있습니다.
+
+### 핵심 문장
+
+- React의 업데이트는 Render와 Commit 두 단계로 진행됩니다.
+- Render 단계에서는 컴포넌트 함수를 호출해 Virtual DOM을 만들고 이전 상태와 비교해서 무엇을 바꿔야 할지 계산합니다.
+- Commit 단계에서는 계산된 변경사항만 실제 DOM에 적용합니다.
+- 분리한 이유는 성능 최적화를 위해서이며 Render는 순수해야 하고 부수 효과는 Commit 이후 Effect에서 처리해야 합니다.
