@@ -55,40 +55,38 @@ const MyRoad = ({ mdx, children }: Props) => {
     <>
       <DateToc contents={data.allMdx.nodes} />
 
-      <Flex flexDirection="column" gap={8}>
-        <Flex gap={10}>
-          <BackButton
-            type="button"
-            onClick={() => {
-              viewTransition(() => navigate(-1))
-            }}
-          >
-            <BackSpace width={50} height={50} />
-          </BackButton>
-
-          <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
-        </Flex>
-
-        <GoogleAdsense slot="3520864068" />
-
-        <MDXProvider
-          components={{
-            h1: Mdx.H1,
-            h2: Mdx.H2,
-            h3: Mdx.H3,
-            p: Mdx.P,
-            ul: Mdx.UL,
-            li: Mdx.LI,
-            a: Mdx.ANCHOR,
-            blockquote: Mdx.BLOCKQUOTE,
-            Image: Mdx.IMAGE,
-            Callout: Mdx.CALLOUT,
-            Video: Mdx.VIDEO,
+      <Flex gap={10}>
+        <BackButton
+          type="button"
+          onClick={() => {
+            viewTransition(() => navigate(-1))
           }}
         >
-          {children}
-        </MDXProvider>
+          <BackSpace width={50} height={50} />
+        </BackButton>
+
+        <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
       </Flex>
+
+      <GoogleAdsense slot="3520864068" />
+
+      <MDXProvider
+        components={{
+          h1: Mdx.H1,
+          h2: Mdx.H2,
+          h3: Mdx.H3,
+          p: Mdx.P,
+          ul: Mdx.UL,
+          li: Mdx.LI,
+          a: Mdx.ANCHOR,
+          blockquote: Mdx.BLOCKQUOTE,
+          Image: Mdx.IMAGE,
+          Callout: Mdx.CALLOUT,
+          Video: Mdx.VIDEO,
+        }}
+      >
+        {children}
+      </MDXProvider>
     </>
   )
 }
