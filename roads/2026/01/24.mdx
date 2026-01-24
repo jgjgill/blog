@@ -1,0 +1,171 @@
+---
+title: 'React Batching이란?'
+date: '2026-01-24'
+slug: '2026-01-24'
+type: 'road'
+---
+
+> 여러 개의 state 업데이트를 하나로 묶어서 한 번의 리렌더링만 발생시키는 React의 성능 최적화 기법
+
+## 기본 개념
+
+- Batching은 React가 여러 state 업데이트를 그룹화하여 단일 리렌더링으로 처리하는 메커니즘
+
+## 등장 배경
+
+- **문제상황**: 여러 state를 연속으로 업데이트할 때마다 리렌더링이 발생하면 성능이 크게 저하됨
+- **해결방안**: state 업데이트를 자동으로 모아서 한 번에 처리
+- **React 18 이전**: 이벤트 핸들러 내부에서만 batching 적용
+- **React 18 이후**: 모든 상황(setTimeout, Promise, native event 등)에서 자동 batching 적용
+
+## 동작 원리
+
+### React 18 이전 (Selective Batching)
+
+- 이벤트 핸들러 함수 시작
+- state 업데이트 요청들을 큐에 저장
+- 이벤트 핸들러 함수 종료
+- 큐에 있는 모든 업데이트를 한 번에 처리 → 1번의 리렌더링
+
+### React 18 이후 (Automatic Batching)
+
+- 어떤 컨텍스트에서든 state 업데이트 발생
+- React가 자동으로 마이크로태스크 큐에 업데이트 예약
+- 현재 실행 컨텍스트 종료 후 모든 업데이트를 일괄 처리
+- 단일 리렌더링 수행
+
+## 예시 코드
+
+```jsx
+import { useState } from 'react'
+
+function Counter() {
+  const [count, setCount] = useState(0)
+  const [flag, setFlag] = useState(false)
+
+  console.log('Component rendered') // 확인용
+
+  const handleClick = () => {
+    // React 18: 자동으로 batching됨 → 1번만 렌더링
+    setCount((c) => c + 1) // 1st update
+    setFlag((f) => !f) // 2nd update
+    setCount((c) => c + 1) // 3rd update
+
+    // 위 3개의 업데이트가 하나로 묶여서 처리됨
+  }
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <p>Flag: {flag.toString()}</p>
+      <button onClick={handleClick}>Update</button>
+    </div>
+  )
+}
+
+// 버튼 클릭 시
+Component rendered // 단 1번만 출력됨
+
+// count: 0 → 2 (한 번에)
+// flag: false → true (한 번에)
+```
+
+### React 17 vs React 18 비교
+
+**React 17 - setTimeout에서 batching 안됨**
+
+```jsx
+function React17Example() {
+  const [count, setCount] = useState(0)
+  const [flag, setFlag] = useState(false)
+
+  const handleClick = () => {
+    setTimeout(() => {
+      setCount((c) => c + 1) // 1번째 렌더링
+      setFlag((f) => !f) // 2번째 렌더링
+      // React 17: 총 2번 렌더링 발생
+    }, 0)
+  }
+
+  console.log('Rendered')
+  return <button onClick={handleClick}>Click</button>
+}
+
+// 출력: Rendered (2번)
+```
+
+**React 18 - setTimeout에서도 batching**
+
+```jsx
+function React18Example() {
+  const [count, setCount] = useState(0)
+  const [flag, setFlag] = useState(false)
+
+  const handleClick = () => {
+    setTimeout(() => {
+      setCount((c) => c + 1)
+      setFlag((f) => !f)
+      // React 18: 1번만 렌더링
+    }, 0)
+  }
+
+  console.log('Rendered')
+  return <button onClick={handleClick}>Click</button>
+}
+
+// 출력: Rendered (1번)
+```
+
+**flushSync로 batching 비활성화**
+
+```jsx
+import { flushSync } from 'react-dom'
+
+function FlushSyncExample() {
+  const [count, setCount] = useState(0)
+  const [flag, setFlag] = useState(false)
+
+  const handleClick = () => {
+    // 즉시 동기적으로 업데이트 (batching 무시)
+    flushSync(() => {
+      setCount((c) => c + 1) // 1번째 렌더링
+    })
+
+    // DOM에서 업데이트된 값 즉시 읽기 가능
+    console.log(document.getElementById('count').textContent)
+
+    flushSync(() => {
+      setFlag((f) => !f) // 2번째 렌더링
+    })
+  }
+
+  return (
+    <div>
+      <p id="count">Count: {count}</p>
+      <p>Flag: {flag.toString()}</p>
+      <button onClick={handleClick}>Update</button>
+    </div>
+  )
+}
+```
+
+## 개념 정리
+
+React Batching은 여러 개의 state 업데이트를 하나로 묶어서 단일 리렌더링으로 처리하는 성능 최적화 기법입니다.
+
+예를 들어 버튼 클릭 이벤트에서 setState를 3번 호출한다면 batching이 없을 때 3번의 리렌더링이 발생하겠지만,
+React는 이들을 자동으로 그룹화하여 1번만 리렌더링합니다.
+
+React 18 이전에는 이벤트 핸들러 내부에서만 batching이 동작했습니다.
+따라서 setTimeout이나 Promise 내부의 업데이트는 각각 리렌더링을 유발했습니다.
+
+React 18부터는 Automatic Batching이 도입되어 어떤 컨텍스트에서든 자동으로 batching됩니다.
+setTimeout, Promise, native event listener 등 모든 상황에서 작동합니다.
+
+만약 즉시 동기적으로 업데이트가 필요한 경우 예를 들어 DOM을 측정해야 하는 경우에는 flushSync를 사용하여 batching을 비활성화할 수 있습니다.
+
+## 핵심 문장
+
+- Batching은 여러 state 업데이트를 모아서 한 번의 리렌더링으로 처리하는 React의 자동 최적화 기능
+- React 18부터는 이벤트 핸들러뿐 아니라 setTimeout, Promise 등 모든 상황에서 자동으로 동작
+- 불필요한 리렌더링을 방지해 성능을 향상
