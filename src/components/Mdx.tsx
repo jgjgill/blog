@@ -13,7 +13,7 @@ const Ul = ({ ...props }) => <StyledUl {...props} />
 const Li = ({ ...props }) => <StyledLi {...props} />
 const Anchor = ({ ...props }) => <StyledAnchor {...props} />
 const Blockquote = ({ ...props }) => <StyledBlockquote {...props} />
-const Image = ({ ...props }) => <StyledImage {...props} />
+const Image = ({ ...props }) => <StyledImage loading="lazy" decoding="async" {...props} />
 const Callout = ({ ...props }) => <StyledCallout {...props} />
 const Video = ({ ...props }) => (
   <StyledVideo height={400} controls {...props}>

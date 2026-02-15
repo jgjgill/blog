@@ -108,10 +108,21 @@ export const globalStyles = css`
     transition-property: background-color, color;
   }
 
-  * {
-    transition: 0.3s;
+  a,
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  span,
+  li,
+  button,
+  time,
+  footer,
+  div {
     color: var(--text-color);
     transition-property: color;
+    transition-duration: 0.3s;
   }
 
   html.dark span > code.language-text {
