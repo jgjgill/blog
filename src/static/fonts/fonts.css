@@ -3,7 +3,7 @@
   src: local('Pretendard');
   src: url('./Pretendard-Light.subset.woff2') format('woff2');
   font-weight: 300;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -11,7 +11,7 @@
   src: local('Pretendard');
   src: url('./Pretendard-Medium.subset.woff2') format('woff2');
   font-weight: 500;
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
@@ -19,6 +19,6 @@
   src: local('Pretendard');
   src: url('./Pretendard-Bold.subset.woff2') format('woff2');
   font-weight: 700;
-  font-display: block;
+  font-display: swap;
 }
 
