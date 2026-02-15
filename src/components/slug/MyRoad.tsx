@@ -41,7 +41,6 @@ const MyRoad = ({ mdx, children }: Props) => {
             slug
           }
           id
-          body
           frontmatter {
             date
             title

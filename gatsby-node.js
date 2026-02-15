@@ -48,5 +48,13 @@ exports.onCreateNode = ({ node, actions, getNode }) => {
       name: 'source',
       value: sourceInstanceName,
     })
+
+    const wordsCount = (node.body || '').split(' ').length
+    const minutes = Math.ceil(parseFloat((wordsCount / 200).toFixed(2)))
+    createNodeField({
+      node,
+      name: 'readingTime',
+      value: minutes,
+    })
   }
 }

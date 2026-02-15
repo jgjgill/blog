@@ -4,7 +4,6 @@ import { Link } from 'gatsby'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
 import React from 'react'
 import { Content } from 'types/content'
-import { readingTimeWithCount } from 'utils/reading-time'
 
 import { Text } from './@shared'
 
@@ -13,7 +12,6 @@ interface Props {
 }
 
 const Post = ({ node }: Props) => {
-  const readingTime = readingTimeWithCount(node.body)
   const thumbnail = getImage(node.frontmatter.thumbnail)
 
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
@@ -31,7 +29,7 @@ const Post = ({ node }: Props) => {
             <Title as="h3">{node.frontmatter.title}</Title>
             <Excerpt>{node.excerpt}</Excerpt>
             <Text as="time">{node.frontmatter.date}</Text> |{' '}
-            <Text>{readingTime.minutes} min read</Text>
+            <Text>{node.fields?.readingTime || 1} min read</Text>
             <Category>{node.frontmatter.category}</Category>
           </Wrapper>
         </Card>

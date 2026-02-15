@@ -105,7 +105,9 @@ export const query = graphql`
         }
         id
         excerpt
-        body
+        fields {
+          readingTime
+        }
       }
     }
   }

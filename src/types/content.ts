@@ -5,7 +5,10 @@ export interface Content {
   id: string
   frontmatter: Frontmatter
   excerpt: ReactNode
-  body: string
+  body?: string
+  fields?: {
+    readingTime: number
+  }
 }
 
 export type Frontmatter = {

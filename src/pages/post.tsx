@@ -63,7 +63,9 @@ export const query = graphql`
         }
         id
         excerpt
-        body
+        fields {
+          readingTime
+        }
       }
       totalCount
       group(field: { frontmatter: { category: SELECT } }) {

@@ -57,7 +57,6 @@ export const query = graphql`
           contentFilePath
         }
         id
-        body
         frontmatter {
           date
           title
