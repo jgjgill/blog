@@ -242,6 +242,24 @@ const config: GatsbyConfig = {
     // gatsby-plugin-offline: manifest.webmanifest 캐시 생성을 위해 manifest 플러그인 이후에 위치
     {
       resolve: 'gatsby-plugin-offline',
+      options: {
+        workboxConfig: {
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/pagead2\.googlesyndication\.com/,
+              handler: 'NetworkOnly',
+            },
+            {
+              urlPattern: /^https:\/\/googleads\.g\.doubleclick\.net/,
+              handler: 'NetworkOnly',
+            },
+            {
+              urlPattern: /^https:\/\/www\.googletagservices\.com/,
+              handler: 'NetworkOnly',
+            },
+          ],
+        },
+      },
     },
     {
       resolve: `gatsby-source-filesystem`,
