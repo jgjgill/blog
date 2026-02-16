@@ -4,7 +4,7 @@ import { Comment, Mdx, Toc } from 'components'
 import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Blog } from 'types/content'
 import { readingTimeWithCount } from 'utils/reading-time'
 
@@ -17,6 +17,35 @@ const BlogPost = ({ mdx, children }: Props) => {
   const thumbnail = getImage(mdx.frontmatter.thumbnail)
   const readingTime = readingTimeWithCount(mdx.body)
 
+  // 모바일에서 Toc hydration 방지 (CSS display:none이지만 JS는 실행됨)
+  const [showToc, setShowToc] = useState(false)
+
+  // Comment lazy loading (페이지 최하단이므로 뷰포트 근접 시에만 마운트)
+  const [showComment, setShowComment] = useState(false)
+  const commentRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1401px)')
+    setShowToc(mql.matches)
+    const handler = (e: MediaQueryListEvent) => setShowToc(e.matches)
+    mql.addEventListener('change', handler)
+    return () => mql.removeEventListener('change', handler)
+  }, [])
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowComment(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '200px' },
+    )
+    if (commentRef.current) observer.observe(commentRef.current)
+    return () => observer.disconnect()
+  }, [])
+
   if (!thumbnail) throw new Error('이미지가 존재하지 않습니다!')
 
   return (
@@ -24,7 +53,7 @@ const BlogPost = ({ mdx, children }: Props) => {
       <h1>{mdx.frontmatter.title}</h1>
       <time>{mdx.frontmatter.date}</time>
       <span>{readingTime.minutes} min read</span>
-      <Toc toc={mdx.tableOfContents} />
+      {showToc && <Toc toc={mdx.tableOfContents} />}
       <Flex flexDirection="column" style={{ marginBottom: '8px' }}>
         <Flex justifyContent="center">
           <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
@@ -51,7 +80,7 @@ const BlogPost = ({ mdx, children }: Props) => {
       >
         {children}
       </MDXProvider>
-      <Comment />
+      <div ref={commentRef}>{showComment && <Comment />}</div>
     </>
   )
 }
