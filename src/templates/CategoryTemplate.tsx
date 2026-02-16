@@ -8,6 +8,7 @@ import Post from 'components/Post'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -29,6 +30,7 @@ const CategoryTemplate = ({
   pageContext,
 }: PageProps<Props, { category: string }>) => {
   const { ref, page } = useIntersectionObserver(data.allMdx.nodes.length)
+  const isMobile = useIsMobile()
 
   return (
     <App>
@@ -36,7 +38,11 @@ const CategoryTemplate = ({
         <Flex flexDirection="column" gap={8}>
           <Category selectedCategory={pageContext.category} />
 
-          <GoogleAdsense slot="3931169437" />
+          <GoogleAdsense
+            slot={isMobile ? '3168023427' : '3931169437'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
 
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (

@@ -5,6 +5,7 @@ import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import SideProjects from 'components/SideProjects'
 import { graphql, HeadFC, PageProps } from 'gatsby'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -20,17 +21,27 @@ interface Props {
 }
 
 const IndexPage = ({ data }: PageProps<Props>) => {
+  const isMobile = useIsMobile()
+
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={8}>
           <Author />
 
-          <GoogleAdsense slot="4730003951" />
+          <GoogleAdsense
+            slot={isMobile ? '4481105096' : '4730003951'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
 
           <SideProjects />
 
-          <GoogleAdsense slot="4840926425" />
+          <GoogleAdsense
+            slot={isMobile ? '7126180819' : '4840926425'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
 
           <Flex flexDirection="column" gap={20}>
             <h2>Recent Posts</h2>

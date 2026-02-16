@@ -5,6 +5,7 @@ import { Flex, Text } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { HeadFC } from 'gatsby'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React from 'react'
 
 const values = [
@@ -19,11 +20,17 @@ const values = [
 ]
 
 const AboutPage = () => {
+  const isMobile = useIsMobile()
+
   return (
     <App>
       <Layout>
         <div style={{ marginBottom: '8px' }}>
-          <GoogleAdsense slot="9375067805" />
+          <GoogleAdsense
+            slot={isMobile ? '8383422161' : '9375067805'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
         </div>
 
         <Flex flexDirection="column" gap={40}>

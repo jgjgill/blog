@@ -4,6 +4,7 @@ import { Mdx } from 'components'
 import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { graphql, navigate, useStaticQuery } from 'gatsby'
+import { useIsMobile } from 'hooks/useIsMobile'
 import BackSpace from 'images/back-space.inline.svg'
 import React from 'react'
 import { Blog, Content } from 'types/content'
@@ -42,6 +43,7 @@ interface Roads {
 }
 
 const MyRoad = ({ mdx, children }: Props) => {
+  const isMobile = useIsMobile()
   const data: Roads = useStaticQuery(graphql`
     query {
       allMdx(
@@ -81,7 +83,11 @@ const MyRoad = ({ mdx, children }: Props) => {
         <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
       </Flex>
 
-      <GoogleAdsense slot="3520864068" />
+      <GoogleAdsense
+        slot={isMobile ? '3186935803' : '3520864068'}
+        width={isMobile ? '300px' : '728px'}
+        height={isMobile ? '50px' : '90px'}
+      />
 
       <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>
     </>

@@ -5,6 +5,7 @@ import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, PageProps } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -21,6 +22,7 @@ interface Props {
 
 const BlogPage = ({ data }: PageProps<Props>) => {
   const { ref, page } = useIntersectionObserver(data.allMdx.nodes.length)
+  const isMobile = useIsMobile()
 
   return (
     <App>
@@ -28,7 +30,11 @@ const BlogPage = ({ data }: PageProps<Props>) => {
         <Flex flexDirection="column" gap={8}>
           <Category selectedCategory="all" />
 
-          <GoogleAdsense slot="3931169437" />
+          <GoogleAdsense
+            slot={isMobile ? '3168023427' : '3931169437'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
 
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (

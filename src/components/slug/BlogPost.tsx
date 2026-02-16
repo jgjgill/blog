@@ -4,6 +4,7 @@ import { Comment, Mdx, Toc } from 'components'
 import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Blog } from 'types/content'
 import { readingTimeWithCount } from 'utils/reading-time'
@@ -31,6 +32,7 @@ interface Props {
 const BlogPost = ({ mdx, children }: Props) => {
   const thumbnail = getImage(mdx.frontmatter.thumbnail)
   const readingTime = useMemo(() => readingTimeWithCount(mdx.body), [mdx.body])
+  const isMobile = useIsMobile()
 
   // 모바일에서 Toc hydration 방지 (CSS display:none이지만 JS는 실행됨)
   const [showToc, setShowToc] = useState(false)
@@ -74,7 +76,11 @@ const BlogPost = ({ mdx, children }: Props) => {
           <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
         </Flex>
 
-        <GoogleAdsense slot="6154008098" />
+        <GoogleAdsense
+          slot={isMobile ? '8557857579' : '6154008098'}
+          width={isMobile ? '300px' : '728px'}
+          height={isMobile ? '50px' : '90px'}
+        />
       </Flex>
 
       <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>

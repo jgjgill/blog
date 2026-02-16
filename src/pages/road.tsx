@@ -5,6 +5,7 @@ import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, Link, PageProps } from 'gatsby'
+import { useIsMobile } from 'hooks/useIsMobile'
 import React from 'react'
 import { Content } from 'types/content'
 
@@ -17,13 +18,19 @@ interface Props {
 }
 
 const LoadPage = ({ data }: PageProps<Props>) => {
+  const isMobile = useIsMobile()
+
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={8}>
           <MyRoad>My Road</MyRoad>
 
-          <GoogleAdsense slot="3739597744" />
+          <GoogleAdsense
+            slot={isMobile ? '1854941758' : '3739597744'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
 
           <RoadCard>
             {data.allMdx.nodes.map((node) => (

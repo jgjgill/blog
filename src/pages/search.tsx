@@ -6,6 +6,7 @@ import GoogleAdsense from 'components/GoogleAdsense'
 import { PATH } from 'constants/path'
 import { graphql, HeadFC, useStaticQuery } from 'gatsby'
 import useIntersectionObserver from 'hooks/useIntersectionObserver'
+import { useIsMobile } from 'hooks/useIsMobile'
 import useSearch from 'hooks/useSearch'
 import React, { useState } from 'react'
 import { Content } from 'types/content'
@@ -29,12 +30,17 @@ const Search = () => {
   const [query, setQuery] = useState('')
   const nodes = useSearch(query, search.fusejs)
   const { ref, page } = useIntersectionObserver(nodes.length)
+  const isMobile = useIsMobile()
 
   return (
     <App>
       <Layout>
         <Flex flexDirection="column" gap={8}>
-          <GoogleAdsense slot="4538432263" height="280px" />
+          <GoogleAdsense
+            slot={isMobile ? '9696503835' : '4538432263'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '200px' : '280px'}
+          />
 
           <Flex flexDirection="column" gap={20} style={{ width: '100%' }}>
             <Input
