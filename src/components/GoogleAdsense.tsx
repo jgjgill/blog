@@ -48,12 +48,8 @@ const GoogleAdsense = ({
   }, [slot])
 
   useEffect(() => {
-    // hydration 완료 후 유휴 시간에 스크립트 로드 (메인 스레드 블로킹 방지)
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => loadAdsenseScript())
-    } else {
-      setTimeout(() => loadAdsenseScript(), 1)
-    }
+    // 컴포넌트 마운트 시 스크립트를 1회만 로드 (async 속성으로 비동기 다운로드)
+    loadAdsenseScript()
 
     // 뷰포트 근처 진입 시 push 호출
     const observer = new IntersectionObserver(
