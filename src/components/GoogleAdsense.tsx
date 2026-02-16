@@ -94,6 +94,8 @@ const GoogleAdsense = ({
 export default GoogleAdsense
 
 const AdContainer = styled.div<{ height: string }>`
+  display: flex;
+  justify-content: center;
   width: 100%;
   min-height: ${(props) => props.height};
 
