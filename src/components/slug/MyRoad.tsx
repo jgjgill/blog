@@ -11,6 +11,20 @@ import { viewTransition } from 'utils/view-transition'
 
 import DateToc from './DateToc'
 
+const MDX_COMPONENTS = {
+  h1: Mdx.H1,
+  h2: Mdx.H2,
+  h3: Mdx.H3,
+  p: Mdx.P,
+  ul: Mdx.UL,
+  li: Mdx.LI,
+  a: Mdx.ANCHOR,
+  blockquote: Mdx.BLOCKQUOTE,
+  Image: Mdx.IMAGE,
+  Callout: Mdx.CALLOUT,
+  Video: Mdx.VIDEO,
+}
+
 interface Props {
   mdx: Blog
   children: React.ReactNode
@@ -69,23 +83,7 @@ const MyRoad = ({ mdx, children }: Props) => {
 
       <GoogleAdsense slot="3520864068" />
 
-      <MDXProvider
-        components={{
-          h1: Mdx.H1,
-          h2: Mdx.H2,
-          h3: Mdx.H3,
-          p: Mdx.P,
-          ul: Mdx.UL,
-          li: Mdx.LI,
-          a: Mdx.ANCHOR,
-          blockquote: Mdx.BLOCKQUOTE,
-          Image: Mdx.IMAGE,
-          Callout: Mdx.CALLOUT,
-          Video: Mdx.VIDEO,
-        }}
-      >
-        {children}
-      </MDXProvider>
+      <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>
     </>
   )
 }

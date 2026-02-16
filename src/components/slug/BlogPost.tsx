@@ -4,9 +4,24 @@ import { Comment, Mdx, Toc } from 'components'
 import { Flex } from 'components/@shared'
 import GoogleAdsense from 'components/GoogleAdsense'
 import { GatsbyImage, getImage } from 'gatsby-plugin-image'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Blog } from 'types/content'
 import { readingTimeWithCount } from 'utils/reading-time'
+
+const MDX_COMPONENTS = {
+  h1: Mdx.H1,
+  h2: Mdx.H2,
+  h3: Mdx.H3,
+  h4: Mdx.H4,
+  p: Mdx.P,
+  ul: Mdx.UL,
+  li: Mdx.LI,
+  a: Mdx.ANCHOR,
+  blockquote: Mdx.BLOCKQUOTE,
+  Image: Mdx.IMAGE,
+  Callout: Mdx.CALLOUT,
+  Video: Mdx.VIDEO,
+}
 
 interface Props {
   mdx: Blog
@@ -15,7 +30,7 @@ interface Props {
 
 const BlogPost = ({ mdx, children }: Props) => {
   const thumbnail = getImage(mdx.frontmatter.thumbnail)
-  const readingTime = readingTimeWithCount(mdx.body)
+  const readingTime = useMemo(() => readingTimeWithCount(mdx.body), [mdx.body])
 
   // 모바일에서 Toc hydration 방지 (CSS display:none이지만 JS는 실행됨)
   const [showToc, setShowToc] = useState(false)
@@ -62,24 +77,7 @@ const BlogPost = ({ mdx, children }: Props) => {
         <GoogleAdsense slot="6154008098" />
       </Flex>
 
-      <MDXProvider
-        components={{
-          h1: Mdx.H1,
-          h2: Mdx.H2,
-          h3: Mdx.H3,
-          h4: Mdx.H4,
-          p: Mdx.P,
-          ul: Mdx.UL,
-          li: Mdx.LI,
-          a: Mdx.ANCHOR,
-          blockquote: Mdx.BLOCKQUOTE,
-          Image: Mdx.IMAGE,
-          Callout: Mdx.CALLOUT,
-          Video: Mdx.VIDEO,
-        }}
-      >
-        {children}
-      </MDXProvider>
+      <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>
       <div ref={commentRef}>{showComment && <Comment />}</div>
     </>
   )
