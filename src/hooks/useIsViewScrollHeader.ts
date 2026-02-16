@@ -1,5 +1,15 @@
-import { throttle } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
+
+function throttle<T extends (...args: any[]) => void>(fn: T, delay: number): T {
+  let lastCall = 0
+  return ((...args: any[]) => {
+    const now = Date.now()
+    if (now - lastCall >= delay) {
+      lastCall = now
+      fn(...args)
+    }
+  }) as T
+}
 
 export function useIsViewScrollHeader(scrollY: number) {
   const [isView, setIsView] = useState(true)
