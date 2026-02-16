@@ -76,12 +76,17 @@ const GoogleAdsense = ({
   }, [adKey])
 
   return (
-    <AdContainer height={height}>
+    <AdContainer>
       <ins
         key={adKey}
         ref={advertRef}
         className="adsbygoogle"
-        style={{ display: 'inline-block', width, height, textDecoration: 'none' }}
+        style={{
+          display: 'inline-block',
+          width,
+          height,
+          textDecoration: 'none',
+        }}
         data-ad-client="ca-pub-2173037699636228"
         data-ad-slot={slot}
       >
@@ -93,11 +98,11 @@ const GoogleAdsense = ({
 
 export default GoogleAdsense
 
-const AdContainer = styled.div<{ height: string }>`
+const AdContainer = styled.div`
   display: flex;
   justify-content: center;
+  align-items: center;
   width: 100%;
-  min-height: ${(props) => props.height};
 
   .adsbygoogle span {
     display: none !important;
