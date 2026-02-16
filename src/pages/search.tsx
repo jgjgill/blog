@@ -36,11 +36,13 @@ const Search = () => {
     <App>
       <Layout>
         <Flex flexDirection="column" gap={8}>
-          <GoogleAdsense
-            slot={isMobile ? '9696503835' : '4538432263'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '200px' : '280px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '9696503835' : '4538432263'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '200px' : '280px'}
+            />
+          )}
 
           <Flex flexDirection="column" gap={20} style={{ width: '100%' }}>
             <Input

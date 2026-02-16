@@ -26,11 +26,13 @@ const AboutPage = () => {
     <App>
       <Layout>
         <div style={{ marginBottom: '8px' }}>
-          <GoogleAdsense
-            slot={isMobile ? '8383422161' : '9375067805'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '50px' : '90px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '8383422161' : '9375067805'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '50px' : '90px'}
+            />
+          )}
         </div>
 
         <Flex flexDirection="column" gap={40}>

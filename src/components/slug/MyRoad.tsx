@@ -83,11 +83,13 @@ const MyRoad = ({ mdx, children }: Props) => {
         <h1 style={{ wordBreak: 'break-all' }}>{mdx.frontmatter.title}</h1>
       </Flex>
 
-      <GoogleAdsense
-        slot={isMobile ? '3186935803' : '3520864068'}
-        width={isMobile ? '300px' : '728px'}
-        height={isMobile ? '50px' : '90px'}
-      />
+      {isMobile !== null && (
+        <GoogleAdsense
+          slot={isMobile ? '3186935803' : '3520864068'}
+          width={isMobile ? '300px' : '728px'}
+          height={isMobile ? '50px' : '90px'}
+        />
+      )}
 
       <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>
     </>

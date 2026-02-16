@@ -76,11 +76,13 @@ const BlogPost = ({ mdx, children }: Props) => {
           <ThumbnailImage image={thumbnail} alt={mdx.frontmatter.thumbnail_alt} />
         </Flex>
 
-        <GoogleAdsense
-          slot={isMobile ? '8557857579' : '6154008098'}
-          width={isMobile ? '300px' : '728px'}
-          height={isMobile ? '50px' : '90px'}
-        />
+        {isMobile !== null && (
+          <GoogleAdsense
+            slot={isMobile ? '8557857579' : '6154008098'}
+            width={isMobile ? '300px' : '728px'}
+            height={isMobile ? '50px' : '90px'}
+          />
+        )}
       </Flex>
 
       <MDXProvider components={MDX_COMPONENTS}>{children}</MDXProvider>

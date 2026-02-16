@@ -29,19 +29,23 @@ const IndexPage = ({ data }: PageProps<Props>) => {
         <Flex flexDirection="column" gap={8}>
           <Author />
 
-          <GoogleAdsense
-            slot={isMobile ? '4481105096' : '4730003951'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '50px' : '90px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '4481105096' : '4730003951'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '50px' : '90px'}
+            />
+          )}
 
           <SideProjects />
 
-          <GoogleAdsense
-            slot={isMobile ? '7126180819' : '4840926425'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '50px' : '90px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '7126180819' : '4840926425'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '50px' : '90px'}
+            />
+          )}
 
           <Flex flexDirection="column" gap={20}>
             <h2>Recent Posts</h2>

@@ -38,11 +38,13 @@ const CategoryTemplate = ({
         <Flex flexDirection="column" gap={8}>
           <Category selectedCategory={pageContext.category} />
 
-          <GoogleAdsense
-            slot={isMobile ? '3168023427' : '3931169437'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '50px' : '90px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '3168023427' : '3931169437'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '50px' : '90px'}
+            />
+          )}
 
           <PostList
             render={data.allMdx.nodes.slice(0, page).map((node) => (

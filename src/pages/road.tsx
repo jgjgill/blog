@@ -26,11 +26,13 @@ const LoadPage = ({ data }: PageProps<Props>) => {
         <Flex flexDirection="column" gap={8}>
           <MyRoad>My Road</MyRoad>
 
-          <GoogleAdsense
-            slot={isMobile ? '1854941758' : '3739597744'}
-            width={isMobile ? '300px' : '728px'}
-            height={isMobile ? '50px' : '90px'}
-          />
+          {isMobile !== null && (
+            <GoogleAdsense
+              slot={isMobile ? '1854941758' : '3739597744'}
+              width={isMobile ? '300px' : '728px'}
+              height={isMobile ? '50px' : '90px'}
+            />
+          )}
 
           <RoadCard>
             {data.allMdx.nodes.map((node) => (
