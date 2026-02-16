@@ -246,16 +246,27 @@ const config: GatsbyConfig = {
         workboxConfig: {
           runtimeCaching: [
             {
-              urlPattern: /^https:\/\/pagead2\.googlesyndication\.com/,
+              // 광고 관련 도메인은 항상 네트워크에서 로드 (캐싱 방지)
+              urlPattern:
+                /^https:\/\/(pagead2\.googlesyndication\.com|googleads\.g\.doubleclick\.net|www\.googletagservices\.com)/,
               handler: 'NetworkOnly',
             },
             {
-              urlPattern: /^https:\/\/googleads\.g\.doubleclick\.net/,
-              handler: 'NetworkOnly',
+              urlPattern: /(\.js$|\.css$|static\/)/,
+              handler: 'CacheFirst',
             },
             {
-              urlPattern: /^https:\/\/www\.googletagservices\.com/,
-              handler: 'NetworkOnly',
+              urlPattern: /^https?:.*\/page-data\/.*\.json/,
+              handler: 'StaleWhileRevalidate',
+            },
+            {
+              urlPattern:
+                /^https?:.*\.(png|jpg|jpeg|webp|avif|svg|gif|tiff|js|woff|woff2|json|css)$/,
+              handler: 'StaleWhileRevalidate',
+            },
+            {
+              urlPattern: /^https?:\/\/fonts\.googleapis\.com\/css/,
+              handler: 'StaleWhileRevalidate',
             },
           ],
         },
