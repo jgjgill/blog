@@ -1,0 +1,32 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const filtered = headings.filter((h) => h.depth <= 3);
+---
+
+{filtered.length > 1 && (
+  <nav class="toc text-sm">
+    <p class="font-semibold mb-2 text-xs uppercase tracking-wide text-muted">목차</p>
+    <ul class="space-y-1">
+      {filtered.map((h) => (
+        <li style={`padding-left: ${(h.depth - 2) * 0.75}rem`}>
+          <a
+            href={`#${h.slug}`}
+            class="text-muted hover:text-fg transition-colors line-clamp-1"
+          >
+            {h.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}

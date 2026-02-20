@@ -14,10 +14,11 @@ interface Props {
 const { title, description, ogImage, canonicalUrl } = Astro.props;
 const locale = getLocaleFromUrl(Astro.url);
 const siteUrl = 'https://jgjgill.com';
-const defaultDescription = locale === 'ko'
-  ? '프론트엔드 개발자 이종길입니다.'
-  : 'Frontend developer jgjgill.';
+const defaultDescription =
+  locale === 'ko' ? '프론트엔드 개발자 이종길입니다.' : 'Frontend developer jgjgill.';
 const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
+const GA_ID = import.meta.env.PUBLIC_GA_ID;
+const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID;
 ---
 
 <!doctype html>
@@ -52,6 +53,29 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
     />
+
+    <!-- Google Analytics -->
+    {GA_ID && (
+      <>
+        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
+        <script is:inline define:vars={{ GA_ID }}>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { window.dataLayer.push(arguments); }
+          gtag('js', new Date());
+          gtag('config', GA_ID);
+        </script>
+      </>
+    )}
+
+    <!-- Google AdSense -->
+    {ADSENSE_ID && (
+      <script
+        is:inline
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
+        crossorigin="anonymous"
+      ></script>
+    )}
   </head>
   <body class="flex flex-col min-h-dvh">
     <Header locale={locale} />
@@ -60,4 +84,5 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
     </main>
     <Footer />
   </body>
+
 </html>
