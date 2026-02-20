@@ -21,10 +21,7 @@ try {
 
 제대로 에러에 대한 정보를 얻을 수 있을 것 같았는데 막상 확인해보니 `{}`가 출력되었다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/stringify-error-console.png"
-  alt="JSON.stringify() Error 콘솔"
-/>
+![JSON.stringify() Error 콘솔](../../images/stringify-error-console.png)
 
 ## 해결 과정
 
@@ -50,10 +47,7 @@ JSON.stringify(err, Object.getOwnPropertyNames(err))
 Object.getOwnPropertyDescriptors(new Error({ test: 'jgjg' }))
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/get-own-property-descriptors-example.png"
-  alt="getOwnPropertyDescriptors 예제"
-/>
+![getOwnPropertyDescriptors 예제](../../images/get-own-property-descriptors-example.png)
 
 <br />
 
@@ -77,10 +71,7 @@ try {
 
 이렇게 수정하면 정상적으로 에러가 출력이 된다. 🧐
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/stringify-success.png"
-  alt="JSON.stringify() 정상 출력"
-/>
+![JSON.stringify() 정상 출력](../../images/stringify-success.png)
 
 ## 참고 문서
 

@@ -7,10 +7,7 @@ date: '2024-02-04'
 
 해당 레포는 `yarn`으로 모노레포가 구성된 것 같았는데 코드를 파악하려고 할 때 다음과 같은 에러가 발생했다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/yarn-monorepo-cannot-find-module-error.png"
-  alt="yarn 모노레포 cannot find module 에러"
-/>
+![yarn 모노레포 cannot find module 에러](../../images/yarn-monorepo-cannot-find-module-error.png)
 
 ## 공식 문서에서는...
 
@@ -30,10 +27,7 @@ yarn dlx @yarnpkg/sdks vscode
 
 하지만 공식 문서와 별개로 나는 이미 설정이 되어 있었다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/use-workspace-version.png"
-  alt="Use Workspace Version"
-/>
+![Use Workspace Version](../../images/use-workspace-version.png)
 
 그럼에도 불구하고 에러는 사라지지 않는 상황... 😇
 
@@ -41,17 +35,11 @@ yarn dlx @yarnpkg/sdks vscode
 
 뭐가 문제인지 전혀 알 수 없는 상황에서 관련 문서들을 뒤적이다가 다음 코멘트를 발견했다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/typescript-restart-ts-server-comment.png"
-  alt="Typescript: Restart TS Server 코멘트"
-/>
+![Typescript: Restart TS Server 코멘트](../../images/typescript-restart-ts-server-comment.png)
 
 느낌이 싸했는데 `Typescript: Restart TS Server`을 했더니 바로 해결됐다..
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/yarn-monorepo-cannot-find-module-resolution.png"
-  alt="yarn 모노레포 cannot find module 해결"
-/>
+![yarn 모노레포 cannot find module 해결](../../images/yarn-monorepo-cannot-find-module-resolution.png)
 
 들인 시간이 너무 아까웠다.. 😥
 

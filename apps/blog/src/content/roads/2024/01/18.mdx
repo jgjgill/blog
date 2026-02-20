@@ -3,10 +3,7 @@ title: '타입스크립트에서 사용되는 지시어 주석 알아보기'
 date: '2024-01-18'
 ---
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/typescript-directive-annotation.png"
-  alt="TypeScript 지시어 주석"
-/>
+![TypeScript 지시어 주석](../../images/typescript-directive-annotation.png)
 
 타입스크립트에서 사용되는 지시어 주석들을 알아보자.
 
@@ -17,10 +14,7 @@ date: '2024-01-18'
 - 파일에서 타입 검사를 사용할 수 있게 한다.
 - 파일의 최상단에 있어야 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-check-error.png"
-  alt="// @ts-check 에러 예제"
-/>
+![// @ts-check 에러 예제](../../images/ts-check-error.png)
 
 ## 파일 전체 타입 무시하기
 
@@ -29,17 +23,11 @@ date: '2024-01-18'
 - 파일에서 타입 검사를 사용할 수 없도록 한다.
 - 파일의 최상단에 있어야 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/type-error-code.png"
-  alt="타입 에러 코드"
-/>
+![타입 에러 코드](../../images/type-error-code.png)
 
 타입 에러가 발생하는 예제 코드이다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-nocheck-code.png"
-  alt="// @ts-nocheck 사용 예제"
-/>
+![// @ts-nocheck 사용 예제](../../images/ts-nocheck-code.png)
 
 `// @ts-nocheck` 사용하면 타입 에러가 사라진다.
 
@@ -49,20 +37,14 @@ date: '2024-01-18'
 
 - 다음 줄에서 타입 에러를 무시한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-ignore-code.png"
-  alt="// @ts-ignore 사용 예제"
-/>
+![// @ts-ignore 사용 예제](../../images/ts-ignore-code.png)
 
 ### // @ts-expect-error
 
 - 다음 줄에서 타입 에러를 무시한다.
 - 에러가 하나 이상 존재할 것으로 예상한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/ts-expect-error-code.png"
-  alt="// @ts-expect-error 사용 예제"
-/>
+![// @ts-expect-error 사용 예제](../../images/ts-expect-error-code.png)
 
 동일한 코드에서 `// @ts-ignore`와 동일하게 동작한다.
 
@@ -72,10 +54,7 @@ date: '2024-01-18'
 
 올바른 타입으로 수정해보자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/unused-ts-expect-error-code.png"
-  alt="// Unused @ts-expect-error 사용 예제"
-/>
+![// Unused @ts-expect-error 사용 예제](../../images/unused-ts-expect-error-code.png)
 
 주석의 제거를 유도한다.
 

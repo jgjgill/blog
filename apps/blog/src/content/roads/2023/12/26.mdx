@@ -9,10 +9,7 @@ date: '2023-12-26'
 
 우선 초기 코드를 살펴보자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-first-code.png"
-  alt="커링 리팩터링 과정 1"
-/>
+![커링 리팩터링 과정 1](../../images/currying-first-code.png)
 
 내부 로직을 없애서 핵심적인 부분만 보면 다음과 같다.
 
@@ -27,15 +24,9 @@ date: '2023-12-26'
 
 `onClick` 함수를 따로 만들 필요가 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-second-code-1.png"
-  alt="커링 리팩터링 과정 2-1"
-/>
+![커링 리팩터링 과정 2-1](../../images/currying-second-code-1.png)
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-second-code-2.png"
-  alt="커링 리팩터링 과정 2-2"
-/>
+![커링 리팩터링 과정 2-2](../../images/currying-second-code-2.png)
 
 이번에도 이해하기 쉽게 핵심만 바라보자.
 
@@ -83,22 +74,13 @@ console.log(curryAdd(1)(2)(3)) // 출력: 6
 
 커링을 적용할 수 있는 부분은 다음과 같다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-simple-version.png"
-  alt="커링 간단한 버전"
-/>
+![커링 간단한 버전](../../images/currying-simple-version.png)
 
 커링을 활용해서 리팩터링을 해보자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-third-code-1.png"
-  alt="커링 리팩터링 과정 3-1"
-/>
+![커링 리팩터링 과정 3-1](../../images/currying-third-code-1.png)
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-third-code-2.png"
-  alt="커링 리팩터링 과정 3-2"
-/>
+![커링 리팩터링 과정 3-2](../../images/currying-third-code-2.png)
 
 이 흐름을 놓치지 말자.
 
@@ -116,7 +98,4 @@ const onClick = () => <Chechbox onClick={onClickToggle('상')} />
 
 최종 코드는 다음과 같다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/currying-last-code.png"
-  alt="커링 리팩터링 최종 코드"
-/>
+![커링 리팩터링 최종 코드](../../images/currying-last-code.png)
