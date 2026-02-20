@@ -1,10 +1,12 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Toc from '../../components/Toc.astro';
 import { useTranslations } from '../../i18n';
 import Callout from '../../components/mdx/Callout';
 import Video from '../../components/mdx/Video';
 import Image from '../../components/mdx/Image';
+import Comment from '../../components/Comment';
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -19,7 +21,7 @@ const { post } = Astro.props;
 const locale = 'ko';
 const t = useTranslations(locale);
 
-const { Content, remarkPluginFrontmatter } = await render(post);
+const { Content, headings, remarkPluginFrontmatter } = await render(post);
 const readingTime = remarkPluginFrontmatter?.minutesRead ?? '';
 ---
 
@@ -38,11 +40,17 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? '';
       <h1 class="text-2xl font-bold leading-snug">{post.data.title}</h1>
     </header>
 
-    <div class="prose">
+    <Toc headings={headings} />
+
+    <div class="prose mt-8">
       <Content components={{ Callout, Video, Image }} />
     </div>
 
-    <footer class="mt-12 pt-6 border-t border-border">
+    <div class="mt-12">
+      <Comment lang={locale} client:visible />
+    </div>
+
+    <footer class="mt-8 pt-6 border-t border-border">
       <a href="/post" class="text-sm text-muted hover:text-fg transition-colors">
         ← {t.common.backToList}
       </a>
