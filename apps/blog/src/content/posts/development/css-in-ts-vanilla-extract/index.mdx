@@ -74,10 +74,7 @@ console.log(3)
 또한, vanilla-extract 타입은 **타입 정의 구문에 대한 설명**과 편집하고 있는 **MDN 문서에 대한 링크를 제공**해준다.
 이는 번거롭게 구글링하는 과정을 줄이게 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/css-in-ts-vanilla-extract/images/code-description-helper.png"
-  alt="code-description-helper"
-/>
+![code-description-helper](./images/code-description-helper.png)
 
 ## vanilla-extract 사용법
 
@@ -291,10 +288,7 @@ vanilla-extract은 `.css.ts` 방식으로 파일을 작성한다.
 
 **Header.css.ts**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/css-in-ts-vanilla-extract/images/header-css-code.gif"
-  alt="header-css-code"
-/>
+![header-css-code](./images/header-css-code.gif)
 
 이제 스타일을 적용하자.
 
@@ -319,26 +313,17 @@ export default Header
 
 다음과 같이 잘 적용된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/css-in-ts-vanilla-extract/images/result-code.png"
-  alt="result-code"
-/>
+![result-code](./images/result-code.png)
 
 만들어진 코드를 구체적으로 살펴보면 Zero runtime과 관련해서 사용된 스타일 코드가 난독화를 거쳐 만들어진다.
 
 **style 태그**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/css-in-ts-vanilla-extract/images/style-code.png"
-  alt="style-code"
-/>
+![style-code](./images/style-code.png)
 
 **난독화가 적용된 class 이름**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/css-in-ts-vanilla-extract/images/classname-code.png"
-  alt="classname-code"
-/>
+![classname-code](./images/classname-code.png)
 
 가볍게 사용해봤는데, CSS에도 타입스크립트를 적용한다는 점이 가장 매력적으로 다가왔고 스타일을 객체로 적용하는 점이 구조적으로 좋게 느껴졌다.
 앞으로도 계속 vanilla-extract에 적응하고 더 깊은 기능들을 사용하면서 개발 효율성을 높이고 싶다. 😚

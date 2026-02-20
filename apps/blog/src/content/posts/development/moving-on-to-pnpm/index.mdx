@@ -11,10 +11,7 @@ category: 'development'
 
 ## npm은 무엇이 문제일까?
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/npm3.png"
-  alt="npm3"
-/>
+![npm3](./images/npm3.png)
 
 ### npm 3 이전
 
@@ -85,10 +82,7 @@ pnpm store path // 스토어 경로
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/pnpm-store.png"
-  alt="pnpm store"
-/>
+![pnpm store](./images/pnpm-store.png)
 
 여기에 설치된 패키지들의 원본이 저장되는 것이다.
 
@@ -100,19 +94,13 @@ pnpm의 `node_modules`의 대략적인 구조는 다음과 같다.
 
 하나씩 살펴보자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/pnpm-structure.png"
-  alt="pnpm structure"
-/>
+![pnpm structure](./images/pnpm-structure.png)
 
 최상단 `node_modules`에 `.pnpm` 폴더와 `package.json`에 설치한 모듈들이 나타난다.
 
 여기서 모듈들은 심볼릭 링크를 가르킨다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/symlink-example.png"
-  alt="symlink example"
-/>
+![symlink example](./images/symlink-example.png)
 
 pnpm에서는 `.pnpm` 폴더를 가상 저장소(`virtual store`)라고 지칭한다.
 
@@ -288,22 +276,13 @@ pnpm store path
 <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>npm clean install</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/npm-clean-install(61s).png"
-      alt="npm clean install(61s)"
-    />
+    ![npm clean install(61s)](./images/npm-clean-install(61s).png)
     <span>61초 소요</span>
   </div>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>pnpm clean install</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/pnpm-clean-install-1.png"
-      alt="pnpm clean install 1"
-    />
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/pnpm-clean-install-2(35s).png"
-      alt="pnpm clean install 2"
-    />
+    ![pnpm clean install 1](./images/pnpm-clean-install-1.png)
+    ![pnpm clean install 2](./images/pnpm-clean-install-2(35s).png)
     <span>35초 소요</span>
   </div>
 </div>
@@ -315,18 +294,12 @@ pnpm store path
 <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>npm with lockfile</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/npm-clone(39s).png"
-      alt="npm clone(39s)"
-    />
+    ![npm clone(39s)](./images/npm-clone(39s).png)
     <span>39초 소요</span>
   </div>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>pnpm witch lockfile</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/pnpm-clone(30s).png"
-      alt="pnpm clone(30s)"
-    />
+    ![pnpm clone(30s)](./images/pnpm-clone(30s).png)
     <span>30초 소요</span>
   </div>
 </div>
@@ -335,10 +308,7 @@ pnpm store path
 
 ### 결과 테이블
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/benchmark-table.png"
-  alt="benchmark table"
-/>
+![benchmark table](./images/benchmark-table.png)
 
 <br />
 
@@ -347,18 +317,12 @@ pnpm store path
 <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>npm install</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/actions-npm.png"
-      alt="actions-npm"
-    />
+    ![actions-npm](./images/actions-npm.png)
     <span>31초 소요</span>
   </div>
   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
     <span>pnpm install</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/moving-on-to-pnpm/images/actions-pnpm.png"
-      alt="actions pnpm"
-    />
+    ![actions pnpm](./images/actions-pnpm.png)
     <span>14초 소요</span>
   </div>
 </div>

@@ -18,11 +18,7 @@ PASS 인증을 구현해야 했다.
 
 보통 PASS 인증 과정에서 다음과 같이 새로운 창이 생겨난다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/images/pass-auth.png"
-  alt="PASS 인증"
-  width="300"
-/>
+![PASS 인증](./images/pass-auth.png)
 
 새로 생긴 창에서 성공 혹은 실패에 대한 응답을 받아 원래 페이지에서 동작을 처리하는 것이 필요하다.
 
@@ -34,10 +30,7 @@ PASS 인증을 구현해야 했다.
 
 일반적인 상황에서 서로 다른 페이지의 스크립트는 **동일 출처 정책**(SOP)으로 출처 페이지가 **동일한 프로토콜, 포트 번호, 호스트**를 공유하는 경우에만 접근할 수 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/images/url-structure.png"
-  alt="url 구조"
-/>
+![url 구조](./images/url-structure.png)
 
 여기서 `postMessage`는 SOP를 안전하게 우회하는 제어 메커니즘을 제공한다.
 
@@ -178,10 +171,7 @@ export default function Child() {
 
 **콘솔**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/images/console-example.png"
-  alt="console 예제"
-/>
+![console 예제](./images/console-example.png)
 
 <br />
 
@@ -193,10 +183,7 @@ export default function Child() {
 
 **동작**
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/videos/postmessage-example.mov"
-  alt="postMessage 예제"
-/>
+<video src="/videos/development/communicate-from-another-window-with-postmessage/postmessage-example.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 <br />
 
@@ -221,10 +208,7 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 그럼 다음과 같이 에러가 발생한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/images/postmessage-targetorigin-error.png"
-  alt="postMessage targetOrigin 에러"
-/>
+![postMessage targetOrigin 에러](./images/postmessage-targetorigin-error.png)
 
 올바른 `origin`으로 변경 `*`로 구성했던 처음 동작과 같이 정상적으로 동작한다.
 
@@ -295,10 +279,7 @@ useEffect(() => {
 
 **동작**
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/communicate-from-another-window-with-postmessage/videos/postmessage-two-way-example.mov"
-  alt="postMessage 양방향 통신 예제"
-/>
+<video src="/videos/development/communicate-from-another-window-with-postmessage/postmessage-two-way-example.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 양방향 통신도 정상적으로 동작한다.
 

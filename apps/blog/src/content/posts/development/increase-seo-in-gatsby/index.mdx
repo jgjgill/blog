@@ -48,10 +48,7 @@ Gastby에서는 SEO 컴포넌트를 통해 검색엔진이 컨텐츠를 이해�
 
 위의 경로를 참고했을 때 저의 상황에서는 다음과 같은 경로로 사용할 수 있습니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/github-og-icon-path.png"
-  alt="github-og-icon-path"
-/>
+![github-og-icon-path](./images/github-og-icon-path.png)
 
 `https://raw.githubusercontent.com/jgjgill/blog/main/src/images/og-icon.png`가 해당 경로가 되겠네요.
 
@@ -61,17 +58,11 @@ Gastby에서는 SEO 컴포넌트를 통해 검색엔진이 컨텐츠를 이해�
 
 해당 프로그램을 설치하고 테스트할 페이지에 프로그램을 실행하면 호스팅된 페이지가 생성됩니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/og-test-link.png"
-  alt="og-test-link"
-/>
+![og-test-link](./images/og-test-link.png)
 
 생성된 링크를 소셜 미디어 플랫폼에서 확인하면 끝입니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/og-test-result.png"
-  alt="og-test-result"
-/>
+![og-test-result](./images/og-test-result.png)
 
 최종적으로 구성된 SEO 컴포넌트는 다음과 같습니다.
 
@@ -133,10 +124,7 @@ export const Head: HeadFC = () => <Seo />
 
 그러면 다음과 같이 `Head` 안에 관련 태그들이 생성되는 것을 확인하실 수 있습니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/seo-component-result-in-page.png"
-  alt="seo-component-result-in-page"
-/>
+![seo-component-result-in-page](./images/seo-component-result-in-page.png)
 
 ## 사이트맵 적용하기
 
@@ -234,10 +222,7 @@ query에서 데이터를 받고 만들어지는 페이지에 대해 각각 `path
 sitemap은 `production` 모드에서만 확인할 수 있습니다.
 따라서 `gatsby build & gatsby serve` 명령어를 통해 sitemap이 public 폴더 내에 잘 생성되었는지 확인하면 됩니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/sitemap-result.png"
-  alt="sitemap-result"
-/>
+![sitemap-result](./images/sitemap-result.png)
 
 만들어진 sitemap을 [Google Search Console](https://search.google.com/search-console/about)에 추가까지 하면 끝입니다.
 
@@ -338,10 +323,7 @@ name에는 URL이나 slug 같은 유니크한 값으로 지정해줍니다.
 
 sitemap과 동일하게 rss도 build시에만 확인 할 수 있으니 `gatsby build & gatsby serve`명령어를 통해 확인하면 됩니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/rss-result.png"
-  alt="rss-result"
-/>
+![rss-result](./images/rss-result.png)
 
 ## robots.txt 적용하기
 
@@ -366,10 +348,7 @@ robots.txt 파일은 크롤러가 사이트에서 접근할 수 있는 URL을 �
 
 `gatsby build` 이후 `robots.txt` 파일이 생성되었는지 확인합니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/increase-seo-in-gatsby/images/robots-result.png"
-  alt="robots-result"
-/>
+![robots-result](./images/robots-result.png)
 
 ## 마무리
 

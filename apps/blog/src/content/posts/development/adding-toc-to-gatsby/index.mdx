@@ -56,10 +56,7 @@ gatsby.config.ts에 플러그인을 추가해줍니다.
 
 설정이 끝나면 GraphQL에서 **tableOfContents**에서 데이터가 생성되었음을 확인할 수 있습니다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/graphql-tableofcontents.png"
-  alt="graphql-tableofcontents"
-/>
+![graphql-tableofcontents](./images/graphql-tableofcontents.png)
 
 데이터를 보면 알 수 있듯이 `items` 내부에 `url`과 `title`, 재귀적으로 `items`과 호출되는 것을 확인할 수 있습니다.
 
@@ -175,19 +172,13 @@ export default Toc
 
 ## 마무리
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/toc.gif"
-  alt="toc"
-/>
+![toc](./images/toc.gif)
 
 ### Gastby 프레임워크에 기여하기
 
 TOC 작업을 하는 과정에서 공식 문서를 읽다가 `gatsby-remark-autolink-headers`에서 오타를 발견했습니다.🧐
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/redudant-typo.png"
-  alt="redudant-typo"
-/>
+![redudant-typo](./images/redudant-typo.png)
 
 `redundant`가 `redudant`로 오타가 있네요.
 Gatsby라는 거대한 프레임워크에 기여할 수 있는 좋은 기회라고 생각하여 빠르게 수정하고 PR을 남겨봤습니다.
@@ -196,10 +187,7 @@ Gatsby라는 거대한 프레임워크에 기여할 수 있는 좋은 기회라�
 
 **PR Merge**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/adding-toc-to-gatsby/images/pr-merge.png"
-  alt="pr-merge"
-/>
+![pr-merge](./images/pr-merge.png)
 
 다행히도 [머지](https://github.com/gatsbyjs/gatsby/pull/37812)되었습니다.👍
 (대단한 개발자분의 Thanks까지... 영광입니다..)

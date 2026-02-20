@@ -64,10 +64,7 @@ async function foo() {
 }
 ```
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/async-function-about-return-await/videos/just-calling.mov"
-  alt="일반적 호출"
-/>
+<video src="/videos/development/async-function-about-return-await/just-calling.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 - `Promise`의 비동기 동작, 1초를 기다리지 않는다.
 - 호출 결과로 이행/거부와 상관없이 항상 `undefined` 나온다.
@@ -85,10 +82,7 @@ async function foo() {
 }
 ```
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/async-function-about-return-await/videos/awaiting.mov"
-  alt="await 호출"
-/>
+<video src="/videos/development/async-function-about-return-await/awaiting.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 - `Promise`의 비동기 동작, 1초를 기다린다.
 - 호출 결과로 이행 시에는 `undefined` 거부 시에는 `caught` 가 나온다.
@@ -107,10 +101,7 @@ async function foo() {
 }
 ```
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/async-function-about-return-await/videos/returning.mov"
-  alt="return 호출"
-/>
+<video src="/videos/development/async-function-about-return-await/returning.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 - `Promise`의 비동기 동작, 1초를 기다린다.
 - 호출 결과로 이행 시에는 `pass` 거부 시에는 에러가 발생한다.
@@ -135,10 +126,7 @@ async function foo() {
 `async/await`은 `Promise`를 기반 `syntactic sugar` 으로 더 편리하게 사용하기 위해 만들어진 문법이다.
 그래서 `async function` 선언으로 하나의 비동기 함수를 정의할 때 **암시적으로 `Promise` 를 사용하여 결과를 반환**한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/async-function-about-return-await/images/async-function-promise.png"
-  alt="비동기 함수 Promise 반환"
-/>
+![비동기 함수 Promise 반환](./images/async-function-promise.png)
 
 코드로 살펴보자.
 
@@ -184,10 +172,7 @@ async function foo() {
 }
 ```
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/async-function-about-return-await/videos/return-awaiting.mov"
-  alt="return await 호출"
-/>
+<video src="/videos/development/async-function-about-return-await/return-awaiting.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 - `Promise`의 비동기 동작, 1초를 기다린다.
 - 호출 결과로 **이행 시에는 `pass` 거부 시에는 `caught`** 가 나온다.

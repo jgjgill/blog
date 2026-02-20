@@ -26,10 +26,7 @@ category: 'development'
 
 **주사위 컴포넌트 🎲**
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/videos/dice-component.mov"
-  alt="주사위 컴포넌트"
-/>
+<video src="/videos/development/learning-dependency-issues-with-my-library/dice-component.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 <br />
 
@@ -44,10 +41,7 @@ pnpm i three @types/three @react-three/fiber @react-three/drei // 기타 의존 
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/interaction-error-screen.png"
-  alt="interaction 에러 화면"
-/>
+![interaction 에러 화면](./images/interaction-error-screen.png)
 
 <br />
 
@@ -90,10 +84,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/local-version.png"
-  alt="개발 환경 설치 버전"
-/>
+![개발 환경 설치 버전](./images/local-version.png)
 
 <br />
 
@@ -101,10 +92,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/project-version.png"
-  alt="프로젝트 설치 버전"
-/>
+![프로젝트 설치 버전](./images/project-version.png)
 
 <br />
 
@@ -129,10 +117,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/no-error-screen.png"
-  alt="정상 동작 화면"
-/>
+![정상 동작 화면](./images/no-error-screen.png)
 
 ## peerDependencies 활용하기
 
@@ -155,10 +140,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/pnpm-interaction-v1.0.1-internal-dep.png"
-  alt="pnpm interaction v1.0.1 내부 의존성"
-/>
+![pnpm interaction v1.0.1 내부 의존성](./images/pnpm-interaction-v1.0.1-internal-dep.png)
 
 <br />
 
@@ -166,10 +148,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/pnpm-interaction-v1.0.1-three-install.png"
-  alt="pnpm interaction v1.0.1 three 설치"
-/>
+![pnpm interaction v1.0.1 three 설치](./images/pnpm-interaction-v1.0.1-three-install.png)
 
 ### v.1.0.2 (peerDependencies 적용 코드)
 
@@ -187,10 +166,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/pnpm-interaction-v1.0.2-internal-dep.png"
-  alt="pnpm interaction v1.0.2 내부 의존성"
-/>
+![pnpm interaction v1.0.2 내부 의존성](./images/pnpm-interaction-v1.0.2-internal-dep.png)
 
 <br />
 
@@ -198,10 +174,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/pnpm-interaction-v1.0.2-three-install.png"
-  alt="pnpm interaction v1.0.2 three 설치"
-/>
+![pnpm interaction v1.0.2 three 설치](./images/pnpm-interaction-v1.0.2-three-install.png)
 
 <br />
 
@@ -209,10 +182,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/pnpm-unmet-peer-warn.png"
-  alt="pnpm unmet peer 경고"
-/>
+![pnpm unmet peer 경고](./images/pnpm-unmet-peer-warn.png)
 
 <br />
 
@@ -224,19 +194,13 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/npm-interaction-v1.0.1-internal-dep.png"
-  alt="npm interaction v1.0.1 내부 의존성"
-/>
+![npm interaction v1.0.1 내부 의존성](./images/npm-interaction-v1.0.1-internal-dep.png)
 
 <br />
 
 구성된 구조를 보면 `node_modules`가 점점 깊게 들어가는 형태가 눈에 띈다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/npm-interaction-v1.0.1-three-install.png"
-  alt="npm interaction v1.0.1 three 설치"
-/>
+![npm interaction v1.0.1 three 설치](./images/npm-interaction-v1.0.1-three-install.png)
 
 <br />
 
@@ -250,28 +214,19 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/yarn-three-error.png"
-  alt="yarn three 미설치 에러"
-/>
+![yarn three 미설치 에러](./images/yarn-three-error.png)
 
 <br />
 
 `interaction`만 설치했을 때는 다음과 같다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/yarn-pnp-interaction.png"
-  alt="yarn pnp interaction"
-/>
+![yarn pnp interaction](./images/yarn-pnp-interaction.png)
 
 <br />
 
 `three`를 설치하면 다음과 같이 구성된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/yarn-pnp-three.png"
-  alt="yarn pnp three"
-/>
+![yarn pnp three](./images/yarn-pnp-three.png)
 
 <br />
 
@@ -281,10 +236,7 @@ export default App
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learning-dependency-issues-with-my-library/images/yarn-interaction-v1.0.2-peer-warn.png"
-  alt="yarn interaction v1.0.2 peerDependencies 경고"
-/>
+![yarn interaction v1.0.2 peerDependencies 경고](./images/yarn-interaction-v1.0.2-peer-warn.png)
 
 <br />
 

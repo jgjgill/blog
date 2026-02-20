@@ -83,20 +83,14 @@ type RootMenu = RootMenuBase & {
 }
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/optional-property-result.png"
-  alt="옵셔널 프로퍼티 결과"
-/>
+![옵셔널 프로퍼티 결과](./images/optional-property-result.png)
 
 일단 에러가 뜨지 않는다.
 일차적인 목표는 달성했다.
 
 하지만 사용하는 입장에서는 다음과 같이 `path`와 `subMenu`를 같이 사용하는 경우가 발생할 수 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/type-not-result.png"
-  alt="타입이 제대로 추론되지 않는 결과"
-/>
+![타입이 제대로 추론되지 않는 결과](./images/type-not-result.png)
 
 다른 방안을 떠올려보자.
 
@@ -128,10 +122,7 @@ type SubMenu = { label: string; key: string; path: string }
 type RootMenu = RootMenuBase & (RootMenuPath | RootMenuSubMenu)
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/type-not-result.png"
-  alt="타입이 제대로 추론되지 않는 결과"
-/>
+![타입이 제대로 추론되지 않는 결과](./images/type-not-result.png)
 
 하지만 결과는 이전과 똑같이 원하는 대로 나오지 않는다.
 
@@ -142,10 +133,7 @@ type RootMenu = RootMenuBase & (RootMenuPath | RootMenuSubMenu)
 타입스크립트는 유니언의 모든 멤버에 대해 유효한 경우에만 연산을 허용한다고 한다.
 그래서 다음과 같이 `number | string`이 있는 경우 문자열에서만 접근할 수 있는 메서드를 사용할 수 없다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/union-type-error-example.png"
-  alt="유니언 타입 에러 예제"
-/>
+![유니언 타입 에러 예제](./images/union-type-error-example.png)
 
 따라서 현재 상황에서도 `subMenu`와 `path`가 모두 고려된 것이다.
 
@@ -199,10 +187,7 @@ type 결과_타입 = A | B
 const result: 결과_타입 = { a: 'a', b: 'b' } // 에러 발생
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/xor-a-b-example.png"
-  alt="XOR a, b 예제"
-/>
+![XOR a, b 예제](./images/xor-a-b-example.png)
 
 제대로 에러를 발생시킨다.
 
@@ -221,10 +206,7 @@ type 결과_타입 = XOR<A, B>
 const result: 결과_타입 = { a: 'a', b: 'b' } // 에러 발생
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/xor-without-example.png"
-  alt="XOR Without 예제"
-/>
+![XOR Without 예제](./images/xor-without-example.png)
 
 ## 문제 해결하기
 
@@ -258,10 +240,7 @@ const rootMenu: RootMenu = [
 ]
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/typescript-xor/images/xor-result.gif"
-  alt="XOR 결과"
-/>
+![XOR 결과](./images/xor-result.gif)
 
 에러도 제대로 체크한다..! 😆
 

@@ -56,10 +56,7 @@ Firebase와 달리 Supabase는 `PostgreSQL` 관계형 데이터베이스를 기�
 
 ### Next.js 세팅하기
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-nextjs14-tweet.png"
-  alt="Supabase와 Next.js 14 관련 트윗"
-/>
+![Supabase와 Next.js 14 관련 트윗](./images/supabase-nextjs14-tweet.png)
 
 Supabase가 SSR 환경뿐만 아니라 Next.js 13부터 도입된 `app router`가 잘 적용이 되는지 궁금했다.
 관련 자료를 찾아봤을 때 Next.js 14와도 호환이 되며 `server action` 기능 또한 안정적이라고 한다.
@@ -90,25 +87,16 @@ Supabase [Dashboard](https://supabase.com/dashboard/projects)에서 새로운 �
 
 지역은 한국으로 변경한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-new-project.png"
-  alt="Supabase 새 프로젝트"
-/>
+![Supabase 새 프로젝트](./images/supabase-new-project.png)
 
 앞서 `env.local`에 추가하지 못한 URL과 API Keys 값이 생성된다.
 `env.local`에 설정해준다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-project-url-api-key.png"
-  alt="Supabase 프로젝트 URL, API 키"
-/>
+![Supabase 프로젝트 URL, API 키](./images/supabase-project-url-api-key.png)
 
 여기까지 잘 진행했으면 프로젝트를 실행했을 때 다음과 같이 `Login` 버튼이 나오게 된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/project-with-login-button.png"
-  alt="프로젝트 로그인 버튼"
-/>
+![프로젝트 로그인 버튼](./images/project-with-login-button.png)
 
 이제 데이터를 만들자.
 테이블을 생성하거나 데이터 작업을 할 때는 `Table Editor` 혹은 `SQL Editor`를 사용할 수 있다.
@@ -132,27 +120,18 @@ Supabase [Dashboard](https://supabase.com/dashboard/projects)에서 새로운 �
    ('It was awesome!');
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-sql-editor.png"
-  alt="Supabase SQL Editor"
-/>
+![Supabase SQL Editor](./images/supabase-sql-editor.png)
 
 `Table Editor`에서도 직접 테이블 생성 및 데이터 작업을 진행할 수 있다.
 
 <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
   <div>
     <span>테이블 생성</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/notes-table.png"
-      alt="notes 테이블 생성"
-    />
+    ![notes 테이블 생성](./images/notes-table.png)
   </div>
   <div>
     <span>데이터 추가</span>
-    <Image
-      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/notes-data.png"
-      alt="notes 데이터 추가"
-    />
+    ![notes 데이터 추가](./images/notes-data.png)
   </div>
 </div>
 
@@ -160,10 +139,7 @@ Supabase [Dashboard](https://supabase.com/dashboard/projects)에서 새로운 �
 그래서 데이터에 대한 접근이 제한될 수 있는데,
 우선 이때는 다음과 같이 `RLS Policy`를 추가해주면 데이터에 대한 접근이 가능해진다.
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/rls-policy.mov"
-  alt="RLS 정책"
-/>
+<video src="/videos/development/quickly-start-a-project-with-supabase/rls-policy.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 <br />
 
@@ -182,10 +158,7 @@ export default async function Notes() {
 }
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/notes-data-confirm.png"
-  alt="notes 데이터 확인"
-/>
+![notes 데이터 확인](./images/notes-data-confirm.png)
 
 ### 인증/인가 구현하기
 
@@ -198,10 +171,7 @@ export default async function Notes() {
 - 내 애플리케이션 > 앱 설정 > 앱 키: `REST API Key`
 - 내 애플리케이션 > 제품 설정 > 카카오 로그인 > 보안: `Client secret code`
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-kakao-providers.png"
-  alt="Supabase 카카오 Providers 설정"
-/>
+![Supabase 카카오 Providers 설정](./images/supabase-kakao-providers.png)
 
 이 2가지 값을 Supabase Dashboard에서 Authentication > Configuration > Providers > Kakao에 추가하면 된다.
 `Callback URL (for OAuth)` 주소는 다시 카카오에서 다음 경로를 찾아가 추가한다.
@@ -277,10 +247,7 @@ export default async function Index() {
 
 메인 페이지에서 다음과 같이 확인할 수 있다.
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/project-login-logout.mov"
-  alt="프로젝트 로그인/로그아웃 확인"
-/>
+<video src="/videos/development/quickly-start-a-project-with-supabase/project-login-logout.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 <br />
 
@@ -293,10 +260,7 @@ export default async function Index() {
 이를 위한 설정이 필요하다.
 다음 가려진 부분에 배포 주소를 입력한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-redirect-urls.png"
-  alt="Supabase Redirect URLs"
-/>
+![Supabase Redirect URLs](./images/supabase-redirect-urls.png)
 
 #### 유저 테이블 생성하기
 
@@ -325,18 +289,12 @@ end;
 
 `Show advanced settings`에서 `Type of security`은 `SECURITY DEFINER`으로 변경한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-database-functions.png"
-  alt="Supabase Database Functions"
-/>
+![Supabase Database Functions](./images/supabase-database-functions.png)
 
 이렇게 만든 함수를 `auth` 스키마에 따라 트리거시키도록 해야 한다.
 하지만 현재 Supabase에서는 `auth` 스키마가 읽기 전용으로 보호되어 있어 다르게 접근해야 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-database-triggers-before.png"
-  alt="Supabase Database Triggers Before"
-/>
+![Supabase Database Triggers Before](./images/supabase-database-triggers-before.png)
 
 트리거를 추가하기 위해 `SQL Editor`를 활용할 수 있다.
 명령어는 다음과 같다.
@@ -352,27 +310,18 @@ trigger 제거: drop trigger if exists trigger_name on auth.users;
 create trigger insert_profile_for_new_user after insert on auth.users for each row execute function insert_profile_for_new_user();
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-database-triggers-after.png"
-  alt="Supabase Database Triggers After"
-/>
+![Supabase Database Triggers After](./images/supabase-database-triggers-after.png)
 
 이제 Authentication > Users에 추가된 기존 유저 정보는 삭제하고 `profiles` 테이블을 만든다.
 `profiles`테이블에는 현재 설정된 값에 따라 `id`, `nickname`으로 열을 구성한다.
 
 이때 `id`(uuid)는 `auth` 스키마의 `users.id`와 외래키(foreign key) 관계를 맺어야 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-profiles-foreign-key.png"
-  alt="Supabase Profiles 테이블 외래키"
-/>
+![Supabase Profiles 테이블 외래키](./images/supabase-profiles-foreign-key.png)
 
 이제 다시 카카오 로그인을 진행해보면 `profiles` 테이블에 유저 데이터가 자동으로 추가된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/images/supabase-profiles-data.png"
-  alt="Supabase Profile 데이터"
-/>
+![Supabase Profile 데이터](./images/supabase-profiles-data.png)
 
 이렇게 하면 우리가 접근할 수 있는 유저 테이블을 활용하면서 유저에 대한 추가 작업을 진행할 수 있다.
 
@@ -381,10 +330,7 @@ create trigger insert_profile_for_new_user after insert on auth.users for each r
 Supabase에 대해 학습해봤으니 하나의 작은 앱을 만들어보자.
 간단하게 프로토타입을 만들어 보면서 프로젝트 세팅부터 배포까지 진행했다.
 
-<Video
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/quickly-start-a-project-with-supabase/videos/nextjs-with-supabase-playground.mov"
-  alt="Nextjs with supabase playground"
-/>
+<video src="/videos/development/quickly-start-a-project-with-supabase/nextjs-with-supabase-playground.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
 [nextjs-with-supabase-playground](https://github.com/jgjgill/nextjs-with-supabase-playground)
 

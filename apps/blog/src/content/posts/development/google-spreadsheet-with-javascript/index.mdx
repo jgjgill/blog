@@ -32,19 +32,13 @@ category: 'development'
 
 새 프로젝트를 생성하자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/new-project-create.png"
-  alt="새 프로젝트 생성"
-/>
+![새 프로젝트 생성](./images/new-project-create.png)
 
 <br />
 
 프로젝트에 **Sheets API**를 사용하기 위해 API를 검색해서 적용할 수 있도록 한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/sheet-api-use.png"
-  alt="시트 API 사용"
-/>
+![시트 API 사용](./images/sheet-api-use.png)
 
 <br />
 
@@ -54,28 +48,19 @@ category: 'development'
 
 `API 및 서비스` → `사용자 인증 정보` → `사용자 인증 정보 만들기` → `서비스 계정` 경로로 진행한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/service-account-create-process-1.png"
-  alt="서비스 계정 생성 과정 1"
-/>
+![서비스 계정 생성 과정 1](./images/service-account-create-process-1.png)
 
 <br />
 
 **이름, 계정 ID, 설명**을 입력해서 계정을 생성한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/service-account-create-process-2.png"
-  alt="서비스 계정 생성 과정 2"
-/>
+![서비스 계정 생성 과정 2](./images/service-account-create-process-2.png)
 
 <br />
 
 다음과 같이 생성된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/service-account-create-process-3.png"
-  alt="서비스 계정 생성 과정 3"
-/>
+![서비스 계정 생성 과정 3](./images/service-account-create-process-3.png)
 
 ### API 키 생성
 
@@ -83,19 +68,13 @@ category: 'development'
 
 `API 및 서비스` → `사용자 인증 정보` → `사용자 인증 정보 만들기` → `API 키` 경로로 진행한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/api-key-create-process-1.png"
-  alt="API 키 생성 과정 1"
-/>
+![API 키 생성 과정 1](./images/api-key-create-process-1.png)
 
 <br />
 
 다음과 같이 바로 생성이 된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/api-key-create-process-2.png"
-  alt="API 키 생성 과정 2"
-/>
+![API 키 생성 과정 2](./images/api-key-create-process-2.png)
 
 <br />
 
@@ -103,10 +82,7 @@ category: 'development'
 
 지금은 구글 시트만을 사용하기 때문에 1개만 적용한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/api-key-create-process-3.png"
-  alt="API 키 생성 과정 3"
-/>
+![API 키 생성 과정 3](./images/api-key-create-process-3.png)
 
 ## 스프레트 시트 설정
 
@@ -122,10 +98,7 @@ category: 'development'
 
 `https://docs.google.com/spreadsheets/d/{스프레드_시트_ID}/edit#gid={시트_ID}`
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/spreadsheet-setting-process-1.png"
-  alt="스프레드시트 설정 과정 1"
-/>
+![스프레드시트 설정 과정 1](./images/spreadsheet-setting-process-1.png)
 
 <br />
 
@@ -139,10 +112,7 @@ category: 'development'
 
 코드 상으로 구글 시트에 접근하기 위해 필요하다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/spreadsheet-setting-process-2.png"
-  alt="스프레드시트 설정 과정 2"
-/>
+![스프레드시트 설정 과정 2](./images/spreadsheet-setting-process-2.png)
 
 ### 구글 시트 접근자 정보 구성하기
 
@@ -152,19 +122,13 @@ category: 'development'
 
 서비스 계정을 클릭(`IAM 및 관리자` → `서비스 계정`)해서 새로운 키를 생성한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/google-sheet-accessor-information-configuration-process-1.png"
-  alt="구글 시트 접근자 정보 구성 과정 1"
-/>
+![구글 시트 접근자 정보 구성 과정 1](./images/google-sheet-accessor-information-configuration-process-1.png)
 
 <br />
 
 `JSON` 유형으로 생성한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/google-sheet-accessor-information-configuration-process-2.png"
-  alt="구글 시트 접근자 정보 구성 과정 2"
-/>
+![구글 시트 접근자 정보 구성 과정 2](./images/google-sheet-accessor-information-configuration-process-2.png)
 
 ### 코드 적용하기
 
@@ -256,10 +220,7 @@ URL에서 봤던 gid=sheetId 부분이다.
 await doc.addSheet({ title: '새로운 시트' })
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/add-sheet-exmaple.png"
-  alt="시트 추가 예제"
-/>
+![시트 추가 예제](./images/add-sheet-exmaple.png)
 
 <br />
 
@@ -276,10 +237,7 @@ const newSheet = doc.sheetsByTitle['새로운 시트']
 await newSheet.delete()
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/delete-sheet-example.gif"
-  alt="시트 삭제 예제"
-/>
+![시트 삭제 예제](./images/delete-sheet-example.gif)
 
 <br />
 
@@ -301,11 +259,7 @@ await newSheet.delete()
 sheet.setHeaderRow(['nickname', 'blog'])
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/set-header-row-example.png"
-  alt="HeaderRow 추가 예제"
-  width="50%"
-/>
+![HeaderRow 추가 예제](./images/set-header-row-example.png)
 
 <br />
 
@@ -324,10 +278,7 @@ const rows = await sheet.getRows()
 console.log(rows[0].get('nickname'), rows[0].get('blog'))
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/add-row-example.png"
-  alt="Row 추가 예제"
-/>
+![Row 추가 예제](./images/add-row-example.png)
 
 ### cell 관련 작업
 
@@ -361,10 +312,7 @@ a1.textFormat = { bold: true }
 await sheet.saveUpdatedCells()
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/google-spreadsheet-with-javascript/images/cell-example.png"
-  alt="Cell 기능 예제"
-/>
+![Cell 기능 예제](./images/cell-example.png)
 
 <br />
 

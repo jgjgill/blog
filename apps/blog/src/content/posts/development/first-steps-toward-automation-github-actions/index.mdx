@@ -57,10 +57,7 @@ Github Actions는 **빌드, 테스트, 배포 파이프라인을 자동화할 �
 
 ### CI/CD
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/ci-cd.png"
-  alt="ci-cd"
-/>
+![ci-cd](./images/ci-cd.png)
 
 CI/CD의 기본 개념은 **지속적인 통합, 지속적인 서비스 제공, 지속적인 배포**이다.
 
@@ -150,10 +147,7 @@ npx storybook@latest init // 스토리북 설치
 
 `Settings/Actions/General` 경로에서 Workflow permissions을 다음과 같이 변경한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/workflow-permissions.png"
-  alt="workflow-permissions"
-/>
+![workflow-permissions](./images/workflow-permissions.png)
 
 ### 스토리북 자동화
 
@@ -164,10 +158,7 @@ npx storybook@latest init // 스토리북 설치
 `Chromatic`에서 프로젝트를 추가해준다.
 토큰 번호는 유출되지 않도록 주의하자.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/chromatic.png"
-  alt="chromatic"
-/>
+![chromatic](./images/chromatic.png)
 
 ```bash
 npm install chromatic --save-dev
@@ -228,17 +219,11 @@ jobs:
 
 `Settings/Secrets and variables/Actions`에서 `CHROMATIC_PROJECT_TOKEN`으로 토큰 번호를 추가한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/chromatic-project-token.png"
-  alt="chromatic-project-token"
-/>
+![chromatic-project-token](./images/chromatic-project-token.png)
 
 그러면 다음과 같이 PR에서 스토리북 배포 링크 코멘트가 추가되는 것을 확인할 수 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/storybook-pr.png"
-  alt="storybook-pr"
-/>
+![storybook-pr](./images/storybook-pr.png)
 
 이제 `develop` 브랜치에 푸시가 발생했을 때 스토리북 배포가 진행되는 것을 해보자.
 배포는 `github pages`를 활용하고자 한다.
@@ -277,17 +262,11 @@ jobs:
 깃허브에서 깃허브 페이지 배포 설정을 진행한다.
 `GitHub Actions`로 설정한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/github-pages.png"
-  alt="github-pages"
-/>
+![github-pages](./images/github-pages.png)
 
 `develop` 브랜치에 푸시가 이루어지면 성공적으로 깃허브 페이지 배포가 된 것을 확인할 수 있다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/storybook-deploy.png"
-  alt="storybook-deploy"
-/>
+![storybook-deploy](./images/storybook-deploy.png)
 
 ### 배포 자동화
 
@@ -308,10 +287,7 @@ vercel link
 
 명령어에 따라 진행하면 `.vercel` 폴더가 생성된다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/vercel-id.png"
-  alt="vercel-id"
-/>
+![vercel-id](./images/vercel-id.png)
 
 깃허브 `Secrets and variables/Actions`에서 다음 세 가지의 secret을 설정한다.
 
@@ -319,10 +295,7 @@ vercel link
 - VERCEL_PROJECT_ID (projectId)
 - VERCEL_TOKEN ([참고링크](https://vercel.com/guides/how-do-i-use-a-vercel-api-access-token))
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/vercel-token.png"
-  alt="vercel-token"
-/>
+![vercel-token](./images/vercel-token.png)
 
 이제 관련 `workflow`를 작성하면 된다.
 
@@ -368,10 +341,7 @@ jobs:
           message: '🚀preview: ${{ steps.deploy.outputs.url }}'
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/deploy-pr.png"
-  alt="deploy-pr"
-/>
+![deploy-pr](./images/deploy-pr.png)
 
 빠르게 배포 관련 `workflow`도 작성해보자.
 
@@ -408,10 +378,7 @@ jobs:
         run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/first-steps-toward-automation-github-actions/images/deploy.png"
-  alt="deploy"
-/>
+![deploy](./images/deploy.png)
 
 `workflow` 관련 전체 코드는 다음 링크에서 확인할 수 있다.
 

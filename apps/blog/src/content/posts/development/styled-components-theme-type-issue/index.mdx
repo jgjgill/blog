@@ -14,10 +14,7 @@ category: 'development'
 
 스타일 작업을 하던 어느 날 갑자기 styled-components의 theme 타입이 자동 완성으로 불러올 수 없게 되었다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/theme-any-issue.png"
-  alt="theme any issue"
-/>
+![theme any issue](./images/theme-any-issue.png)
 
 처음에는 VSCode 설정이 잘못되었나.. styled-components 버전과 styled-components 플러그인 버전이 맞지 않아서 발생한 건가.. 등등.. 여러 삽질을 했지만 원인을 찾지 못했었다.. 🫠
 
@@ -69,10 +66,7 @@ declare module 'styled-components' {
 
 styled-components 모듈의 `DefaultTheme` 코드 부분을 살펴보면 다음과 같다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/default-theme-interface.png"
-  alt="default theme interface"
-/>
+![default theme interface](./images/default-theme-interface.png)
 
 <br />
 
@@ -99,10 +93,7 @@ styled-components `DefaultTheme` 문서에서 관련 정보를 찾을 수 있었
 
 ([styled-components: Create a declarations file](https://styled-components.com/docs/api#create-a-declarations-file))
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/styled-components-declaration.png"
-  alt="styled-components declaration"
-/>
+![styled-components declaration](./images/styled-components-declaration.png)
 
 <br />
 
@@ -134,10 +125,7 @@ declare module 'styled-components' {
 
 <br />
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/theme-type-default-theme.png"
-  alt="theme type default theme"
-/>
+![theme type default theme](./images/theme-type-default-theme.png)
 
 ## Type과 Interface 뭐가 다를까?
 
@@ -161,10 +149,7 @@ declare module 'styled-components' {
 
 관련해서 intersection 타입을 interface 타입으로 변경해서 타입 추론 속도를 개선한 당근에서의 사례도 존재한다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/styled-components-theme-type-issue/images/type-daangn-meetup.png"
-  alt="당근 테크 밋업 타입"
-/>
+![당근 테크 밋업 타입](./images/type-daangn-meetup.png)
 
 (출처: [내 타입스크립트 코드가 이렇게 느릴 리 없어! | 2024 당근 테크 밋업](https://www.youtube.com/watch?v=g9FL8hKoNqE))
 

@@ -21,10 +21,7 @@ DOM과 관련된 코드를 작성하면서 **Element**, **Node**와 같은 단�
 
 ## Node
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/node.png"
-  alt="node"
-/>
+![node](./images/node.png)
 
 > The DOM Node interface is an abstract base class upon which many other DOM API objects are based, thus letting those object types to be used similarly and often interchangeably.
 > As an abstract class, there is no such thing as a plain Node object.
@@ -38,10 +35,7 @@ HTML을 구성하는 노드는 여러 가지가 존재한다. **`Element`는 `No
 
 ### Document
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/document.png"
-  alt="document"
-/>
+![document](./images/document.png)
 
 `Document` 인터페이스는 DOM 트리 같은 페이지 컨텐츠의 시작점으로 브라우저가 불러온 웹 페이지를 나타낸다.
 페이지의 URL을 얻거나 문서에 새로운 요소를 생성하는 기능을 제공한다.
@@ -69,20 +63,14 @@ ul.append(fragment)
 
 ### Attr
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/attr.png"
-  alt="attr"
-/>
+![attr](./images/attr.png)
 
 `Attr` 인터페이스는 요소의 속성을 객체로 나타낸다. **Attribute**로도 혼용해서 사용하는 것 같다.
 일반적으로 생각하는 태그에 대한 속성 값과 관련된 노드이다.
 
 ### CharacterData
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/characterdata.png"
-  alt="characterdata"
-/>
+![characterdata](./images/characterdata.png)
 
 `CharacterData` 인터페이스는 문자들을 포함하는 `Node` 객체를 나타낸다.
 텍스트뿐만 아니라 주석도 노드에 포함된다. (Text, Comments)
@@ -91,10 +79,7 @@ ul.append(fragment)
 
 가장 많이 사용하고 접하게 되는 용어이다.
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/element.png"
-  alt="element"
-/>
+![element](./images/element.png)
 
 `Element`는 **`Document` 안의 모든 객체가 상속하는 제일 범용적인 기반 클래스**이다.
 공통 메서드와 속성만 가지고 있으며,
@@ -106,19 +91,13 @@ ul.append(fragment)
 <div style={{width: '50%'}}>
 **HTMLElement**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/html-element.png"
-  alt="html-element"
-/>
+![html-element](./images/html-element.png)
 </div>
 
 <div style={{width: '50%'}}>
 **SVGElement**
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/svg-element.png"
-  alt="svg-element"
-/>
+![svg-element](./images/svg-element.png)
 </div>
 </div>
 
@@ -158,10 +137,7 @@ ul.append(fragment)
 document.querySelector('div').childNodes
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/childnodes-result.png"
-  alt="childnodes-result"
-/>
+![childnodes-result](./images/childnodes-result.png)
 
 ### Element: children
 
@@ -182,10 +158,7 @@ document.querySelector('div').childNodes
 document.querySelector('div').children
 ```
 
-<Image
-  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-dom/images/children-result.png"
-  alt="children-result"
-/>
+![children-result](./images/children-result.png)
 
 이에 대부분의 경우 우리가 원하는 동작, 요소에 접근하기 위해서는 `children`을 사용하는 것이 좋다.😚
 
