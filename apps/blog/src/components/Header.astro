@@ -1,5 +1,5 @@
 ---
-import { useTranslations, type Locale } from "../i18n";
+import { useTranslations, getLocalePath, getAlternateLocales, type Locale } from "../i18n";
 
 interface Props {
   locale: Locale;
@@ -7,8 +7,8 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const isEn = locale === "en";
-const prefix = isEn ? "/en" : "";
+const prefix = getLocalePath(locale);
+const alternateLocales = getAlternateLocales(locale);
 ---
 
 <header class="w-full border-b border-border">
@@ -41,15 +41,17 @@ const prefix = isEn ? "/en" : "";
           {t.nav.about}
         </a>
       </li>
-      <li>
-        <a
-          href={isEn ? "/" : "/en"}
-          class="hover:text-fg transition-colors"
-          aria-label="Switch language"
-        >
-          {isEn ? "KO" : "EN"}
-        </a>
-      </li>
+      {alternateLocales.map((alt) => (
+        <li>
+          <a
+            href={`${getLocalePath(alt)}/`}
+            class="hover:text-fg transition-colors"
+            aria-label="Switch language"
+          >
+            {alt.toUpperCase()}
+          </a>
+        </li>
+      ))}
     </ul>
   </nav>
 </header>

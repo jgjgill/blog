@@ -4,8 +4,6 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Toc from '../../components/Toc.astro';
 import { useTranslations } from '../../i18n';
 import Callout from '../../components/mdx/Callout';
-import Video from '../../components/mdx/Video';
-import Image from '../../components/mdx/Image';
 import Comment from '../../components/Comment';
 
 export async function getStaticPaths() {
@@ -43,7 +41,7 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? '';
     <Toc headings={headings} />
 
     <div class="prose mt-8">
-      <Content components={{ Callout, Video, Image }} />
+      <Content components={{ Callout }} />
     </div>
 
     <div class="mt-12">

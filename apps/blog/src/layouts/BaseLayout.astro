@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { getLocaleFromUrl } from '../i18n';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title: string;
@@ -17,8 +18,6 @@ const siteUrl = 'https://jgjgill.com';
 const defaultDescription =
   locale === 'ko' ? '프론트엔드 개발자 이종길입니다.' : 'Frontend developer jgjgill.';
 const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
-const GA_ID = import.meta.env.PUBLIC_GA_ID;
-const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID;
 ---
 
 <!doctype html>
@@ -54,25 +53,25 @@ const ADSENSE_ID = import.meta.env.PUBLIC_ADSENSE_ID;
       href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
     />
 
+    <ClientRouter />
+
     <!-- Google Analytics -->
-    {GA_ID && (
-      <>
-        <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}></script>
-        <script is:inline define:vars={{ GA_ID }}>
-          window.dataLayer = window.dataLayer || [];
-          function gtag() { window.dataLayer.push(arguments); }
-          gtag('js', new Date());
-          gtag('config', GA_ID);
-        </script>
-      </>
+    {import.meta.env.PROD && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-FYFKVCHDP2"></script>}
+    {import.meta.env.PROD && (
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-FYFKVCHDP2');
+      </script>
     )}
 
     <!-- Google AdSense -->
-    {ADSENSE_ID && (
+    {import.meta.env.PROD && (
       <script
         is:inline
         async
-        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_ID}`}
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2173037699636228"
         crossorigin="anonymous"
       ></script>
     )}

@@ -12,6 +12,14 @@ export function useTranslations(locale: Locale) {
 
 export function getLocaleFromUrl(url: URL): Locale {
   const [, first] = url.pathname.split('/');
-  if (first === 'en') return 'en';
-  return 'ko';
+  if (first in languages) return first as Locale;
+  return defaultLocale;
+}
+
+export function getLocalePath(locale: Locale): string {
+  return locale === defaultLocale ? '' : `/${locale}`;
+}
+
+export function getAlternateLocales(current: Locale): Locale[] {
+  return (Object.keys(languages) as Locale[]).filter((l) => l !== current);
 }
