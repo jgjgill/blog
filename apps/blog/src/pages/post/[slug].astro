@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n';
+import Callout from '../../components/mdx/Callout';
+import Video from '../../components/mdx/Video';
+import Image from '../../components/mdx/Image';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => {
+    // Astro 5 glob loader strips index.mdx → id is "category/slug" (no /index)
+    const slug = post.id.split('/').at(-1) ?? post.id;
+    return { params: { slug }, props: { post } };
+  });
+}
+
+const { post } = Astro.props;
+const locale = 'ko';
+const t = useTranslations(locale);
+
+const { Content, remarkPluginFrontmatter } = await render(post);
+const readingTime = remarkPluginFrontmatter?.minutesRead ?? '';
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  canonicalUrl={`https://jgjgill.com/post/${Astro.params.slug}`}
+>
+  <article>
+    <header class="mb-8">
+      <p class="text-sm text-muted mb-2">
+        {post.data.date}
+        {readingTime && ` · ${readingTime}`}
+        · {t.post.category[post.data.category]}
+      </p>
+      <h1 class="text-2xl font-bold leading-snug">{post.data.title}</h1>
+    </header>
+
+    <div class="prose">
+      <Content components={{ Callout, Video, Image }} />
+    </div>
+
+    <footer class="mt-12 pt-6 border-t border-border">
+      <a href="/post" class="text-sm text-muted hover:text-fg transition-colors">
+        ← {t.common.backToList}
+      </a>
+    </footer>
+  </article>
+</BaseLayout>

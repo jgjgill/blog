@@ -1,5 +1,5 @@
 ---
-import { useTranslations, type Locale } from '../i18n';
+import { useTranslations, type Locale } from "../i18n";
 
 interface Props {
   locale: Locale;
@@ -7,38 +7,47 @@ interface Props {
 
 const { locale } = Astro.props;
 const t = useTranslations(locale);
-const isEn = locale === 'en';
-const prefix = isEn ? '/en' : '';
+const isEn = locale === "en";
+const prefix = isEn ? "/en" : "";
 ---
 
-<header class="w-full border-b border-[var(--color-border)]">
+<header class="w-full border-b border-border">
   <nav class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
     <a href={`${prefix}/`} class="font-bold text-base tracking-tight">
       jgjgill
     </a>
-    <ul class="flex items-center gap-5 text-sm text-[var(--color-muted)]">
+    <ul class="flex items-center gap-5 text-sm text-muted">
       <li>
-        <a href={`${prefix}/post`} class="hover:text-[var(--color-fg)] transition-colors">
+        <a
+          href={`${prefix}/post`}
+          class="hover:text-fg transition-colors"
+        >
           {t.nav.post}
         </a>
       </li>
       <li>
-        <a href={`${prefix}/road`} class="hover:text-[var(--color-fg)] transition-colors">
+        <a
+          href={`${prefix}/road`}
+          class="hover:text-fg transition-colors"
+        >
           {t.nav.road}
         </a>
       </li>
       <li>
-        <a href={`${prefix}/about`} class="hover:text-[var(--color-fg)] transition-colors">
+        <a
+          href={`${prefix}/about`}
+          class="hover:text-fg transition-colors"
+        >
           {t.nav.about}
         </a>
       </li>
       <li>
         <a
-          href={isEn ? '/' : '/en'}
-          class="hover:text-[var(--color-fg)] transition-colors"
+          href={isEn ? "/" : "/en"}
+          class="hover:text-fg transition-colors"
           aria-label="Switch language"
         >
-          {isEn ? 'KO' : 'EN'}
+          {isEn ? "KO" : "EN"}
         </a>
       </li>
     </ul>
