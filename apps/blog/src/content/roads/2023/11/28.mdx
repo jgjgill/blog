@@ -1,0 +1,44 @@
+---
+title: 'Next.js 13 에러 삽질기 - Skipping auto-scroll behavior due to position: sticky or position: fixed on element'
+date: '2023-11-28'
+---
+
+## position 관련 에러
+
+다음과 같은 에러가 발생했다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/next-js-13-position-auto-scroll-warn.png"
+  alt="next-js-13-position-auto-scroll-warn"
+/>
+
+경고 문구를 봤을 때 레이아웃에서 준 `sticky`, `fixed` 때문에 발생한 경고인 것 같다.
+
+### scroll 속성
+
+Next.js는 라우팅이 이동할 때 기본적으로 페이지의 최상단으로 이동시킨다.
+
+여기서 레이아웃에서 준 스타일과 충돌하는 문제가 발생한 것 같다.
+
+`Link` 컴포넌트와 `useRouter` 함수에서 `scroll` 속성을 `false`를 주면 된다.
+
+**Link**
+
+```tsx
+<Link
+  href={라우팅 주소}
+  scroll={false}
+>
+```
+
+**useRouter**
+
+```tsx
+<button onClick={() => router.push(라우팅 주소, {scroll: false})}>
+  ...
+</button>
+```
+
+## 참고 문서
+
+- [Disabling scroll restoration](https://nextjs.org/docs/app/api-reference/functions/use-router#disabling-scroll-restoration)

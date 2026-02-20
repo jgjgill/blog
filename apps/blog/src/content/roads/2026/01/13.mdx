@@ -1,0 +1,130 @@
+---
+title: 'React Effect란?'
+date: '2026-01-13'
+---
+
+> React Effect는 컴포넌트가 렌더링된 후 외부 시스템(API, DOM, 타이머 등)과 동기화하거나 부수 효과(side effect)를 수행하는 메커니즘
+
+## 기본 개념
+
+- React Effect는 useEffect Hook을 통해 구현
+- 컴포넌트의 렌더링 결과가 화면에 반영된 후에 실행되는 코드
+- 순수 함수인 컴포넌트 렌더링 로직과 달리, Effect는 렌더링 외부의 작업을 처리
+
+## 등장 배경
+
+- **생명주기 메서드의 복잡성**: Class 컴포넌트에서 componentDidMount, componentDidUpdate, componentWillUnmount로 분산되던 로직을 하나로 통합
+- **관심사 분리**: 연관된 로직을 한 곳에 모으고, 무관한 로직을 분리
+- **리소스 정리**: 구독, 타이머 등의 정리를 자동화
+- **외부 동기화**: React 외부 시스템(브라우저 API, 서드파티 라이브러리)과의 연결
+
+## 동작 원리
+
+- 렌더링 단계: 컴포넌트 함수가 실행되어 JSX 반환
+- 커밋 단계: React가 DOM에 변경사항 반영
+- 페인팅: 브라우저가 화면에 그림
+- Effect 실행: useEffect 콜백 함수 실행
+- 클린업: 다음 Effect 실행 전 또는 언마운트 시 cleanup 함수 실행
+
+### 관련 개념과 비교
+
+- useEffect: 화면 업데이트 후 비동기 실행 (대부분의 경우)
+- useLayoutEffect: 화면 업데이트 전 동기 실행 (DOM 측정 필요 시)
+
+## 헷갈리기 쉬운 부분
+
+### 오해: Effect는 생명주기 메서드의 대체다
+
+```jsx
+// ❌ 생명주기로 생각하는 접근
+useEffect(() => {
+  // componentDidMount처럼 사용
+}, [])
+
+useEffect(() => {
+  return () => {
+    // componentWillUnmount처럼 사용
+  }
+}, [])
+
+// ✅ 동기화로 생각하는 접근
+useEffect(() => {
+  // ChatRoom과 연결 동기화
+  const connection = createConnection(roomId)
+  connection.connect()
+
+  return () => connection.disconnect()
+}, [roomId]) // roomId가 변경되면 재동기화
+```
+
+### 오해: cleanup은 언마운트 시에만 실행된다
+
+- 실제: 다음 Effect 실행 전에도 매번 실행
+- 의존성이 변경되면 → cleanup → 새 Effect 순서
+
+```js
+// cleanup이 언마운트 시에만 실행되는 잘못된 가정
+function ChatRoom({ roomId }) {
+  useEffect(() => {
+    const connection = createConnection(roomId)
+    connection.connect()
+
+    return () => {
+      connection.disconnect()
+    }
+  }, [roomId])
+}
+
+// 사용자 동작:
+// 1. "general" 방 입장 → general 연결
+// 2. "travel" 방으로 이동 → travel 연결
+// 3. "music" 방으로 이동 → music 연결
+```
+
+만약 cleanup이 언마운트 시에만 실행된다면:
+
+- ❌ general 연결 유지됨 (정리 안 됨)
+- ❌ travel 연결 유지됨 (정리 안 됨)
+- ✅ music 연결만 유지되어야 함
+
+**결과: 3개 방에 동시 연결! → 메모리 누수, 리소스 낭비**
+
+<br />
+
+**올바른 동작: (cleanup이 매번 실행됨)**
+
+의존성 변경될 때마다:
+
+1. 이전 연결 정리 (cleanup)
+2. 새 연결 시작 (새 Effect)
+
+**결과: 항상 현재 roomId에만 연결됨 ✅**
+
+<br />
+
+**Cleanup이 실행되는 모든 경우**
+
+- **의존성 변경 시** - 다음 Effect 실행 직전
+- **컴포넌트 언마운트 시** - 컴포넌트가 DOM에서 제거될 때
+
+## 개념 정리
+
+### React의 effect란 무엇인가요?
+
+React Effect는 컴포넌트가 렌더링된 후에 외부 시스템과 동기화하거나 부수 효과를 수행하는 메커니즘입니다.
+`useEffect` Hook을 통해 구현됩니다.
+
+Class 컴포넌트에서는 componentDidMount, componentDidUpdate, componentWillUnmount처럼 생명주기가 분산되어 있어 관련 로직이 여러 곳에 흩어지는 문제가 있었습니다.
+useEffect는 이를 하나로 통합하여 관심사를 분리하고 코드 가독성을 높였습니다.
+
+React는 먼저 컴포넌트를 렌더링하고 DOM을 업데이트한 다음, 브라우저가 화면을 그린 후에 Effect를 실행합니다.
+Effect가 렌더링을 차단하지 않아 사용자 경험에 영향을 주지 않습니다.
+
+주로 API 데이터 페칭, 구독 설정, 타이머 관리, 브라우저 API 연동과 같은 외부 작업을 처리하는 데 사용됩니다.
+
+### 핵심 문장
+
+- useEffect는 React 컴포넌트가 렌더링된 후 외부 시스템과 동기화하는 Hook
+- Effect 함수와 의존성 배열로 구성되며, 의존성이 변경될 때마다 cleanup 후 재실행
+- API 호출, 구독, 타이머 같은 부수 효과 처리에 사용
+- 렌더링 후 비동기로 실행되어 사용자 경험을 보장

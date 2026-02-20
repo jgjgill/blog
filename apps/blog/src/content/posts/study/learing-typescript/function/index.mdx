@@ -1,0 +1,394 @@
+---
+title: '러닝 타입스크립트 CHAPTER 5 - 함수'
+description: "러닝 타입스크립트 CHAPTER 5 '함수'에 대해 알아보겠습니다."
+date: '2023-03-31'
+thumbnail: '../images/learing-typescript-thumbnail.png'
+thumbnail_alt: 'learing-typescript-thumbnail'
+category: 'study'
+---
+
+<Callout>💡 한쪽 끝에는 함수 인수가 있고 다른쪽 끝에는 반환 타입이 있습니다.</Callout>
+
+## 함수 매개변수
+
+```ts
+function sing(song) {
+  console.log(`Singing: ${song}!);
+}
+```
+
+sing 함수에서 song 매개변수를 제공하기 위해 의도한 값의 타입은 무엇일까요?
+명시적 타입 정보가 선언되지 않으면 절대 타입을 알 수 없습니다.
+
+```ts
+function sing(song: string) {
+  console.log(`Singing: ${song}!);
+}
+```
+
+변수와 마찬가지로 타입스크립트를 사용하면 타입 애너테이션으로 함수 매개변수의 타입을 선언할 수 있습니다.
+
+코드를 유효한 타입스크립트 구문으로 만들기 위해 함수 매개변수에 적절한 타입 애너테이션을 추가할 필요는 없습니다.
+타입스크립트는 계속 타입 오류를 알리지만, 자바스크립트는 계속 실행됩니다.
+매개변수에 타입 선언이 누락되어도 여전히 타입스크립트에서 자바스크립트로 변환됩니다.
+
+### 필수 매개변수
+
+자바스크립트는 인수의 수와 상관없이 함수를 호출합니다.
+하지만 타입스크립트는 함수에 선언된 모든 매개변수가 필수라고 가정합니다.
+
+그래서 함수가 잘못된 수의 인수로 호출되면 타입 오류를 발생시킵니다.
+
+```ts
+function singTwo(first: string, second: string) {
+  console.log(`${first} / ${second}`)
+}
+
+singTwo('Ball and Chain')
+// Error: Expected 2 arguments, but got 1.
+
+singTwo('Go Your Own Way', 'The Chain', 'Dreams')
+// Error: Expected 2 arguments, but got 3.
+
+singTwo('I Will Survive', 'Higher Love') // OK
+```
+
+함수에 필수 매개변수를 제공하도록 강제하여 예상되는 모든 인숫값을 함수 내에 존재하도록 만듭니다.
+이를 통해 타입 안정성을 강화합니다.
+
+**매개변수**는 **인수로 받을 것으로 예상되는 함수의 선언**을 나타냅니다.
+
+**인수**는 **함수를 호출할 때 매개변수에 제공되는 값**입니다.
+
+### 선택적 매개변수
+
+자바스크립트에서 함수 매개변수가 제공되지 않으면 함수 내부의 인숫값은 기본값으로 `undefined`가 설정됩니다.
+때로는 함수 매개변수를 제공할 필요가 없거나 `undefined`값을 의도적으로 사용할 수 있습니다.
+
+이를 위해 타입스크립트에서도 선택적 매개변수에 인수를 제공하지 못하는 경우 타입 오류를 보고하지 않게 할 수 있습니다.
+타입 애너테이션의 :앞에 ?를 추가해 매개변수가 선택적이라고 표시합니다.
+선택적 매개변수에는 항상 `| undefined`가 유니언 타입으로 추가됩니다.
+
+```ts
+function announceSong(song: string, singer?: string) {
+  console.log(`Song: ${song}`)
+
+  if (singer) {
+    console.log(`Singer: ${singer}`)
+  }
+}
+
+announceSong('Greensleeves') // OK
+announceSong('Greensleeves', undefined) // OK
+announceSong('Greensleeves', 'Sia') // OK
+```
+
+선택적 매개변수는 항상 암묵적으로 `undefined`가 될 수 있습니다.
+
+선택적 매개변수는 `| undefined`를 포함하는 유니언 타입 매개변수와는 다릅니다.
+?으로 표시된 선택적 매개변수가 아닌 유니언 타입 매개변수는 값이 명시적으로 `undefined`일지라도 항상 제공되어야 합니다.
+
+```ts
+function announceSongBy(song: string, singer: string | undefined) {
+  /* ... */
+}
+
+announceSongBy('Greensleeves')
+// Error: Expected 2 arguments, but got 1.
+```
+
+함수에서 사용되는 모든 선택적 매개변수는 마지막 매개변수여야 합니다.
+필수 매개변수 전에 선택적 매개변수를 위치시키면 타입스크립트 구문 오류가 발생합니다.
+
+```ts
+function announceSinger(singer?: string, song: string) {}
+// Error: A required parameter cannot follow an optional parameter.
+```
+
+### 기본 매개변수
+
+자바스크립트에서 선택적 매개변수를 선언할 때 =와 같이 포함된 **기본값을 제공**할 수 있습니다.
+즉, 선택적 매개변수에는 기본적으로 값이 제공되기 때문에 해당 타입스크립트 타입에는 암묵적으로 함수 내부에 `| undefined` 유니언 타입이 추가됩니다.
+
+매개변수에 기본값이 있고 타입 애너테이션이 없는 경우, 타입스크립트는 해당 기본값을 기반으로 매개변수 타입을 유추합니다.
+
+다음 rateSong 함수에서 rating은 `number`타입으로 유추되지만, 함수를 호출하는 코드에서는 선택적 `number | undefined`가 됩니다.
+
+```ts
+function rateSong(song: string, rating = 0) {
+  console.log(`${song} gets ${rating}/5 starts!`)
+}
+
+rateSong('Photograph') // OK
+rateSong('Set Fire to the Rain', 5) // OK
+rateSong('Set Fire to the Rain', undefined) // OK
+
+rateSong('At Last!', '100')
+// Error Argument of type '100' is not assignable to parameter of type 'number | undefined'.
+```
+
+### 나머지 매개변수
+
+타입스크립트는 나머지 매개변수의 타입을 일반 매개변수와 유사하게 선언할 수 있습니다.
+단, 인수 배열을 나타내기 위해 끝에 **[] 구문이 추가**된다는 점만 다릅니다.
+
+```ts
+function singAllTheSongs(singer: string, ...songs: string[]) {
+  for (const song of songs) {
+    console.log(`${song}, by ${singer}`)
+  }
+}
+
+singAllTheSongs('Alicia Keys') // OK
+singAllTheSongs('Lady Gaga', 'Bad Romance', 'Just Dance', 'Poker Face') // OK
+```
+
+## 반환 타입
+
+타입스크립트는 **지각적**입니다.
+함수가 반환할 수 있는 가능한 모든 값을 이해하면 함수가 반환하는 타입을 알 수 있습니다.
+
+```ts
+// 타입: (songs: string[]) => number
+function singSongs(songs: string[]) {
+  for (const song of songs) {
+    console.log(`${song}`)
+  }
+
+  return songs.length
+}
+
+// 타입: (songs: string[], index: number) => string | undefined
+function getSongAt(songs: string[], index: number) {
+  return index < songs.length ? songs[index] : undefined
+}
+```
+
+### 명시적 반환 타입
+
+변수와 마찬가지로 타입 애너테이션을 사용해 함수의 반환 타입을 명시적으로 선언하지 않는 것이 좋습니다.
+그러나 가끔 함수에서 반환 타입을 명시적으로 선언하는 방식이 유용할 때가 있습니다.
+
+- 가능한 반환값이 많은 함수가 항상 동일한 타입의 값을 반환하도록 강제합니다.
+- 타입스크립트는 재귀 함수의 반환 타입을 통해 타입을 유추하는 것을 거부합니다.
+- 수백 개 이상의 타입스크립트 파일이 있는 매우 큰 프로젝트에서 타입스크립트 타입 검사 속도를 높일 수 있습니다.
+
+다음 getSongRecordingDate 함수는 `Date | undefined`를 반환하도록 명시적으로 선언되었지만, 반환문 중 하나가 `string`을 반환하도록 잘못 제공하고 있습니다.
+
+```ts
+function getSongRecordingDate(song: string): Date | undefined {
+  switch (song) {
+    case 'Strange Fruit':
+      return new Date('April 20, 1939') // OK
+
+    case 'Greensleeves':
+      return 'unknown'
+    // Error: Type 'string' is not assignable to type 'Date'.
+
+    default:
+      return undefined // OK
+  }
+}
+```
+
+## 함수 타입
+
+자바스크립트에서는 함수를 값으로 전달할 수 있습니다.
+즉, 함수를 가지기 위한 매개변수 또는 변수의 타입을 선언하는 방법이 필요합니다.
+
+**함수 타입** 구문은 화살표 함수와 유사하지만 함수 본문 대신 타입이 있습니다.
+
+```ts
+let nothingInGiveString: () => string
+```
+
+함수 타입은 **콜백 매개변수** (함수로 호출되는 매개변수)를 설명하는 데 자주 사용합니다.
+
+```ts
+const songs = ['Juice', 'Shake It Off', "What's Up"]
+
+function runOnSongs(getSongAt: (index: number) => string) {
+  for (let i = 0; i < songs.length; i++) {
+    console.log(getSongAt(i))
+  }
+}
+
+function getSongAt(index: number) {
+  return `${songs[index]}`
+}
+
+runOnSongs(getSongAt) // OK
+
+function logSong(song: string) {
+  return `${song}`
+}
+
+runOnSongs(logSong)
+// Error: Argument of type '(song: string) => string' is not assignable to parameter of type '(index: number) => string'
+// Types of parameters 'song' and 'index' are incompatible.
+// Type 'number' is not assignable to type 'string'.
+```
+
+오류 메시지는 할당 가능성 오류의 예로 몇 가지 상세한 단계까지 제공합니다.
+
+1.첫 번째 단계는 두 함수 타입을 출력합니다.
+
+2.다음 단계는 일치하지 않는 부분을 지정합니다.
+
+3.마지막 단계는 일치하지 않는 부분에 대한 정확한 할당 가능성 오류를 출력합니다.
+
+이전 코드와 비교하면 다음과 같습니다.
+
+1.logSongs: (song: string) => string은 getSongAt: (index: number) => string에 할당되도록 제공된 타입입니다.
+
+2.logSong의 song 매개변수는 getSongAt의 index 매개변수로 할당됩니다.
+
+3.song의 string 타입은 index의 number 타입에 할당할 수 없습니다.
+
+### 함수 타입 괄호
+
+유니언 타입의 애니테이션에서 함수 반환 위칠르 나타내거나 유니언 타입을 감싸는 부분을 표시할 때 괄호를 사용합니다.
+
+```ts
+// 타입은 string | undefined 유니언을 반환하는 함수
+let returnsStringOrUndefined: () => string | undefined
+
+// 타입은 undefined나 string을 반환하는 함수
+let maybeReturnsString: (() => string) | undefined
+```
+
+### 매개변수 타입 추론
+
+타입스크립트는 선언된 타입의 위치에 제공된 함수의 매개변수 타입을 유추할 수 있습니다.
+
+```ts
+let singer: (song: string) => string
+
+singer = function (song) {
+  // song: string의 타입
+  return `Singing: ${song.toUpperCase()}` // OK
+}
+```
+
+### 함수 타입 별칭
+
+타입 별칭은 함수 타입에 유용합니다. 반복적으로 작성하는 매개변수와 반환 타입을 갖는 코드 공간을 많이 절약할 수 있습니다.
+
+```ts
+type StringToNumber = (input: string) => number
+
+let StringToNumber: StringToNumber
+
+StringToNumber = (input) => input.length // OK
+```
+
+## 그외 반환 타입
+
+### void 반환 타입
+
+일부 함수는 어떤 값도 반환하지 않습니다.
+예를 들어 return 문이 없는 함수, 값을 반환하지 않는 return 문을 가진 함수가 있습니다.
+타입스크립트는 **void** 키워드를 사용해 반환값이 없는 함수의 반환 타입을 확인할 수 있습니다.
+void를 반환하도록 선언한 함수는 값 반환을 허용하지 않습니다.
+
+함수 타입 선언 시 voide 반환 타입은 매우 유용합니다. void를 사용하면 함수에서 반환되는 모든 값은 무시됩니다.
+
+```ts
+let songLogger: (song: string) => void
+
+songLogger = (song) => {
+  console.log(`${songs}`)
+}
+
+songLogger('Heart of Glass')
+```
+
+자바스크립트 함수는 실젯값이 반환되지 않으면 기본으로 모두 `undefined`를 반환하지만 void는 `undefined`와 동일하지 않습니다.
+
+void는 **함수의 반환 타입이 무시된다는 것**을 의미합니다.
+
+`undefined`는 **반환되는 리터럴 값**입니다.
+
+```ts
+function returnsVoid() {
+  return
+}
+
+let lazyValue: string | undefined
+
+lazyValue = returnsVoid()
+// Error: Type 'void' is not assignable to type 'string | undefined'
+```
+
+`undefined`와 void를 구분해서 사용하면 매우 유용합니다.
+특히 void를 반환하도록 선언된 타입 위치에 전달된 함수가 반환된 모든 값을 무시하도록 설정할 때 유용합니다.
+예를 들어 배열의 내장 `forEach` 메서드는 void를 반환하는 콜백을 받습니다.
+
+void 타입은 **자바스크립트가 아닌 함수의 반환 타입을 선언**하는 데 사용하는 타입스크립트 키워드입니다.
+void 타입은 함수의 반환값이 자체적으로 반환될 수 있는 값도 아니고, 사용하기 위한 것도 아니라는 표시임을 기억해야 합니다.
+
+### never 반환 타입
+
+일부 함수는 값을 반환하지 않을 뿐만 아니라 반환할 생각도 전혀 없습니다.
+**never 반환 함수**는 의도적으로 항상 오류를 발생시키거나 무한 루프를 실행하는 함수입니다.
+
+명시적 `: never` 타입 애너테이션을 추가해 해당 함수를 호출한 후 모든 코드가 실행되지 않음을 나타낼 수 있습니다.
+다음 fail 함수는 오류만 발생시키므로 param의 타입을 `string`으로 좁혀 타입스크립트의 제어 흐름 분석을 도와줍니다.
+
+```ts
+function fail(message: string): never {
+  throw new Error(`Invairant failure: ${message}`)
+}
+
+function workWithUnsafeParam(param: unknown) {
+  if (typeof param !== 'string') {
+    fail('param should be a string, not ${typeof param}')
+  }
+
+  // parma의 타입은 string
+  param.toUpperCase() // OK
+}
+```
+
+void는 **아무것도 반환하지 않는 함수**를 위한 것입니다.
+
+never는 **절대 반환하지 않는 함수**를 위한 것입니다.
+
+## 함수 오버로드
+
+자바스크립트 함수는 매우 다른 매개변수들로 호출될 수 있습니다.
+이러한 함수는 **오버로드 시그니처**라고 불리는 타입스크립트 구문으로 설명할 수 있습니다.
+여러 오버로드 시그니처와 하나의 최종 **구현 시그니처**를 선언할 수 있습니다.
+
+오버로드된 함수 호출에 대해 구문 오류를 생성할지 여부를 결정할 때 타입스크립트는 함수의 오버로드 시그니처만 확인합니다.
+구현 시그니처는 함수의 내부 로직에서만 사용됩니다.
+
+```ts
+function createDate(time: number): Date // 오버로드 시그니처
+function createDate(month: number, day: number, year: number): Date // 오버로드 시그니처
+function createDate(monthOrTimestamp: number, day?: number, year?: number) {
+  return day === undefined || year === undefined
+    ? new Date(monthOrTimestamp)
+    : new Date(year, monthOrTimestamp, day)
+} // 구현 시그니처
+
+createDate(554356800) // OK
+createDate(7, 27, 1987) // OK
+
+createDate(4, 1)
+// Error: No overload expects 2 arguments, but overloads do exist that expect either 1 or 3 arguments.
+```
+
+### 호출 시그니처 호환성
+
+함수의 오버로드 시그니처에 있는 반환 타입과 각 매개변수는 구현 시그니처에 있는 동일한 인덱스의 매개변수에 할당할 수 있어야 합니다.
+즉, 구현 시그니처는 모든 오버로드 시그니처와 호환되어야 합니다.
+
+## 마치며
+
+- 타입 애너테이션으로 **함수 매개변수 타입** 선언하기
+- 타입 시스템의 동작을 변경하기 위한 **선택적 매개변수, 기본 매개변수, 나머지 매개변수** 선언하기
+- 타입 애너테이션으로 **함수 반환 타입** 선언하기
+- **void 타입**으로 **사용 가능한 값을 반환하지 않는 함수** 알아보기
+- **never 타입**으로 **절대 반환하지 않는 함수** 알아보기
+- **함수 오버로드**를 사용해서 다양한 함수 호출 시그니처 설명하기

@@ -1,0 +1,212 @@
+---
+title: 'gs-i18n: Google Sheets와 i18next를 활용한 다국어 관리 CLI 도구 개발기'
+description: 'Google Sheets와 i18next를 활용하여 다국어 관리를 자동화하는 CLI 도구 개발 과정을 소개합니다.'
+date: '2025-05-18'
+thumbnail: './images/gs-i18n-cli-tool-development-thumbnail.png'
+thumbnail_alt: 'gs-i18n cli tool development thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 Google Sheets와 i18next를 활용하여 다국어 관리를 자동화하는 CLI 도구 개발 과정을
+  소개합니다. 피드백은 언제나 환영입니다:)
+</Callout>
+
+> [gs-i18n](https://jgjgill.github.io/gs-i18n/) 많은 관심 부탁드립니다.. 🙇‍♂️
+
+## 만들게 된 계기
+
+### 처음 다국어를 접하며
+
+업무에서 여러 커뮤니티를 관리하고 있는데 그중에서 다국어를 사용하는 커뮤니티도 존재하는 상황이었다.
+
+<br />
+
+그런데 기존에는 JSON 파일에서 개발자가 직접 하나씩 번역을 수정하는 방식으로 번역 작업이 진행되고 있었다.
+이에 단순 번역 작업임에도 매번 적지 않은 시간이 소요되었고 사람에 의존하다 보니 누락되거나 잘못 번역하는 경우도 많이 발생해서 추가 작업이 빈번하게 발생했다.
+
+<br />
+
+또한 기존 영어만 제공해온 다국어 기능에서 새로운 다국어 커뮤니티 추가로 영어뿐만 아니라 8개 언어를 추가로 번역해야 하는 요구 상황이 발생했다.
+
+<br />
+
+이러한 상황에서 기존 업무 시스템으로는 너무나도 많은 비효율이 발생할 것 같다는 판단이 들었고 어떻게 하면 효율적으로 다국어 작업을 해나갈 수 있을까 방안을 모색했다.
+
+<br />
+
+당시 찾은 방안으로 [국제화(i18n) 자동화 가이드](https://meetup.nhncloud.com/posts/295)를 레퍼런스로 구글 시트와 i18n을 활용한 방안이 현재 상황에 적절한 해결책으로 보여졌다.
+
+<br />
+
+해당 프로세스를 구축하면 개발자는 번역 작업에서 의존성을 분리할 수 있고 기획자가 구글 시트를 통해 번역 작업을 주도하는 흐름으로 변경되게 된다.
+개발자는 단순히 명령어만 입력하면 되어 작업 시간 또한 매우 단축할 수 있다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/images/multilingual-comparison.png"
+  alt="다국어 프로세스 비교"
+/>
+
+<br />
+
+해당 레퍼런스에서는 감사하게도 [구성 코드](https://gist.github.com/dongsik-yoo/fd9f005e540aa76a5903d14503a5289c)들이 제공된다.
+
+<br />
+
+하지만 해당 작업을 진행할 때 조금의 삽질을 하게 되었다.
+아무래도 글이 작성된 시기가 2021년이어서 사용되는 라이브러리 버전이 많이 달라졌고 코드는 타입스크립트가 아닌 자바스크립트로 구성되어 코드를 이해하고 직접 프로젝트에 적용하는데 추가 작업들이 필요했다.
+
+<br />
+
+그러면서 구성된 코드들이 아쉽지만 견고하게 구성되지 못했는데 어찌저찌 서비스에는 무리없이 활용되면서 일차적인 다국어 작업은 마무리되었다.
+
+<br />
+
+그래도 개인적인 마음 한편에는 ‘**언젠간 개선해야지..**’ 라는 생각과 ‘**다른 사람들도 분명히 다국어를 적용하는 과정에서 나와 같은 삽질을 할텐데 관련 도구가 있으면 좋겠다**’는 생각이 생기게 되었다.
+
+### 이론에서 실전으로
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/images/multi-paradigm-programming-thumbnail.png"
+  alt="멀티패러다임 프로그래밍"
+/>
+
+<br />
+
+올해 [멀티패러다임 프로그래밍](https://www.inflearn.com/course/multi-paradigm-programming)이라는 강의를 접하게 되었다.
+
+<br />
+
+해당 강의에서는 iterator를 중심으로 generator, 지연 평가 등 견고하면서도 유연한 코드를 구성하는 방법을 배울 수 있는데 공부하면서 많은 부분을 배우게 되었다.
+
+코드가 아름답게 개선되는 과정을 경험하면서 과거 불안정하게 구성된 다국어 프로세스 코드가 떠올랐다.
+학습을 실전으로 적용할 수 있는 좋은 기회가 될 것 같은 생각이 들었다.
+
+<br />
+
+그렇게 과거의 코드를 다시 살펴보게 되었다.
+
+## FxTS와 함께 코드 개선하기
+
+이터러블 개념을 활용한 함수형 프로그래밍 라이브러리로 [FxTS](https://fxts.dev/docs/getting-started)가 있다.
+해당 라이브러리를 활용하면 **지연 평가, 타입 인터페이스, 선언적인 코드 작성, 안정적인 비동기 데이터 다루기**를 해나갈 수 있었다.
+
+<br />
+
+보통 다음과 같은 느낌의 코드 개선이 이루어졌다고 보면 된다.
+
+**AS-IS**
+
+```ts
+fs.readdir(localePath, (error, languages) => {
+  languages.forEach((language) => {
+    const localeJsonFilePath = `${localePath}/${language}/${namespace}.json`
+
+    const jsonString = JSON.stringify(languagesMap[language], null, 2)
+
+    try {
+      fs.writeFile(localeJsonFilePath, jsonString, 'utf8', (err) => {
+        if (err) {
+          throw new Error(err)
+        }
+      })
+    } catch (err) {
+      throw new Error('upload:i18n을 실행하여 사용할 키 목록 및 json파일을 생성해주세요.')
+    }
+  })
+})
+```
+
+<br />
+
+**TO-BE**
+
+```ts
+await fx(languageDirs)
+  .filter((language) => languagesMap[language])
+  .toAsync()
+  .each(async (language) => {
+    const localeJsonFilePath = path.join(localePath, language, `${namespace}.json`)
+
+    const jsonString = JSON.stringify(languagesMap[language], null, 2)
+    fs.promises.writeFile(localeJsonFilePath, jsonString, 'utf-8')
+  })
+```
+
+## CLI 도구 만들기
+
+다른 사람들이 어떻게 해당 코드를 활용할 수 있을까 생각해봤을 때 vite나 shadcn과 같은 라이브러리들이 떠올랐다.
+
+해당 라이브러리들은 CLI와 함께 사용자 환경에 관련 파일들을 구성할 수 있게 해주는데 해당 방법을 사용하면 다국어 작업을 위해 필요한 코드들을 세팅할 수 있게 해준다.
+
+### `#!/usr/bin/env node` (셔뱅)
+
+`Shebang(#!)`이라는 개념이 사용된다.
+
+<br />
+
+Shebang(또는 해시뱅)은 유닉스 계열 운영체제에서 스크립트 파일의 첫 줄에 위치하는 특별한 표기법이다.
+해당 표기는 해당 파일을 실행할 때 사용할 인터프리터(프로그램)를 지정할 수 있다고 한다.
+
+<br />
+
+문법 자체는 다음과 같이 구성된다.
+
+- `#!`: 쉬뱅(shebang) 기호로, 이 파일이 스크립트임을 운영체제에 알림
+- `/usr/bin/env`: 현재 환경에서 프로그램을 찾는 명령어
+- `node`: 이 스크립트를 실행할 인터프리터
+
+그래서 `/usr/bin/env node`를 사용하면 사용자의 PATH에서 node 실행 파일을 찾아 실행해서 node가 설치된 경로와 상관없이 스크립트가 실행될 수 있다.
+
+### package.json의 `bin`
+
+[package.json에는 bin 기능](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#bin)이 존재한다.
+
+해당 기능은 npm에게 "이 명령어를 실행하면 이 파일을 실행해"라고 지시하는 것으로 npm이 심볼릭 링크를 만들 때 사용된다.
+
+```tsx
+"bin": "./dist/index.js",
+```
+
+## 동작
+
+이외의 자잘하고 세부적인 사항들은 생략하고... 😇
+
+뚝딱뚝딱 만들면 다음과 같이 동작하는 CLI 도구가 완성된다.
+
+### 스프레드 시트 조회하기
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/videos/gs-i18n-1.mov"
+  alt="gs-i18n 예제 1"
+/>
+
+### i18next-scanner 파일 생성하기
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/videos/gs-i18n-2.mov"
+  alt="gs-i18n 예제 2"
+/>
+
+### 다국어 관련 기본 파일 구성하기
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/videos/gs-i18n-3.mov"
+  alt="gs-i18n 예제 3"
+/>
+
+### 다국어 코드 시트에 반영하기
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/videos/gs-i18n-4.mov"
+  alt="gs-i18n 예제 4"
+/>
+
+### 시트 번역 내용 코드에 반영하기
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/gs-i18n-cli-tool-development/videos/gs-i18n-5.mov"
+  alt="gs-i18n 예제 5"
+/>

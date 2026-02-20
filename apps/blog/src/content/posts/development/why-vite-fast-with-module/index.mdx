@@ -1,0 +1,403 @@
+---
+title: '모듈과 함께 알아보는 "Vite는 왜 빠른가?"'
+description: 'Vite가 왜 빠른지에 대해 자바스크립트 모듈을 알아보며 이해하고자 합니다.'
+date: '2023-08-02'
+thumbnail: './images/javascript-modules-thumbnail.png'
+thumbnail_alt: 'javascript-modules-thumbnail'
+category: 'development'
+---
+
+
+<Callout>
+  💡 Vite가 왜 빠른지에 대해 자바스크립트 모듈을 알아보며 이해하고자 합니다. 피드백은
+  언제나 환영입니다:)
+</Callout>
+
+## 모듈
+
+Vite가 등장하면서 개발 환경을 구축하는 것이 굉장히 편해졌다.
+이와 관련해서 사람들이 Vite에 대해 말할 때 주로 하는 말들이 '**빠르다!, 편리하다!, 간편하다!**'인 것 같다.
+물론 Vite를 직접 사용했을 때 내가 느낀 점 또한 '**빠르다!, 편리하다!, 간편하다!**'로 일치하면서 사람들의 말에 저절로 동의하게 된다.
+
+그래서 Vite는 나에게 **마법같은 도구**로 느껴지곤 했다.
+Vite의 여러 기능으로 점점 Vite에 의존함과 동시에 내가 알지 못한 부분에 대해 여러 작업을 하다보니 알게 모르게 마음 속에 두려움도 생겨나기 시작했다.
+
+이에 한 번 Vite에 대해 정리하는 시간을 가질 필요성을 느꼈다.
+
+**Vite는 무엇 때문에 빠른 것일까..?**
+
+**Vite는 어떤 도구인 것인가..!**
+
+## 모듈이란?
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/modules.png"
+    alt="modules"
+    width="50%"
+  />
+</div>
+
+자바스크립트에서 모듈은 **독립적인 단위로 묶는 기능**으로 이해할 수 있다.
+
+### 모듈의 요소
+
+이러한 모듈은 세 가지 요소로 구분할 수 있을 것이다.
+
+- `Imports`: **외부 모듈의 기능을 가져오기**
+- `Code`: **모듈의 고유 코드**
+- `Exports`: **외부 모듈에서 해당 변수나 함수에 접근할 수 있도록 내보내기**
+
+이와 같은 요소들은 우리가 코드를 작성하면서 많이 본 형태들로 익숙할 것이다.
+
+### 모듈의 장점
+
+모듈은 다섯 가지의 장점으로 살펴볼 수 있다.
+
+- **재사용성(Reusability)**: 하나의 모듈은 코드의 다양한 공간에서 사용할 수 있다.
+- **결합성(Composability)**: 모듈은 더 나은 기능을 위해 함께 연결될 수 있다.
+- **영향력(Leverage)**: 모듈은 NPM을 통해 쉽게 설치될 수 있다.
+- **독립성(Isolation)**: 모듈은 테스트하기 용이하고 동시에 작업할 수 있다.
+- **조직성(Organization)**: 모듈은 거대한 코드베이스에서도 관리하기 쉽다.
+
+이렇게 모듈과 관련된 기본적인 개념을 잡고 다음으로 넘어가자.
+
+## 모듈의 연대기 훑기
+
+모듈의 발전된 형태와 전체적인 흐름을 이해하기 위해 연대기를 훑어보고자 한다.
+우리의 목표는 Vite에 대해 이해하는 것이니 얉게 훑어보는 방식으로 진행하고자 한다.
+
+### 파일에 따라 코드 분리
+
+가장 먼저 단순하게 파일에 따라 코드를 분리하는 형태를 떠올릴 수 있다.
+
+다음 코드를 보면 세 개의 스크립트가 있다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/copy-and-paste-1.png"
+  alt="copy-and-paste-1"
+/>
+
+각각의 스크립트 파일은 다음과 같이 구성되어 있다.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/copy-and-paste-2.png"
+    alt="copy-and-paste-2"
+    width="50%"
+  />
+</div>
+
+이러한 구성에서 코드들은 예상대로 동작한다.
+하지만 과연 이를 모듈이라고 할 수 있을까?
+
+단순히 파일에 따라 코드를 분리하게 되면 다음과 같은 문제가 발생한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/copy-and-paste-3.png"
+  alt="copy-and-paste-3"
+/>
+
+`window` 객체, 즉 **전역 객체에 접근**하게 된다.
+이는 전역 객체를 오염되게 만드는 것으로 **이름 충돌**의 위험을 야기해 문제가 되는 것이다.
+
+### IIFE
+
+**IIFE**(Immediately Invoked Function Expression)는 **즉시 실행 함수**로 다음과 같은 구문으로 사용된다.
+
+구문을 보면 쉽게 이해할 수 있듯이 **선언과 동시에 실행**된다는 것이 특징이다.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE.png"
+    alt="IIFE"
+    width="30%"
+  />
+</div>
+
+이전과 동일하게 코드를 통해 알아보자.
+
+코드에서는 4개의 스크립트로 구성되어 있다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-1.png"
+  alt="IIFE-1"
+/>
+
+각각의 스크립트는 다음과 같이 구성된다.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-2.png"
+    alt="IIFE-2"
+    width="25%"
+  />
+</div>
+
+`App` 파일에서는 객체를 선언한다.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-3.png"
+    alt="IIFE-3"
+    width="70%"
+  />
+</div>
+
+`users` 파일에서는 앞서 선언한 APP 객체에 데이터를 추가한다.
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-4.png"
+    alt="IIFE-4"
+    width="50%"
+  />
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-5.png"
+    alt="IIFE-5"
+    width="50%"
+  />
+</div>
+
+`test1`, `test2` 파일에서는 APP에 선언된 데이터를 출력하는 함수를 APP에 추가한다.
+
+이러한 방식으로 코드를 구성하면 파일에 따른 코드 분리에서 발생했던 전역 객체의 문제는 해결할 수 있을 것이다.
+
+하지만 IIFE의 방식은 단지 **window에서 APP으로 이동**한 것이다.
+그래서 APP 객체 안에 모든 import가 위치하기 때문에 여전히 **이름 충돌**의 문제가 발생하게 된다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-6.png"
+  alt="IIFE-6"
+/>
+
+또한, IIFE 방식은 다른 문제점도 존재하는데 바로 **스크립트 순서**이다.
+이는 파일에 따라 코드 분리에서도 해당하는 문제이다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-7.png"
+  alt="IIFE-7"
+/>
+
+스크립트 순서를 변경하여 `APP` 파일이 가장 아래에 위치한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/IIFE-8.png"
+  alt="IIFE-8"
+/>
+
+`ReferenceError`가 발생하여 스크립트의 순서도 신경써야 한다는 것을 알 수 있다.
+
+마지막으로 IIFE 방식은 **코드를 쓰기가 상당히 귀찮다**는 것이다.
+생성하는 파일마다 IIFE구문을 작성해야 하니 파일 수가 많아지게 되면 굉장히 많은 수고가 들게 된다.
+
+### CommonJS (CJS)
+
+상대적으로 이전 방식들과 비교했을 때 `CommonJS`는 익숙한 구문일 것이다.
+간략하게 특징을 요약하면 다음과 같다.
+
+- 자바스크립트를 브라우저뿐만 아니라 서버 등 **범용적(common)으로 사용**하고자 한다.
+- **동기적으로 동작**한다.
+- `requre` / `module.exports` 구문을 사용한다.
+
+`CommonJS` 방식으로는 어떻게 모듈을 구성하는지 알아보자.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/commonJS-1.png"
+    alt="commonJS-1"
+    width="70%"
+  />
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/commonJS-2.png"
+    alt="commonJS-2"
+    width="50%"
+  />
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/commonJS-3.png"
+    alt="commonJS-3"
+    width="50%"
+  />
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/commonJS-4.png"
+    alt="commonJS-4"
+    width="70%"
+  />
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/commonJS-5.png"
+    alt="commonJS-5"
+    width="70%"
+  />
+</div>
+
+코드의 큰 흐름은 이전과 유사하기 때문에 이해하는데 어렵지 않을 것이고 구문도 쉽게 읽힌다.
+
+하지만 `CommonJS`에서도 문제가 발생하게 된다.
+바로 **동기로 작동**하는 것이다.
+
+프론트엔드 개발자가 모듈을 사용할 때 환경은 서버가 아닌 **브라우저**이다.
+그래서 **모듈을 요청받는 동안 지연이 발생**하게 되므로 이때 **모듈에 대한 비동기 지원**에 대한 요구가 생기게 된다.
+(이와 관련해서 Webpack이 점점 존재를 드러낸다.)
+
+### ES Modules (ESM)
+
+드디어 **자바스크립트 공식 모듈**로 `ES Modules`에 도달하게 된다.
+`ES Modules`는 **비동기적으로 동작**하며 우리가 많이 접한 `import` / `exports` 구문을 사용한다.
+
+이번에도 앞선 방식들과 같이 어떻게 모듈을 사용하는지 알아보자.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-1.png"
+    alt="ES-Modules-1"
+    width="70%"
+  />
+</div>
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-2.png"
+    alt="ES-Modules-2"
+    width="50%"
+  />
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-3.png"
+    alt="ES-Modules-3"
+    width="50%"
+  />
+</div>
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-4.png"
+  alt="ES-Modules-4"
+/>
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-5.png"
+  alt="ES-Modules-5"
+/>
+
+많이 봐온 구문으로 익숙한 구성일 것이다.
+`ES Modules` 방식에는 두 가지를 주의해야 한다.
+
+- `script` 태그에 `type="module"`을 추가해야 한다.
+- 서버를 실행해야 한다.
+
+아쉽게도 `ES Modules`에도 문제점이 존재한다.
+
+- **모든 유저**가 최신 브라우저를 사용하지 않아서 `ES Modules`를 지원하지 않을 수 있다.
+- 여러 모듈을 가져오기 위해 **매우 많은 네트워크 요청**이 필요할 수 있다.
+
+네트워크 요청과 관련해서 이전 코드를 예시로 들면 다음과 같은 네트워크 요청이 발생한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/ES-Modules-6.png"
+  alt="ES-Modules-6"
+/>
+
+(여기서도 Webpack이 존재감을 나타낸다.)
+
+## Webpack에 대하여
+
+`CommonJS`와 `ES Modules`에서의 문제점을 정리하면 세 가지로 요약할 수 있다.
+
+- `CommonJS`는 브라우저에서 사용할 수 없다.
+- `ES modules`는 모든 유저가 사용할 수 있는 환경이 아니다.
+- `ES modules`는 매우 많은 네트워크 요청이 발생할 수 있다.
+
+이 문제점들을 해결하고자 Webpack은 **번들링**이라는 개념을 사용한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/webpack-1.png"
+  alt="webpack-1"
+/>
+
+번들링은 **웹 애플리케이션을 실행하기 위해 필요한 모든 파일을 하나의 파일로 결합하는 프로세스**를 의미한다.
+
+(이번 글은 Webpack에 대해 알아보는 것이 목적이 아니기 때문에 자세한 설명은 생략하고자 한다. 😇)
+
+하지만 Webpack에서도 새로운 문제가 발생하게 된다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/webpack-2.png"
+  alt="webpack-2"
+/>
+
+그림을 보면 알 수 있듯이 번들 기반 개발 서버 구성할 시 **작업의 비효율**이 발생한다.
+파일의 수가 기하급수적으로 늘어나게 되면 번들 작업의 시간은 점점 증가하게 된다.
+더욱이 코드를 하나만 변경하여도 모든 파일에서 번들 작업이 진행되어야 한다.
+이러한 번들 과정으로 개발 시 느린 속도로 인해 많은 불편함을 겪었다.
+
+## Vite는 왜 빠른 것인가
+
+그렇다.
+Vite는 Webpack에서 발생한 **번들 과정에서의 문제를 해결**하기 위해 등장한 것이다.
+이를 알아보기 위해 **Dependencies**, **Source Code**로 나누어서 접근할 필요가 있다.
+
+### Dependencies
+
+Dependencies는 외부 라이브러리를 떠오르면 좋을 것 같다.
+대표적으로 `lodash-es` 라이브러리는 600개의 모듈을 가지고 있다고 한다.
+그래서 해당 라이브러리를 사용할 때 아무런 사전 작업없이 사용하면 하나의 기능만 사용해도 굉장히 많은 네트워크 요청이 발생할 수 있다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/lodash.png"
+  alt="lodash"
+/>
+
+(사전 작업이 필요하다...)
+
+이때 Dependencies, 즉 외부 라이브러리는 **개발 시 내용이 바뀌지 않을 일반적인 (Plain) 소스 코드**이다.
+Vite는 이와 관련해서 **사전 번들링 및 캐시** 작업을 한 것이다.
+
+또한, 이 과정에서 `ESbuild`라는 도구를 사용한다고 한다.
+이 도구는 **기존 번들러 대비 10~100배 빠른 속도**를 자랑한다고 소개한다.
+
+캐시도 `max-age=31536000,immutable`로 처리하여 한 번 작업이 이루어지면 다시 해당 작업을 진행하지 않도록 한다.
+
+정리하면 Dependencies와 관련해서 여러 HTTP 요청을 보내는 것이 아닌 하나의 HTTP 요청만을 전송하는 것이다.
+
+### Source Code
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/vite.png"
+  alt="vite"
+/>
+
+Source Code는 **수정이 매우 잦은 코드들**로 우리가 **일반적으로 개발하면서 작성하는 코드들**이 해당할 것이다.
+Vite는 이때 `ES Modules`를 활용한다.
+**브라우저가 번들러 역할**을 하도록 하여 **브라우저 요청에 따라 작업을 처리**한다.
+
+그래서 **현재 화면과 관련된 모듈들에 대한 작업**만 이루어지게 되는 것이다.
+
+## 마무리
+
+간략하게 모듈에 대해서 살펴봤다.
+관련된 용어들을 접할 때 주요 키워드들이 떠오르면 모듈의 흐름을 잡기 쉬울 것이다.
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/why-vite-fast-with-module/images/keywords.png"
+    alt="keywords"
+    width="70%"
+  />
+</div>
+
+Vite에 대해 알아보고 정리하면서 알고 사용하는 것과 모르고 사용하는 것은 천지차이라는 것을 많이 느끼는 시간이었다.
+이번 글을 통해 Vite를 이해하는 시간을 가졌기에 앞으로는 Vite로 편하게 개발하자! 😚
+
+## 출처
+
+- [Everything You Need to Know About Javascript Modules in 6 Minutes](https://medium.com/swlh/everything-you-need-to-know-about-javascript-modules-in-6-minutes-54922fea9880)
+- [Why webpack](https://webpack.js.org/concepts/why-webpack/)
+- [Why Vite](https://vitejs.dev/guide/why.html)
+- [Dependency Pre-Bundling](https://vitejs.dev/guide/dep-pre-bundling.html)

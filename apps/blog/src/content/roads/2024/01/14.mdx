@@ -1,0 +1,80 @@
+---
+title: 'Node.js 탐험기 - Express에서의 body-parser 활용'
+date: '2024-01-14'
+---
+
+## body-parser 이해하기
+
+```js
+const express = require('express')
+
+const app = express()
+
+...
+
+app.use('/', (req, res, next) => {
+  console.log(req.body) // undefined
+})
+```
+
+Express에서 `req.body` 값을 받을 때 아무런 설정을 하지 않으면 `undefined` 가 나온다.
+
+body의 내용을 파싱하기 위해 `body-parser` 라는 것을 사용해야 한다.
+
+현재 Express 버전(4.x)에서는 내장된 미들웨어 기능이다.
+
+### express.json()
+
+`JSON` 페이로드로 들어오는 요청을 파싱한다.
+
+```js
+app.use(express.json())
+```
+
+<br />
+
+### express.urlencoded()
+
+`urlencoded` 페이로드가 포함된 수신 요청을 파싱한다.
+
+<br />
+
+#### extended 옵션
+
+`extended` 옵션을 주지 않으면 다음 문구가 나온다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/roads/images/node-js-body-parser.png"
+  alt="Node.js body-parser"
+/>
+
+`false`: `queryString` 라이브러리로 구문 분석한다.
+
+- 단순 객체 형태의 문자열에 활용한다.
+- Node.js 내장 모듈이다.
+
+```js
+querystring.parse('name=jgjgill&city=seoul') // { name: 'jgjgill', city: 'seoul' }
+```
+
+<br />
+
+`true`: [qs](https://www.npmjs.com/package/qs) 라이브러리로 구문 분석한다.
+
+- 리치 객체와 배열을 URL 인코딩 형식으로 인코딩, 복잡한 배열이나 객체에 활용한다.
+- URL 인코딩과 유사한 JSON 환경 구현한다.
+- npm 설치 필요하다.
+
+```js
+qs.stringify({ a: { b: 'c' } }) // a%5Bb%5D=c
+```
+
+다음과 같이 사용한다.
+
+```js
+app.use(express.urlencoded({ extended: true }))
+```
+
+## 참고 문서
+
+- [Express - 4.x API](https://expressjs.com/en/4x/api.html)

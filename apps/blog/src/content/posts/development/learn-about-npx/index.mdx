@@ -1,0 +1,144 @@
+---
+title: 'npx에 대해 알아보기'
+description: 'npx와 관련된 개념들을 이해합니다.'
+date: '2025-12-02'
+thumbnail: './images/learn-about-npx-thumbnail.png'
+thumbnail_alt: 'npx에 대해 알아보기 썸네일'
+category: 'development'
+---
+
+<Callout>💡 npx와 관련된 개념들을 이해합니다. 피드백은 언제나 환영입니다:)</Callout>
+
+## npx란? (Node Package eXecute)
+
+### npm과의 관계 및 등장 배경
+
+npm 자체는 패키지를 다운로드하고 관리하는 관리자 역할을 수행한다.
+
+이때 패키지를 사용할 때 2가지 방법이 존재한다.
+
+- 로컬 설치 (프로젝트 안에서)
+- 글로벌 설치 (컴퓨터 전체에)
+
+<br />
+
+로컬 설치의 경우 설치는 하지만 명령어로 바로 실행이 불가하다. ex) `gs-i18n "Hello"`
+
+실행하려면 긴 경로를 입력할 필요가 있다. ex) `/node_modules/.bin/gs-i18n "Hello"`
+
+<br />
+
+글로벌 설치는 컴퓨터 어디서든 사용이 가능하다. ex) `gs-i18n "Hello"`
+
+하지만 컴퓨터 전체에 설치해서 용량을 차지하게 된다.
+
+그리고 버전 충돌 문제, 관리자 권한 필요, 최신 버전 유지 어려움 등의 어려움이 따른다.
+
+<br />
+
+### npx의 등장
+
+`create-react-app`로 비교하면 프로젝트를 만들 때 한 번만 실행하고 싶은 경우가 있다.
+
+왜 계속 컴퓨터에 저장해야 할까?
+
+이와 같이 필요할 때만 실행하고 싶은 니즈로 `npx`가 생겨나게 되었다. ex) `npx create-react-app my-app`
+
+<br />
+
+### npm 5.2.0 이후 기본 포함
+
+처음에는 별도 패키지로 npm install -g npx 설치 필요했다. [npx 패키지](https://www.npmjs.com/package/npx)
+
+이후 버전에 `npx`는 npm에 기본적으로 포함되면서 별도로 설치가 불필요해졌다.
+
+즉 npm이 설치되어 있으면 `npx`도 자동으로 설치된다.
+
+<br />
+
+### 핵심 개념 (패키지 실행기, 일회성)
+
+- `npm`은 패키지 관리, `npx`는 패키지 실행 (Package Runner)
+- 일회성: 항상 최신 버전 사용, 실행이 필요한 순간에만 존재, 실행이 끝나면 흔적을 남기지 않음
+
+<br />
+
+## npx 동작 방식
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/npx-structure.png"
+  alt="npx 구조"
+/>
+
+### 로컬 node_modules/.bin 우선 탐색
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/node-modules-bin.png"
+    alt="node_modules bin"
+    width="70%"
+  />
+</div>
+
+<br />
+
+`npx`는 가장 먼저 현재 프로젝트의 `node_modules/.bin/` 디렉토리를 확인한다.
+
+이 폴더에는 프로젝트에 설치된 패키지의 실행 파일들이 심볼릭 링크 형태로 저장되어 있다.
+
+<br />
+
+### 글로벌 설치 확인
+
+다음으로 시스템 전역에 설치된 패키지를 탐색한다.
+
+```bash
+$ npm list -g --depth=0
+```
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-npx/images/npm-global-list.png"
+    alt="npm global list"
+    width="70%"
+  />
+</div>
+
+<br />
+
+### 캐시 확인
+
+로컬과 글로벌에 모두 없다면 **npm 캐시**를 확인한다. `~/.npm/_npx/`
+
+<br />
+
+### 임시 설치 및 실행 메커니즘
+
+캐시에도 없다면 npm registry에서 패키지를 다운로드한다.
+
+`npm registry`는 JavaScript 패키지들이 저장되어 있는 거대한 온라인 창고이다.
+
+ex) [gs-i18n regsitry](https://registry.npmjs.org/gs-i18n)
+
+<br />
+
+## npx와 다른 방법들의 차이
+
+많이 헷갈리는 부분 간단하게 정리해보자.
+
+<br />
+
+### npx vs npm
+
+- `npm`: 패키지 관리자 (Package Manager)
+- `npx`: 패키지 실행기 (Package Executor)
+
+<br />
+
+### npx vs 글로벌 설치
+
+**글로벌 설치 문제점**
+
+- 버전 고정 → 수동으로 업데이트 필요
+- 프로젝트별 버전 충돌
+- 디스크 공간

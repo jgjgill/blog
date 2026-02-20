@@ -1,0 +1,105 @@
+---
+title: '좋은 코드를 찾아서 - createSafeContext'
+date: '2024-07-14'
+---
+
+## useContext를 어떻게 구성할까?
+
+[overlay-kit](https://github.com/toss/overlay-kit) 라이브러리에서 `context`를 구성할 때 사용한 코드가 마음에 들어 글로 남기고자 한다.
+
+<br />
+
+매번 `Provider` 패턴의 `useContext` 코드를 구성할 때 어떻게 폴더 및 파일을 구성해야 할 지 고민이 되었는데,
+이번에 살펴볼 `createSafeContext` 함수로 구성하면 깔끔하게 관리할 수 있게 된다.
+
+<br />
+
+**[create-safe-context.ts](https://github.com/toss/overlay-kit/blob/main/packages/src/utils/create-safe-context.ts)**
+
+```ts
+import { type Provider, createContext, useContext } from 'react'
+
+type NullSymbolType = typeof NullSymbol
+const NullSymbol = Symbol('Null')
+
+export type CreateContextReturn<T> = [Provider<T>, () => T]
+
+export function createSafeContext<T>(displayName?: string): CreateContextReturn<T> {
+  const Context = createContext<T | NullSymbolType>(NullSymbol)
+  Context.displayName = displayName ?? 'SafeContext'
+
+  function useSafeContext() {
+    const context = useContext(Context)
+
+    if (context === NullSymbol) {
+      const error = new Error(`[${Context.displayName}]: Provider not found.`)
+      error.name = '[Error] Context'
+
+      throw error
+    }
+
+    return context
+  }
+
+  return [Context.Provider as Provider<T>, useSafeContext]
+}
+```
+
+<br />
+
+### Symbol의 활용
+
+여태까지 `useContext`의 초깃값 `null`을 많이 사용해왔다.
+
+그런데 라이브러리에서는 `Symbol('Null')`을 사용했다.
+
+<br />
+
+`Symbol`은 **원시 값을 반환하는 내장 객체로 매번 고유한 심볼을 반환**한다.
+
+```ts
+null === null // true
+Symbol('null') === Symbol('null') // false
+```
+
+디테일을 고려한 코드라는 생각이 들었다.
+
+<br />
+
+### createSafeContext 함수 내부
+
+`createSafeContext` 함수 내부에서는 `Context`를 생성하고 `useSafeContext` 커스텀훅을 구현한다.
+
+이를 통해 응집도가 높아진 것 같다.
+
+그리고 `displayName`도 고려한 부분이 인상적이다.
+
+<br />
+
+`createSafeContext` 함수의 반환 값은 `[Provider, useContext]`로 구성된다.
+
+```ts
+export type CreateContextReturn<T> = [Provider<T>, () => T]
+
+// [Provider, useContext]
+```
+
+여기서 제네릭을 사용해서 `Provider`에 대한 타입을 사용할 때 정의하도록 했다.
+
+<br />
+
+### createSafeContext 함수 사용하기
+
+**[context.ts](https://github.com/toss/overlay-kit/blob/main/packages/src/context/context.ts)**
+
+```ts
+export const [ContextProvider, useContext] = createSafeContext<ContextData>('tempContext')
+
+export function useTemp() {
+  return useContext().temp
+}
+
+// ...Context를 반환하는 커스텀훅
+```
+
+`createSafeContext`을 통해 사용하는 용도에 맞게 타입과 네이밍만 할당한 뒤 `Provider`와 `useContext`를 활용하면 된다.

@@ -8,7 +8,6 @@ const posts = defineCollection({
       title: z.string(),
       description: z.string(),
       date: z.string(),
-      slug: z.string().optional(),
       thumbnail: image().optional(),
       thumbnail_alt: z.string().optional(),
       category: z.enum(['development', 'study', 'reading', 'essay']),
@@ -20,7 +19,6 @@ const roads = defineCollection({
   schema: z.object({
     title: z.string(),
     date: z.string(),
-    slug: z.string().optional(),
   }),
 });
 

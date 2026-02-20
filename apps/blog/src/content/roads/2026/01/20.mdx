@@ -1,0 +1,348 @@
+---
+title: 'JS 프록시(Proxy)란?'
+date: '2026-01-20'
+---
+
+> 객체의 기본 동작(속성 접근, 할당, 삭제 등)을 가로채서 사용자 정의 동작으로 재정의할 수 있게 해주는 메타프로그래밍 기능
+
+## 기본 개념
+
+- 대상 객체(target)를 감싸는 래퍼 객체
+- 객체에 대한 기본 연산들을 중간에서 가로채고 커스터마이징
+- 원본 객체를 수정하지 않고도 객체의 동작을 제어
+
+## 등장 배경
+
+- 문제: 객체 속성 접근/수정 시 유효성 검사, 로깅, 알림 등의 부가 기능을 추가하려면 getter/setter를 일일이 정의해야 했음
+- 해결: 객체의 모든 기본 동작을 통합적으로 가로채고 제어할 수 있는 표준화된 방법 제공 (ES6)
+
+## 동작 원리
+
+- **Proxy 객체 생성**: new Proxy(target, handler)
+- **트랩 정의**: handler 객체에 가로챌 동작(트랩) 정의
+- **동작 가로채기**: Proxy 객체에 연산 수행 시 해당 트랩 실행
+- **기본 동작 수행**: 트랩에서 원본 객체(target)의 동작 제어
+
+### Proxy vs 일반 객체
+
+- 일반 객체: 동작을 제어하려면 함수로 감싸야 함 (우회 가능)
+- Proxy: 객체 자체가 모든 접근을 자동으로 제어 (우회 불가능)
+
+**일반 객체: 수동적**
+
+```js
+// 일반 객체 - 아무 일도 안 일어남
+const normalObj = {
+  name: 'John',
+  age: 30,
+}
+
+normalObj.name = 'Jane' // 그냥 값만 바뀜
+normalObj.age = -100 // 음수 나이도 그냥 저장됨
+delete normalObj.name // 그냥 삭제됨
+console.log(normalObj.unknown) // undefined만 반환
+
+// 뭔가 추가 로직을 넣고 싶다면? 직접 함수를 만들어야 함
+function setAge(obj, value) {
+  if (value < 0) throw new Error('나이는 음수일 수 없습니다')
+  obj.age = value
+}
+setAge(normalObj, 25) // 함수를 통해서만 검증 가능
+normalObj.age = -5 // 하지만 직접 접근하면 검증 우회!
+```
+
+**Proxy: 능동적**
+
+```js
+// Proxy - 모든 동작을 가로챔!
+const proxyObj = new Proxy(
+  {
+    name: 'John',
+    age: 30,
+  },
+  {
+    get(target, property) {
+      console.log(`📖 ${property} 읽기 시도`)
+      if (!(property in target)) {
+        console.warn(`⚠️  ${property}는 존재하지 않습니다`)
+        return undefined
+      }
+      return target[property]
+    },
+
+    set(target, property, value) {
+      console.log(`✏️  ${property}를 ${value}로 변경 시도`)
+
+      // 자동 검증!
+      if (property === 'age' && value < 0) {
+        throw new Error('나이는 음수일 수 없습니다')
+      }
+
+      target[property] = value
+      return true
+    },
+
+    deleteProperty(target, property) {
+      console.log(`🗑️  ${property} 삭제 시도`)
+      if (property === 'name') {
+        throw new Error('이름은 삭제할 수 없습니다')
+      }
+      delete target[property]
+      return true
+    },
+  },
+)
+
+// 테스트
+proxyObj.name // 📖 name 읽기 시도
+proxyObj.age = 25 // ✏️  age를 25로 변경 시도
+proxyObj.age = -5 // ✏️  age를 -5로 변경 시도 → Error!
+delete proxyObj.name // 🗑️  name 삭제 시도 → Error!
+proxyObj.unknown // 📖 unknown 읽기 시도 → ⚠️  경고 출력
+```
+
+### Proxy vs Object.defineProperty
+
+**Object.defineProperty: 개별 속성에 미리 설정**
+
+```js
+const user = { _age: 30 }
+
+// 미리 age 속성을 정의해야 함
+Object.defineProperty(user, 'age', {
+  get() {
+    console.log('age 읽기')
+    return this._age
+  },
+  set(value) {
+    console.log('age 쓰기:', value)
+    if (value < 0) throw new Error('음수 불가')
+    this._age = value
+  },
+})
+
+user.age = 25 // ✓ 감지됨: "age 쓰기: 25"
+user.age // ✓ 감지됨: "age 읽기"
+
+// 문제 1: 새로운 속성은 감지 안됨!
+user.name = 'John' // ✗ 아무것도 안 일어남
+user.email = 'a@b.com' // ✗ 아무것도 안 일어남
+
+// 문제 2: 배열 메서드 감지 안됨!
+const arr = [1, 2, 3]
+Object.defineProperty(arr, '0', {
+  set(value) {
+    console.log('감지!')
+    this._0 = value
+  },
+  get() {
+    return this._0
+  },
+})
+
+arr[0] = 10 // ✓ 감지됨
+arr.push(4) // ✗ 감지 안됨!
+arr.length = 0 // ✗ 감지 안됨!
+
+// 문제 3: 삭제 감지 불가능!
+delete user.age // ✗ 감지할 방법 없음
+```
+
+**Proxy: 객체 전체를 동적으로 감시**
+
+```js
+const user = new Proxy(
+  { age: 30 },
+  {
+    get(target, property) {
+      console.log(`${property} 읽기`)
+      return target[property]
+    },
+    set(target, property, value) {
+      console.log(`${property} 쓰기:`, value)
+      if (property === 'age' && value < 0) throw new Error('음수 불가')
+      target[property] = value
+      return true
+    },
+    deleteProperty(target, property) {
+      console.log(`${property} 삭제`)
+      delete target[property]
+      return true
+    },
+  },
+)
+
+user.age = 25 // ✓ "age 쓰기: 25"
+user.name = 'John' // ✓ "name 쓰기: John" - 동적 속성도 감지!
+user.email = 'a@b.com' // ✓ "email 쓰기: a@b.com"
+delete user.age // ✓ "age 삭제" - 삭제도 감지!
+
+// 배열도 완벽하게 감지!
+const arr = new Proxy([1, 2, 3], {
+  set(target, property, value) {
+    console.log(`배열 ${property} = ${value}`)
+    target[property] = value
+    return true
+  },
+})
+
+arr.push(4) // ✓ "배열 3 = 4", "배열 length = 4"
+arr.length = 0 // ✓ "배열 length = 0"
+```
+
+### Reflect
+
+```js
+const target = {
+  name: 'John',
+  get fullInfo() {
+    return `Name: ${this.name}` // this에 의존
+  },
+}
+
+// ✗ Reflect 없이 구현
+const proxy1 = new Proxy(target, {
+  get(target, property) {
+    return target[property] // this가 target을 가리킴 (원본 객체)
+  },
+})
+
+console.log(proxy1.fullInfo) // "Name: John" - 지금은 작동
+
+// 하지만 상속 받으면?
+const child = Object.create(proxy1)
+child.name = 'Jane'
+console.log(child.fullInfo) // "Name: John" - ✗ Jane이어야 하는데!
+
+// ✓ Reflect 사용
+const proxy2 = new Proxy(target, {
+  get(target, property, receiver) {
+    // receiver = 실제 호출한 객체
+    return Reflect.get(target, property, receiver) // this가 receiver를 가리킴
+  },
+})
+
+const child2 = Object.create(proxy2)
+child2.name = 'Jane'
+console.log(child2.fullInfo) // "Name: Jane" - ✓ 올바름!
+```
+
+## 예시 코드
+
+```js
+// 1. 기본 Proxy 생성
+const target = {
+  name: 'John',
+  age: 30,
+}
+
+const handler = {
+  // get 트랩: 속성 읽기 가로채기
+  get(target, property) {
+    console.log(`${property} 속성에 접근했습니다.`)
+    return target[property]
+  },
+
+  // set 트랩: 속성 할당 가로채기
+  set(target, property, value) {
+    console.log(`${property}를 ${value}로 설정합니다.`)
+    if (property === 'age' && typeof value !== 'number') {
+      throw new TypeError('age는 숫자여야 합니다.')
+    }
+    target[property] = value
+    return true // 성공 표시
+  },
+}
+
+const proxy = new Proxy(target, handler)
+
+// 2. 사용 예시
+console.log(proxy.name)
+// 출력: "name 속성에 접근했습니다."
+// 출력: "John"
+
+proxy.age = 31
+// 출력: "age를 31로 설정합니다."
+
+proxy.age = 'thirty'
+// Error: age는 숫자여야 합니다.
+```
+
+```js
+// 유효성 검사 Proxy
+const validator = {
+  set(target, property, value) {
+    if (property === 'age') {
+      if (!Number.isInteger(value)) {
+        throw new TypeError('나이는 정수여야 합니다.')
+      }
+      if (value < 0 || value > 150) {
+        throw new RangeError('나이는 0-150 사이여야 합니다.')
+      }
+    }
+    target[property] = value
+    return true
+  },
+}
+
+const person = new Proxy({}, validator)
+
+person.age = 25 // ✓ 정상
+console.log(person.age) // 25
+
+person.age = -5 // ✗ RangeError
+person.age = 25.5 // ✗ TypeError
+```
+
+## 헷갈리기 쉬운 부분
+
+### 오해: Proxy를 만들면 원본 객체가 변경된다
+
+```js
+const target = { name: 'John' }
+const proxy = new Proxy(target, {})
+
+console.log(target === proxy) // false - 별개의 객체!
+target.name = 'Jane' // 원본 직접 수정하면 Proxy 우회됨
+```
+
+### 오해: Proxy는 깊은 감시를 자동으로 한다
+
+```js
+const proxy = new Proxy(
+  { nested: { value: 1 } },
+  {
+    set(target, property, value) {
+      console.log('변경 감지!')
+      target[property] = value
+      return true
+    },
+  },
+)
+
+proxy.nested.value = 2 // 감지 안됨! (nested 객체는 Proxy 아님)
+
+// 해결: 재귀적으로 Proxy 생성 필요
+```
+
+## 개념 정리
+
+### JS의 프록시가 무엇인가요?
+
+Proxy는 ES6에서 도입된 메타프로그래밍 기능으로,
+객체의 기본 동작을 가로채서 사용자 정의 동작으로 재정의할 수 있게 해줍니다.
+
+new Proxy(target, handler) 형태로 생성하는데,
+target은 원본 객체이고 handler는 가로챌 동작들을 정의한 객체입니다.
+handler에는 get, set, has, deleteProperty 같은 트랩 메서드를 정의할 수 있고 이를 통해 속성 접근, 할당, 삭제 등의 동작을 커스터마이징할 수 있습니다.
+
+주로 데이터 검증, 로깅, 접근 제어 등에 활용됩니다.
+Proxy는 동적으로 추가되는 속성도 자동으로 감지합니다.
+
+중첩 객체의 경우 재귀적으로 Proxy를 생성해야 깊은 감시가 가능하다는 점을 주의해야 합니다.
+
+### 핵심 문장
+
+- Proxy는 객체의 기본 동작을 가로채서 커스터마이징할 수 있는 ES6 기능
+- new Proxy(대상객체, 핸들러) 형태로 생성
+- 핸들러에 get, set 같은 트랩을 정의해서 속성 접근이나 할당 시 원하는 로직 실행

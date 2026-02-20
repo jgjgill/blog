@@ -1,0 +1,208 @@
+---
+title: 'this란?'
+date: '2026-01-22'
+---
+
+> this는 함수가 호출되는 방식에 따라 동적으로 결정되는 실행 컨텍스트 참조로,
+> "지금 누가 이 함수를 실행하고 있는가?"를 정의
+
+## 기본 개념
+
+- this는 함수 실행 시점에 결정되는 특수한 키워드
+- 함수가 속한 객체나 실행 컨텍스트를 참조
+- 함수 정의 위치가 아닌 호출 방식에 따라 값이 달라짐
+
+## 등장 배경
+
+- **객체 지향 프로그래밍**: 메서드가 자신이 속한 객체의 속성에 접근해야 하는 필요성
+- **재사용 가능한 함수**: 같은 함수를 여러 객체에서 사용할 때 현재 실행 컨텍스트를 식별
+- **동적 컨텍스트 전환**: 실행 시점에 따라 유연하게 컨텍스트를 변경할 수 있는 메커니즘 필요
+
+## 동작 원리
+
+- **new 바인딩**: new 키워드로 생성 → 새로 생성된 객체
+- **명시적 바인딩**: call, apply, bind 사용 → 명시한 객체
+- **암시적 바인딩**: 객체 메서드 호출 → 해당 객체
+- **기본 바인딩**: 일반 함수 호출 → 전역 객체 (strict mode에서는 undefined)
+
+### 관련 개념
+
+- **화살표 함수**: 자체 this를 갖지 않고 렉시컬 스코프의 this를 사용
+- **클래스**: 클래스 메서드 내 this는 인스턴스를 참조
+- **이벤트 핸들러**: DOM 이벤트에서 this는 이벤트가 발생한 요소
+
+## 예시 코드
+
+```js
+// 1. 기본 바인딩 (일반 함수 호출)
+function showThis() {
+  console.log(this)
+}
+showThis() // window (브라우저) 또는 undefined (strict mode)
+
+// 2. 암시적 바인딩 (메서드 호출)
+const user = {
+  name: 'Alice',
+  greet: function () {
+    console.log(`Hello, ${this.name}`)
+  },
+}
+user.greet() // "Hello, Alice"
+
+// 3. 명시적 바인딩
+function introduce(age, city) {
+  console.log(`${this.name}, ${age}세, ${city} 거주`)
+}
+
+const person = { name: 'Bob' }
+introduce.call(person, 25, 'Seoul') // "Bob, 25세, Seoul 거주"
+introduce.apply(person, [25, 'Seoul']) // 동일
+const boundIntro = introduce.bind(person)
+boundIntro(25, 'Seoul') // 동일
+
+// 4. new 바인딩
+function Person(name) {
+  this.name = name
+  this.sayHi = function () {
+    console.log(`Hi, I'm ${this.name}`)
+  }
+}
+const alice = new Person('Alice')
+alice.sayHi() // "Hi, I'm Alice"
+
+// 5. 화살표 함수
+const team = {
+  name: 'Dev Team',
+  members: ['Alice', 'Bob'],
+  showMembers: function () {
+    // 화살표 함수는 상위 스코프의 this 사용
+    this.members.forEach((member) => {
+      console.log(`${member} is in ${this.name}`)
+    })
+  },
+}
+team.showMembers()
+// "Alice is in Dev Team"
+// "Bob is in Dev Team"
+```
+
+### 일반 함수와 화살표 함수 비교
+
+```js
+// 일반 함수: 호출 방식에 따라 this 변경
+const obj1 = {
+  value: 10,
+  regular: function () {
+    console.log(this.value)
+  },
+}
+obj1.regular() // 10
+setTimeout(obj1.regular, 100) // undefined (this 손실)
+
+// 화살표 함수: 정의 시점의 this 고정
+const obj2 = {
+  value: 20,
+  arrow: () => {
+    console.log(this.value)
+  },
+}
+obj2.arrow() // undefined (상위 스코프 this)
+
+// 혼합 사용 (추천 패턴)
+const obj3 = {
+  value: 30,
+  method: function () {
+    setTimeout(() => {
+      console.log(this.value) // 30 (메서드의 this 유지)
+    }, 100)
+  },
+}
+obj3.method()
+```
+
+## 헷갈리기 쉬운 부분
+
+### 오해: 객체 메서드는 항상 그 객체를 가리킨다
+
+```js
+const obj = {
+  name: 'Test',
+  getName: function () {
+    return this.name
+  },
+}
+
+const getName = obj.getName
+getName() // undefined - this 바인딩 손실!
+```
+
+### call, apply, bind
+
+- call: Comma로 인자 나열 (즉시 Call)
+- apply: Array로 인자 전달 (즉시 Apply)
+- bind: Bind해서 나중에 사용 (Bookmark처럼 저장)
+
+```js
+// 공통으로 사용할 함수와 객체
+function introduce(greeting, punctuation) {
+  return `${greeting}, I'm ${this.name}${punctuation}`
+}
+
+const person = { name: 'Alice' }
+
+// ============================================
+// 1. call: 즉시 실행 + 인자 나열
+// ============================================
+const result1 = introduce.call(person, 'Hello', '!')
+console.log(result1) // "Hello, I'm Alice!"
+// 특징: 바로 결과가 나옴
+
+// ============================================
+// 2. apply: 즉시 실행 + 인자 배열
+// ============================================
+const result2 = introduce.apply(person, ['Hi', '~'])
+console.log(result2) // "Hi, I'm Alice~"
+// 특징: 바로 결과가 나옴 (인자만 배열로)
+
+// ============================================
+// 3. bind: 새 함수 반환 (나중에 실행)
+// ============================================
+const boundIntroduce = introduce.bind(person, 'Hey')
+// 아직 실행 안 됨! 함수만 반환됨
+
+console.log(boundIntroduce) // [Function: bound introduce]
+
+// 나중에 원할 때 실행
+const result3 = boundIntroduce('?')
+console.log(result3) // "Hey, I'm Alice?"
+
+// ============================================
+// 📝 핵심 차이 요약
+// ============================================
+// call(obj, arg1, arg2)   → 즉시실행, 인자 나열
+// apply(obj, [arg1, arg2]) → 즉시실행, 인자 배열
+// bind(obj, arg1)         → 함수반환, 나중실행
+```
+
+## 개념 정리
+
+JavaScript의 this는 함수가 실행되는 시점의 컨텍스트를 나타내는 특수한 키워드입니다.
+중요한 특징은 **함수가 정의된 위치가 아니라 호출되는 방식**에 따라 값이 결정된다는 점입니다.
+
+this 바인딩에는 4가지 규칙이 있습니다.
+첫째, new 키워드로 생성자 함수를 호출하면 새로 생성된 객체가 this가 됩니다.
+둘째, call, apply, bind로 명시적으로 바인딩하면 전달한 객체가 this가 됩니다.
+셋째, 객체의 메서드로 호출하면 점 앞의 객체가 this가 됩니다.
+넷째, 일반 함수로 호출하면 전역 객체나 strict mode에서는 undefined가 됩니다.
+
+화살표 함수는 자체 this를 갖지 않고 정의된 위치의 상위 스코프 this를 그대로 사용합니다.
+콜백 함수나 비동기 처리에서 this를 유지해야 할 때 유용합니다.
+
+이벤트 핸들러나 콜백에서 this가 의도치 않게 변경되는 문제가 자주 발생하는데,
+bind 메서드나 화살표 함수로 해결할 수 있습니다.
+
+## 핵심 문장
+
+- this는 함수 호출 방식에 따라 동적으로 결정되는 실행 컨텍스트
+- 객체 메서드로 호출하면 그 객체를, new로 호출하면 새 객체를, call/apply/bind로는 명시한 객체를 가리킴
+- 화살표 함수는 예외로 상위 스코프의 this를 그대로 사용

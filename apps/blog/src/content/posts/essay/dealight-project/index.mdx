@@ -1,0 +1,362 @@
+---
+title: '회고 일기 - 딜라잇 프로젝트를 마무리하며'
+description: '딜라잇 프로젝트 회고'
+date: '2023-12-07'
+thumbnail: './images/dealight-thumbnail.png'
+thumbnail_alt: 'dealight-thumbnail'
+category: 'essay'
+---
+
+
+<Callout>💡 딜라잇 프로젝트를 회고합니다.</Callout>
+
+## 즐거운 가격, 함께하는 맛의 기쁨 Dealight
+
+> 소상공인들의 당일 폐기 예정 식품의 할인 정보 공유 및 구매/판매 서비스
+
+10월부터 12월까지 2달 동안 이루어진 프로젝트가 끝이 났다.
+
+어떤 부분들을 정리하고 넘어갈까 생각해봤는데 크게 다음과 같은 흐름으로 진행해 보고자 한다.
+
+- 프로젝트 목표: 팀원들의 불편함과 두려움을 없애주기
+- 기술적 도전: Next.js
+- 아쉬웠던 부분 살펴보기
+
+<br />
+
+[딜라잇 서비스](https://dev-dealight.vercel.app)
+
+[딜라잇 깃허브](https://github.com/Team-PalPalHae-Dealight/Team-PalPalHae-Dealight-FE)
+
+## 배포/테스트에서의 자동화
+
+이번 프로젝트에서 우선적으로 달성하고자 했던 부분이었다.
+
+이전 혼콕 프로젝트를 되돌아봤을 때 **자동화** 측면이 부족했다고 여겨졌다.
+그래서 이번에는 이를 주도적으로 진행해봤다.
+
+<br />
+
+프로젝트에서는 **husky**를 적용해서 커밋 시 빌드 과정을 거치도록 했다.
+
+**Github Actions**를 활용해서는 PR 단계에서도 배포 환경을 확인할 수 있도록 구성해봤다.
+
+(프로젝트를 진행하면서 느낀 점은 배포의 경우 PR 단계에서는 불필요했다.. 😇)
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/pr-comment.png"
+  alt="pr comment"
+/>
+
+<br />
+
+UI 테스트와 관련해서는 **Chromatic**을 적극 활용해보았다.
+
+Chromatic을 활용하면 작업 시 변경된 컴포넌트만을 빠르게 파악할 수 있어서 컴포넌트 관리를 용이하게 할 수 있다.
+
+이 과정에서 `TurboSnap` 기능을 적용해서 중복된 스냅샷은 생략하도록 설정해 비용을 절감하고자 했는데 여기서 실수를 하게 되었다.
+
+<br />
+
+우리 팀의 경우 팀 규칙으로 `squash merge`을 사용해서 머지를 하다 보니 스토리 변경에 대한 추적이 제대로 이루어지지 못했었다.
+처음에는 이러한 현상이 `TurboSnap`이 CI 단계에서 일정 수준의 빌드가 이루어져야 적용된다고 설명해서 이게 원인이겠구나 생각을 했었다.
+
+<br />
+
+그러나 알고보니 그냥 우리가 잘못 사용하고 있었던 것이었다.. 😵
+
+나중에서야 `develop` 브랜치에도 Chromatic 설정을 적용해서 스토리 변경에 대한 추적과 `TurboSnap`을 온전히 활용할 수 있었다.
+그래서 막상 Chromatic을 제대로 활용한 시기가 짧아서 이 부분이 아쉽게 느껴진다.
+
+**TurboSnap이 적용된 모습**
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/ui-test-example.png"
+  alt="ui test example"
+/>
+
+**TurboSnap을 통해 생략된 스냅샷**
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/snapshots-turbosnap.png"
+  alt="snapshots turbosnap"
+/>
+
+### 어떻게 하면 스토리북을 효과적으로 쓸 수 있을까
+
+이번에도 점점 기능 구현에 급급해지면서 결국 마지막에는 컴포넌트에 관한 관리가 부실해졌다.
+일정에 치이다보니 팀적으로 UI 테스트가 진행되지 못했다.
+그리고 공통 컴포넌트로 만들 수 있겠다고 여겨지는 부분들도 그냥 컴포넌트 하나 더 만들어서 빠르게 구현하는 방향으로 진행되었다.
+
+이전 혼콕에서도 겪었던 문제점이라서 이를 해결하기 위해 Chromatic을 적극적으로 적용해봤는데 잘 이루어지지 못했다.
+잘못된 방향으로 문제를 접근했던 것 같다.. 😂
+
+<br />
+
+이와 관련해서 지금은 다음과 같은 생각을 하고 있다.
+
+- 디자인 시스템을 만드는게 아니라 프로젝트를 완성시키는게 목적이다 보니 어쩔 수 없는 부분인가?
+- 아직 내가 지속 가능한 컴포넌트를 잘 만들지 못해서 발생한 문제인가?
+
+<br />
+
+이 부분은 계속 고민해봐야 할 부분인 것 같다.
+
+그래도 스토리북과 Chromatic에는 익숙해지고 있다는 느낌을 받아서 긍정적으로 생각하고자 한다.
+
+## 반복적으로 사용되는 커스텀훅 구성하기
+
+딜라잇 서비스 내에서 반복적으로 사용되는 기능들이 몇 가지가 있다.
+
+- 인증/인가
+- 지도 및 좌표
+- 무한 스크롤
+
+<br />
+
+이 기능들을 사용할 때마다 코드를 작성하는 것은 매우 불편하다.
+
+따라서 커스텀훅을 통해 **응집도는 높이고 결합도는 낮추는 방향**으로 관련 기능을 구현하고자 했다.
+
+코드를 하나씩 살펴보면 글이 매우 길어지기에 이번 글에서는 주요 포인트들만 보고자 한다.
+
+### 인증/인가 훅
+
+`useAuth`에서는 로그인/로그아웃, `useUserInfo`에서는 유저 정보를 관리하고자 했다.
+
+```tsx
+// useAuth 훅 관련 코드
+const login = async ({ accessToken, refreshToken }: TokensType) => {
+  ...
+  setIsLoggedIn(true);
+  await queryClient.fetchQuery({ queryKey: ['user-info'] });
+};
+
+const logout = async () => {
+  ...
+  setIsLoggedIn(false);
+  queryClient.setQueryData(['user-info'], () => userInitialData);
+};
+
+// useUserInfo 훅 관련 코드
+async function getUser(): Promise<DefaultContextType> {
+  const data = await axiosInstance.get(유저 정보 API).then((res) => res.data)
+  return data;
+}
+
+const { data: userInfo, isError } = useQuery({
+  queryKey: ['user-info'],
+  queryFn: getUser,
+  initialData: userInitialData,
+  enabled: 토큰 유무 판별
+});
+```
+
+### 무한 스크롤 훅
+
+[관련 작성 글](https://jgjgill-blog.netlify.app/post/honkok-react-query/#useinfinitequery)
+
+```tsx
+const { data: storeItems, ref } = useGetMyStoreItems({ size: 5 });
+...
+return (
+  ...
+  <ItemCards items={storeItems} />
+  <div ref={ref} className="h-4" />
+  ...
+)
+```
+
+### 지도 및 좌표 훅
+
+[관련 작성 글](https://jgjgill-blog.netlify.app/road/2023-11-18/)
+
+```tsx
+// 지도 활용 로직
+const KakaoMap = ({ ...props }) => {
+  const map = useGetMap({ lat: currentPosition.lat, lng: currentPosition.lng })
+
+  useGetCurrentMarker({ currentPosition, map, onClickCurrentPosition })
+  useGetMarker({ positions, map, onClickPosition })
+
+  return (
+    <div className="w-full">
+      <div id="map" style={{ width: `${width}`, height: `${height}` }} />
+    </div>
+  )
+}
+```
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <div>
+    <span>새로고침 시 로그인 유지</span>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/auth-test.gif"
+      alt="auth test"
+    />
+  </div>
+  <div>
+    <span>지도 활용 부분</span>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/map-address-test.gif"
+      alt="map address test"
+    />
+  </div>
+  <div>
+    <span>무한 스크롤 적용 부분</span>
+    <Image
+      src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/infinite-scroll-test.gif"
+      alt="infinite scroll test"
+    />
+  </div>
+</div>
+
+이외에도 팀원들이 어려움을 느낀 부분들이 있으면 빠르게 코드를 살펴보고 문제점을 찾아 해결하고자 노력했다.
+
+특히 **TanStack Query**와 관련해서 많은 도움을 주었는데 혼콕에서의 경험이 큰 자산이 되었다.
+
+## App Router 너 뭐 돼?
+
+아아 이것 때문에 고생을 많이 했다.. 😥
+
+확실히 Next.js 13에서 많은 부분 바뀌었기 때문에 어렵게 접근하게 되는 것 같다.
+
+<br />
+
+미리 공식 문서도 읽어보고 팀원들과 함께 튜토리얼을 진행해보면서 나름의 준비 단계를 거쳤다.
+
+물론 이때도 `Server Component`, `Client Component`에 대한 모호함을 없애지는 못했다.
+
+"그래서 서버 컴포넌트가 뭔데?"라고 물어보면 내가 내린 정의가 정확하다고 확신할 수 없었다.
+
+그래서 끝까지 Next.js를 사용할지 말지 고민을 많이 했다.
+
+### 부딪히면서 학습하자
+
+그래도 팀원들과 의견을 나눴을 때 '이번이 아니면 언제 경험할까?'라는 방향으로 생각이 일치되어 프로젝트의 주요 기술적 도전으로 Next.js를 사용하기로 했다.
+
+확실히 직접 사용해보면서 코드를 체화(삽질)하는 과정을 거치고 다시 문서를 곱씹어보니 왜 서버 컴포넌트를 도입하게 되었는지 이해할 수 있었다.
+
+<br />
+
+지금 시점에서 느낀 점을 말하면 결국 '**서버 사이드 렌더링**이 중요한 개념이었구나'라는 생각이 든다.
+
+서버 컴포넌트와 서버 사이드 렌더링를 아예 분리해서 접근했기에 더욱 어렵게 느껴졌었던 것이다.
+
+물론 둘이 동일하다는 것을 의미하는 것은 아니다.
+서버 사이드 렌더링을 이해하면 자연스럽게 왜 서버 컴포넌트를 도입하려 했는지 이해가 되는 느낌이다.
+
+### 서버와 클라이언트 구분하기
+
+뭐가 됐든 해당 개념을 이해하는데 가장 어려움을 준 요소는 **이름에서 온 혼동**이었다.
+
+서버, 클라이언트 이름을 그대로 사용한 것이 모든 문제의 원인이라고 생각된다.
+
+처음 접하게 되면 '클라이언트 컴포넌트면 당연히 클라이언트 사이드 렌더링 방식으로 사용되는 거 아니야?' 라고 생각할 것이다.
+
+물론 나도 이렇게 생각했다.. 😇
+
+### 클라이언트 컴포넌트도 SSR이 적용된다
+
+깨달음을 얻은 구간이 있었다.
+
+다음 공식 문서 예제 코드를 보고 내가 잘못 이해하고 있었구나 라는 것을 깨닫게 되었다.
+
+```tsx
+'use client'
+
+import { useState } from 'react'
+import dynamic from 'next/dynamic'
+
+// Client Components:
+const ComponentA = dynamic(() => import('../components/A'))
+const ComponentB = dynamic(() => import('../components/B'))
+const ComponentC = dynamic(() => import('../components/C'), { ssr: false })
+```
+
+[Lazy Loading - Importing Client Components](https://nextjs.org/docs/app/building-your-application/optimizing/lazy-loading#importing-client-components)
+
+클라이언트 컴포넌트에서도 SSR, 서버 사이드 렌더링이 적용될 수 있다.
+
+즉 **클라이언트 컴포넌트인데 서버에서 렌더링이 가능하다**는 의미이다.
+
+이 부분이 클라이언트라는 이름 때문에 아이러니하게 느껴진다.
+
+<br />
+
+이외에도 클라이언트 바운더리, 렌더링 방식에 따라 `suspense`를 적용하는 방법과 같은 잡기술(?)이 존재한다.
+
+<br />
+
+이와 관련된 개념들은 추후에 따로 글을 작성해서 다루어보고자 한다.
+
+(자잘하게 겪었던 Next.js 에러들은 [Road 페이지](https://jgjgill-blog.netlify.app/road)에서 확인할 수 있다 😆)
+
+### Next.js에서 활용하지 못한 부분
+
+fetch를 통한 웹 캐시를 활용하지 못했다.
+팀원 모두가 익숙한 `axios`를 사용했기에 포기되었던 부분이다.
+
+(axios는 XMLHttpRequest 객체를 사용)
+
+<br />
+
+여기서 의문이 들었던 부분이 `axios`가 존재하는 것처럼 fetch와 관련된 라이브러리도 존재하지 않을까라는 생각을 했다.
+관련 내용을 찾아보니 [return-fetch](https://github.com/deer-develop/return-fetch/tree/main)라는 좋은 오픈 소스가 존재했다.
+
+그래서 다음에는 이를 적용해볼까 한다.
+
+<br />
+
+어쨌든 웹 표준을 좀 더 깊게 사용해볼 수 있는 기회였는데 아쉽게 다음으로 미루어야할 것 같다.
+
+## 아쉬웠던 부분
+
+### 효율적으로 작업하지 못한 것
+
+최대한 기획적인 부분이나 개발적인 부분에서 정해진 내용들을 공유하고자 노력했지만 인원이 많다보니 미흡한 부분들이 발생해서 같은 일을 여러 번하게 되는 경우가 발생했다.
+
+좀 더 작업의 여유가 있었더라면 문서화나 팀 규칙과 관련해서 효율적으로 작업을 진행할 수 있었는데 그렇게 하지 못했던 점이 아쉽게 느껴진다.
+
+### MSW 도입을 포기했던 것
+
+기술적으로는 MSW를 도입하지 않았던게 아쉬움이 남는다.
+
+프로젝트를 본격적으로 시작하기 전에 MSW를 미리 팀원들과 연습을 해서 도입을 할지 고민을 했었다.
+
+이때 참 생각을 많이 했는데 결국 도입을 하지 않는 방향으로 정했다.
+
+그 이유는 이미 처음 사용해보는 기술이 많았고 백엔드 인원이 많아서 프론트 작업 속도보다 빠르게 진행될 것 같다는 생각을 했기 때문이다.
+
+<br />
+
+지금 생각해보면 너무 해피케이스만 생각했던 것 같다.. 😇
+
+생각치 못한 변수나 API 통신 과정에서 불필요한 비용들이 발생하는 것을 느끼며 잘못된 선택을 내린 것에 후회를 한다.
+
+<br />
+
+모킹 환경은 반드시 구축해놓자.. 한다고 나쁠게 없다..
+
+## 마치며
+
+이번 프로젝트를 마무리하며 하나의 과정이 끝났다.
+몇 주를 오버페이스로 정신없이 달려왔다.. 😵
+
+그래서 이번 주는 앞만 보고 달리면서 생긴 지식의 구멍들을 채워나가고 내가 해왔던 것들을 정리하고자 한다.
+
+<br />
+
+그러고 나서 딜라잇의 코드 품질을 개선하고자 한다.
+
+서비스 완성을 위해 억지로 눈감고 지나쳤던 부분들이 너무나도 많다.. 😂
+
+빠르게 심신을 회복해서 리팩터링 및 미구현 기능들을 적용해보자..!
+
+<div style={{ display: 'flex', justifyContent: 'center' }}>
+  <Image
+    src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/essay/dealight-project/images/devcourse-prize.jpg"
+    alt="devcourse prize"
+    style={{ width: '300px' }}
+  />
+</div>

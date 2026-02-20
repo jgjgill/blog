@@ -1,0 +1,222 @@
+---
+title: 'WeakMap에 대해 알아보기'
+description: 'WeakMap에 대해 알아봅니다.'
+date: '2024-03-03'
+thumbnail: './images/learn-about-weakmap-thumbnail.png'
+thumbnail_alt: 'Learn about weakmap thumbnail'
+category: 'development'
+---
+
+<Callout>💡 WeakMap에 대해 알아봅니다. 피드백은 언제나 환영입니다:)</Callout>
+
+## 들어가기
+
+최근 Zustand를 사용할 일이 생겼다.
+그래서 해당 라이브러리의 메인테이너이신 [Daishi Kato](https://github.com/dai-shi)님을 통해 관련 정보들을 습득하고 있다.
+
+그중에서 [HackDiary](https://daishi.gumroad.com/posts)라는 가벼운 뉴스레터 컨텐츠로 주기적으로 Daishi Kato님의 지식과 생각들을 공유받고 있다.
+여기서 [최신 HackDiary](https://daishi.gumroad.com/p/hackdiary-051)에서 나의 지식의 구멍을 발견할 수 있었다.
+
+<br />
+
+이 HackDiary에서 핵심인 부분은 `jotai`의 `store`를 모두 `WeakMap`으로 교체했다는 것이다.
+기존에는 한 가지 케이스에 `Map`을 사용했었는데 이 부분이 메모리 누수를 유발할 수 있어서 이를 제거했다고 한다.
+
+<br />
+
+이를 읽으면서 `Map`과 `WeakMap`의 차이를 느끼지 못했다.
+
+그래서 이번 기회에 `Map`과 `WeakMap`에 대해 알아보고자 한다.
+
+### 가비지 컬렉션
+
+`Map`과 `WeakMap`에 대해 이해하기 위해서는 가비지 컬렉션을 알아볼 필요가 있다.
+
+`JavaScript`에서 메모리는 **가바지 컬렉션을 통해 자동으로 관리**가 된다.
+
+객체가 생성되었을 때 자동으로 메모리를 할당하고 더 이상 사용되지 않을 때 자동으로 해제한다.
+
+<br />
+
+- 필요할 때 할당
+- 할당된 메모리 사용
+- 필요하지 않으면 해제
+
+<br />
+
+여기서 주로 문제가 발생하는 부분은 `필요하지 않으면 해제`할 때이다.
+
+이와 관련해서 간접적으로 가비지 컬렉션을 관찰하며 메모리 관리에 쓸 수 있는 데이터 구조가 `WeakMap`, `WeakSet`인 것이다.
+
+### Map
+
+`Map`같은 경우 대부분의 사람들이 많이 접해서 익숙한 개념이라고는 생각이 든다.
+
+그래서 이번 글에서는 간단하게 언급하는 정도로 넘어가고자 한다.
+
+<br />
+
+**객체**와 유사하게 생각하면 된다.
+
+객체와의 주요 차이점으로는 `Map`같은 경우 **키에 다양한 자료형을 허용한다는 것**이다.
+
+### WeakMap
+
+우선 `WeakMap`의 기본적인 특징에 대해 알아보자.
+
+<br />
+
+`Map`과 같이 키/값 쌍의 모음이다.
+
+`Map`과 다른 점은 **키같은 경우 반드시 객체 혹은 등록되지 않은 심볼**(non-registered symbols)이어야 한다.
+
+객체와 달리 원시값은 복사되어 컬렉션에 영원히 남을 수 있기 때문에 키값에 포함되지 않는다.
+
+- 원시값: `1 === 1`
+- 객체: `{} !== {}`
+
+일반 원시값을 추가하려고 하면 `Uncaught TypeError: Invalid value used as weak map key` 에러가 발생한다.
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-weakmap/images/weakmap-error.png"
+  alt="WeakMap 에러"
+/>
+
+여기서 등록되지 않는 심볼도 고유해서 다시 만들 수 없기에 객체와 같이 키값에 포함된다.
+
+#### 약한 참조
+
+일반적으로 `JavaScript`에서 **객체의 참조는 강하게 유지**된다.
+
+```js
+let jg = { nickname: 'jgjgill' }
+
+let test = jg
+
+jg = null // 참조를 null로 덮는다.
+
+// jg 객체는 test 요소이기 때문에 가비지 컬렉터의 대상이 되지 않는다.
+// test에 접근하면 객체를 얻을 수 있다.
+console.log(test) // { nickname: "jgjgill" }
+```
+
+<br />
+<br />
+
+그래서 `Map`의 경우에도 객체가 강하게 참조된다.
+
+참조를 `null`로 덮어써도 **가비지 컬렉션의 대상이 되지 않는다.**
+
+```js
+let jg = { nickname: 'jgjgill' }
+
+let map = new Map()
+map.set(jg, '...')
+
+jg = null // 참조를 null로 덮는다.
+
+// jg 객체는 map 안에 저장되어 있다.
+// map.keys()를 이용하면 해당 객체를 얻을 수 있다.
+
+for (let obj of map.keys()) {
+  console.log(obj) // { nickname: "jgjgill" }
+}
+
+console.log(map.size) // 1
+```
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-weakmap/images/map-example.png"
+  alt="Map 예제 코드"
+/>
+
+<br />
+
+하지만 `WeakMap`은 **객체를 약한 참조로 만들 수 있다.**
+
+이전 코드에서 `Map`을 `WeakMap`으로 바꿔보자.
+
+```js
+let jg = { nickname: 'jgjgill' }
+
+let weakMap = new WeakMap()
+weakMap.set(jg, '...')
+
+jg = null // 참조를 null로 덮는다.
+
+// jg를 나타내는 객체는 메모리에서 지워진다.
+```
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/learn-about-weakmap/images/weakmap-example.png"
+  alt="WeakMap 예제 코드"
+/>
+
+<br />
+
+객체가 `WeakMap`의 키에 포함되더라도 **가비지 컬렉션의 대상**이 된다.
+
+<br />
+
+#### 주요 특징
+
+키 객체가 가비지 컬렉션에 의해 정리된 후,
+다른 곳에 강력한 참조가 존재하지 않으면 **키에 연결된 값 또한 가비지 컬렉션의 대상**이다.
+
+<br />
+
+또한 `WeakMap`은 **키를 열거하는 기능을 제공하지 않는다.**
+키를 열거하는 메서드를 제공하게 되면 **목록이 가비지 컬렉션 상태에 따라 달라질 수 있어 비결정성(non-determinism)이 발생**한다.
+이러한 경우에는 `WeakMap` 대신 `Map`을 사용해야 한다.
+
+<br />
+
+#### 비결정성
+
+여기서 비결정성이라는 말이 낮설다.
+GPT에게 도움을 요청했다.
+
+<br />
+
+> WeakMap에서는 non-determinism이라는 단어도 쓰이는 것 같아. 어떤 의미야?
+
+<br />
+
+<hr style={{ width: '100%' }} />
+
+**답변**
+
+`WeakMap`에서 non-determinism(결정 불가능성)이라는 용어는 주로 가비지 컬렉션과 관련이 있습니다.
+
+<br />
+
+여기서 결정 불가능성이란,
+**가비지 컬렉션 작업이 시스템 또는 런타임에 의해 자동**으로 이뤄지며,
+우리가 직접 조작할 수 없기 때문에 **언제 어떤 순서로 메모리가 해제될지를 예측하기 어렵다는 것**을 의미합니다.
+
+<hr style={{ width: '100%' }} />
+
+<br />
+
+GPT의 내용과 함께 생각해보면 `WeakMap`은 **키의 활성 상태를 관찰하는 것을 허용하지 않도록 하여,
+즉 비결정성을 막아서 메모리 누수의 위험성을 방지**한 것이다.
+
+### 마무리
+
+확실히 대중적인 상태 관리 라이브러리는 메모리의 세세한 부분도 신경써야 한다는 점이 인상깊었다.
+
+`WeakMap`에 대해 알아보면서도 참조와 관련된 개념들을 다시 복습할 수 있어서 의미있는 시간이 된 것 같다.
+
+## 참고 문서
+
+- [Map](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map)
+- [WeakMap](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/WeakMap)
+- [Memory management](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Memory_management)
+- [맵과 셋](https://ko.javascript.info/map-set)
+- [위크맵과 위크셋](https://ko.javascript.info/weakmap-weakset)
+- [WeakMap이 알고 싶다](https://ui.toast.com/posts/ko_20210901)
+- [약한 참조와 Finalizer](https://ui.toast.com/weekly-pick/ko_20210624)

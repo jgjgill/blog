@@ -1,0 +1,45 @@
+---
+title: 'isNil을 보면서'
+date: '2024-06-17'
+---
+
+## isNil이란?
+
+최근 Toss 라이브러리를 통해 공부하면서 여러 유틸리티 함수들을 접하고 있다.
+
+그러면서 `isNil`이라는 함수도 알게 되었다.
+
+`isNil`은 주어진 값이 `null`이나 `undefined`인지 확인하는 함수이다.
+
+```ts
+isNil(null) // true
+isNil(undefined) // true
+isNil(1) // false
+```
+
+## 같은 역할, 다른 코드
+
+단순한 기능인 만큼 코드도 간단하지만 `isNil`을 제공하는 라이브러리들의 코드를 살펴보면 모두 동일하지는 않다.
+
+```ts
+export function isNil(x: unknown): x is null | undefined {
+  return x === null || x === undefined
+}
+```
+
+가장 먼저 떠오른 형태이며 요구 사항과 정확하게 일치한다.
+
+<br />
+
+```ts
+export function isNil<T>(val: T | undefined | null): val is null | undefined {
+  return val == null
+}
+```
+
+`null`과 동등 연산자를 활용했다.
+전자와 비교했을 때 더 단순하게 표현되었다.
+
+<br />
+
+개인적으로는 전자의 경우가 더 명시적이다는 느낌을 받아서 전자가 좋다. 🧐

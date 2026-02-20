@@ -1,0 +1,393 @@
+---
+title: '컴포넌트 어떻게 호출하세요? - <Temp />, Temp()의 차이 알아보기'
+description: '컴포넌트를 호출하는 방식으로 <Temp />, Temp()의 차이를 알아봅니다.'
+date: '2024-10-06'
+thumbnail: './images/how-do-you-call-component-thumbnail.png'
+thumbnail_alt: 'How do yo call component thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 컴포넌트를 호출하는 방식으로 `<Temp />` `Temp()`의 차이를 알아봅니다.
+</Callout>
+
+## 컴포넌트를 일반 함수로 호출해도 괜찮을까?
+
+
+> `<Temp />`는 **JSX**, `Temp()`는 **일반 함수**라는 용어로 연결지어서 설명하고자 합니다.
+
+<br />
+
+프로젝트 내 코드에서 다음과 같이 컴포넌트를 호출하고 있었다.
+
+<br />
+
+**예시 코드**
+
+```tsx
+import { useState } from 'react'
+
+function App() {
+  const condition = false
+  const temp = Temp() // 문제 코드: 일반 함수 방식으로 호출 🤔
+
+  // 조건에 따른 렌더링 분기 처리
+  if (condition) {
+    return null
+  }
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요?</h2>
+      {temp}
+    </div>
+  )
+}
+
+function Temp() {
+  const [temp, setTemp] = useState('temp')
+
+  return <div>나는 {temp}</div>
+}
+```
+
+<br />
+
+보통 컴포넌트를 호출할 때 `JSX` 방식으로 호출한다.
+
+그래서 지금처럼 `일반 함수`로 컴포넌트를 호출하는 형태가 어색하게 느껴진다.
+
+<br />
+
+하지만 한편으로 '**컴포넌트도 결국 함수이다**'라는 말이 떠올랐다.
+
+이러한 관점에서는 현재 상황도 문제가 발생하지는 않을 것 같다는 느낌이 들었다.
+
+<br />
+
+코드를 직접 실행했을 때에도 눈에 띄는 에러는 발생하지 않았다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-code-result.png"
+  alt="예제 코드 결과"
+/>
+
+<br />
+
+그런데 정말 차이가 없는게 맞을까?
+
+모르고 지나친 문제가 존재하지는 않을까?
+
+## JSX와 일반 함수 비교하기
+
+`Temp` 함수에 콘솔을 추가해보자.
+
+```tsx
+function Temp() {
+  const [temp, setTemp] = useState('temp')
+
+  console.log('나는 Temp에서 호출')
+
+  return <div>나는 {temp}</div>
+}
+```
+
+<br />
+
+그리고 앞선 예제 코드에서 `Temp` 함수를 호출하는 부분을 `JSX`와 `일반 함수` 형태로 변경한다.
+
+불필요하게 느껴지는 `condition` 부분도 잠시 제거하고 렌더링만 진행하지 않도록 한다.
+
+<br />
+
+**JSX 방식**
+
+```tsx
+import { useState } from 'react'
+
+function App() {
+  const temp = <Temp /> // JSX 방식으로 호출
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - JSX 방식</h2>
+    </div>
+  )
+}
+```
+
+<br />
+
+**일반 함수 방식**
+
+```tsx
+import { useState } from 'react'
+
+function App() {
+  const temp = Temp() // 일반 함수 방식으로 호출
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - 일반 함수 방식</h2>
+    </div>
+  )
+}
+```
+
+<br />
+
+이렇게 했을 때 `JSX` 방식으로의 호출은 아무런 변화가 발생하지 않는다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-jsx-result.png"
+  alt="예제 JSX 결과"
+/>
+
+<br />
+
+하지만 `일반 함수`로 호출했을 때는 콘솔이 찍히게 된다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-function-result.png"
+  alt="예제 함수 결과"
+/>
+
+<br />
+
+이러한 차이가 유발할 수 있는 문제점을 생각해보자.
+
+<br />
+
+`Temp` 컴포넌트가 마운트되었을 때 실행되는 (예를 들어 광고 스크립트, 로깅 함수 등등) 로직이 포함되어 있다.
+
+<br />
+
+```tsx
+function Temp() {
+  const [temp, setTemp] = useState('temp')
+
+  console.log('나는 Temp에서 호출')
+
+  useEffect(() => {
+    console.log('나는 로깅 함수')
+  }, [])
+
+  return <div>나는 {temp}</div>
+}
+```
+
+<br />
+
+기존 예제 코드의 경우 `condition`을 만족하면 해당 화면에 아무 컴포넌트가 렌더링되지 않는다.
+
+하지만 `Temp` 컴포넌트를 `일반 함수`로 호출하게 되면 `Temp` 컴포넌트 내의 로직이 실행된다.
+
+<br />
+
+```tsx
+import { useEffect, useState } from 'react'
+
+function App() {
+  const condition = true
+
+  const temp = Temp() // condition 조건과 무관하게 로직이 실행되고 있는 상황 😵
+
+  if (condition) {
+    return null
+  }
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요?</h2>
+      {temp}
+    </div>
+  )
+}
+```
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-function-problem.png"
+  alt="예제 함수 문제점"
+/>
+
+<br />
+
+예상과 달리 기대하지 않았던 동작이 발생해서 문제가 발생한다.
+
+## Component Tree 비교하기
+
+`JSX`와 `일반 함수`로 호출 했을 때 생성된 `Component Tree`를 살펴보자.
+
+<br />
+
+`JSX`의 경우 `Temp`와 관련된 요소가 트리에 추가되지 않는다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-jsx-tree-not-render.png"
+  alt="렌더링하지 않은 예제 JSX 트리"
+/>
+
+<br />
+
+만약 렌더링을 시켜도 `App` 컴포넌트의 자식 컴포넌트로 `Temp`가 구성된다.
+
+```tsx
+import { useState } from 'react'
+
+function App() {
+  const temp = <Temp /> // JSX 방식으로 호출
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - JSX 방식</h2>
+      {temp} // 추가된 코드
+    </div>
+  )
+}
+
+function Temp() {
+  const [temp, setTemp] = useState('temp')
+
+  console.log('나는 Temp에서 호출')
+
+  return <div>나는 {temp}</div>
+}
+
+export default App
+```
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-jsx-tree-render.png"
+  alt="렌더링한 예제 JSX 트리"
+/>
+
+<br />
+
+하지만 `일반 함수`는 `App` 컴포넌트 내에서 트리가 구성된다.
+
+자식 컴포넌트로 구성되지 않는 것이다.
+
+<br />
+
+<Image
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/images/example-function-tree.png"
+  alt="예제 함수 트리"
+/>
+
+<br />
+
+### 일반 함수는 훅의 규칙을 위반한다
+
+컴포넌트 트리를 봤을 때 배열과 함께 `일반 함수`로 호출하는 경우 에러가 발생하게 된다는 것을 알 수 있다.
+
+훅을 호출할 때 다음과 같은 규칙들이 존재한다.
+
+<br />
+
+- 🔴 Do not call Hooks inside conditions or loops.
+- 🔴 Do not call Hooks after a conditional return statement.
+
+...
+
+<br />
+
+`일반 함수`로 호출하게 되면 `Temp` 컴포넌트의 인스턴스로 구성되는 것이 아닌 `App` 컴포넌트의 인스턴스로 구성되게 된다.
+
+<br />
+
+그래서 위의 규칙들을 위반하게 되어 다음과 같은 에러를 확인할 수 있다.
+
+```tsx
+import { useState } from 'react'
+
+function App() {
+  const [items, setItems] = useState<number[]>([])
+  const addItem = () => setItems((i) => [...i, i.length])
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - 배열 + 일반 함수 호출</h2>
+      <button onClick={addItem}>아이템 추가</button>
+      {items.map(() => Temp())}
+    </div>
+  )
+}
+
+function Temp() {
+  const [temp, setTemp] = useState('temp')
+
+  return <div>나는 {temp}</div>
+}
+
+export default App
+```
+
+<br />
+
+좀 더 쉽게 생각하면 위의 코드는 다음과 같이 호출하는 것과 동일하다.
+
+<br />
+
+```tsx
+function App() {
+  const [items, setItems] = useState<number[]>([])
+  const addItem = () => setItems((i) => [...i, i.length])
+
+  return (
+    <div>
+      <h2>컴포넌트 어떻게 호출하세요? - 배열 + 일반 함수 호출</h2>
+      <button onClick={addItem}>아이템 추가</button>
+      {items.map(() => {
+        const [temp, setTemp] = useState('temp')
+        return <div>나는 {temp}</div>
+      })}
+    </div>
+  )
+}
+
+export default App
+```
+
+<br />
+
+<Video
+  src="https://raw.githubusercontent.com/jgjgill/blog/main/contents/development/how-do-you-call-component/videos/exmaple-function-array-result.mov"
+  alt="예제 함수 배열 결과"
+/>
+
+## React가 렌더링을 시키도록 하는 것이 핵심
+
+> Components should only be used in JSX.
+> Don’t call them as regular functions.
+> React should call it.
+
+<br />
+
+[React 공식 문서](https://react.dev/reference/rules/react-calls-components-and-hooks#never-call-component-functions-directly)에서 해당 문구를 확인할 수 있다.
+**React가 렌더링 중에 컴포넌트 함수가 호출되는 시점을 결정**할 수 있도록 해야 한다.
+그래서 `일반 함수`가 아닌 `JSX`를 사용하여 React가 해당 과정에 관여할 수 있도록 하는 것이 좋다.
+
+<br />
+
+> So don't call function components. Render them.
+
+React가 컴포넌트 호출 및 구성에 관여하도록 하는 것이 중요하다.
+
+`일반 함수`로 호출하지 말고 `JSX` 방식으로 호출해서 렌더링을 시키자. 🧐
+
+## 참고 문서
+
+- [Don't call a React function component](https://kentcdodds.com/blog/dont-call-a-react-function-component)
+- [React calls Components and Hooks](https://react.dev/reference/rules/react-calls-components-and-hooks)
