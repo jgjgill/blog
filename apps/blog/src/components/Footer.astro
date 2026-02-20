@@ -1,0 +1,16 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-[var(--color-border)]">
+  <div class="max-w-2xl mx-auto px-4 h-12 flex items-center justify-between text-xs text-[var(--color-muted)]">
+    <span>© {year} jgjgill</span>
+    <a
+      href="/rss.xml"
+      class="hover:text-[var(--color-fg)] transition-colors"
+      aria-label="RSS Feed"
+    >
+      RSS
+    </a>
+  </div>
+</footer>
