@@ -1,19 +1,19 @@
 ---
-import { getCollection, render } from "astro:content";
-import BaseLayout from "../../layouts/BaseLayout.astro";
-import { useTranslations } from "../../i18n";
-import Callout from "../../components/mdx/Callout";
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { useTranslations } from '../../i18n';
+import Callout from '../../components/mdx/Callout';
 
 export async function getStaticPaths() {
-  const roads = await getCollection("roads");
+  const roads = await getCollection('roads');
   return roads.map((road) => {
-    const slug = road.id.replace(/\//g, "-").replace(/\.mdx?$/, "");
+    const slug = road.id.replace(/\//g, '-').replace(/\.mdx?$/, '');
     return { params: { slug }, props: { road } };
   });
 }
 
 const { road } = Astro.props;
-const locale = "ko";
+const locale = 'ko';
 const t = useTranslations(locale);
 
 const { Content } = await render(road);
