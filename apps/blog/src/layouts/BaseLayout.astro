@@ -56,13 +56,13 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
     <ClientRouter />
 
     <!-- Google Analytics -->
-    {import.meta.env.PROD && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-FYFKVCHDP2"></script>}
+    {import.meta.env.PROD && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-S95JST1DGN"></script>}
     {import.meta.env.PROD && (
       <script is:inline>
         window.dataLayer = window.dataLayer || [];
         function gtag() { window.dataLayer.push(arguments); }
         gtag('js', new Date());
-        gtag('config', 'G-FYFKVCHDP2', { send_page_view: false });
+        gtag('config', 'G-S95JST1DGN', { send_page_view: false });
 
         document.addEventListener('astro:page-load', () => {
           gtag('event', 'page_view', {
