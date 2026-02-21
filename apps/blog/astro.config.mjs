@@ -77,11 +77,8 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: '/404.html',
-        navigateFallbackDenylist: [/\/pagefind\//],
         globPatterns: ['**/*.{html,css,js}'],
         globIgnores: ['**/_astro/giscus-*.js'],
-        additionalManifestEntries: [{ url: '/404.html', revision: null }],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
