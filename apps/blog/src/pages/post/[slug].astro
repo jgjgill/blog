@@ -1,26 +1,26 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import Toc from '../../components/Toc.astro';
-import { useTranslations } from '../../i18n';
-import Callout from '../../components/mdx/Callout';
-import Comment from '../../components/Comment';
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Toc from "../../components/Toc.astro";
+import { useTranslations } from "../../i18n";
+import Callout from "../../components/mdx/Callout";
+import Comment from "../../components/Comment";
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getCollection("posts");
   return posts.map((post) => {
     // Astro 5 glob loader strips index.mdx → id is "category/slug" (no /index)
-    const slug = post.id.split('/').at(-1) ?? post.id;
+    const slug = post.id.split("/").at(-1) ?? post.id;
     return { params: { slug }, props: { post } };
   });
 }
 
 const { post } = Astro.props;
-const locale = 'ko';
+const locale = "ko";
 const t = useTranslations(locale);
 
 const { Content, headings, remarkPluginFrontmatter } = await render(post);
-const readingTime = remarkPluginFrontmatter?.minutesRead ?? '';
+const readingTime = remarkPluginFrontmatter?.minutesRead ?? "";
 ---
 
 <BaseLayout
