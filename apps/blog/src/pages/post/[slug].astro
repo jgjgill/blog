@@ -45,9 +45,7 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? "";
       <Content components={{ Callout }} />
     </div>
 
-    <div class="mt-12">
-      <Comment lang={locale} client:load />
-    </div>
+    <Comment lang={locale} client:visible />
 
     <footer class="mt-8 pt-6 border-t border-border">
       <a
