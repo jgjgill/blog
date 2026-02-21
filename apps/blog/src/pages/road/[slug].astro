@@ -1,21 +1,19 @@
 ---
-import { getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import { useTranslations } from '../../i18n';
-import Callout from '../../components/mdx/Callout';
-import Video from '../../components/mdx/Video';
-import Image from '../../components/mdx/Image';
+import { getCollection, render } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { useTranslations } from "../../i18n";
+import Callout from "../../components/mdx/Callout";
 
 export async function getStaticPaths() {
-  const roads = await getCollection('roads');
+  const roads = await getCollection("roads");
   return roads.map((road) => {
-    const slug = road.id.replace(/\//g, '-').replace(/\.mdx?$/, '');
+    const slug = road.id.replace(/\//g, "-").replace(/\.mdx?$/, "");
     return { params: { slug }, props: { road } };
   });
 }
 
 const { road } = Astro.props;
-const locale = 'ko';
+const locale = "ko";
 const t = useTranslations(locale);
 
 const { Content } = await render(road);
@@ -32,11 +30,14 @@ const { Content } = await render(road);
     </header>
 
     <div class="prose">
-      <Content components={{ Callout, Video, Image }} />
+      <Content components={{ Callout }} />
     </div>
 
     <footer class="mt-12 pt-6 border-t border-border">
-      <a href="/road" class="text-sm text-muted hover:text-fg transition-colors">
+      <a
+        href="/road"
+        class="text-sm text-muted hover:text-fg transition-colors"
+      >
         ← {t.common.backToList}
       </a>
     </footer>
