@@ -9,6 +9,7 @@ import rehypeSlug from "rehype-slug";
 import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import expressiveCode from "astro-expressive-code";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
+import AstroPWA from "@vite-pwa/astro";
 
 export default defineConfig({
   site: "https://jgjgill.com",
@@ -38,6 +39,69 @@ export default defineConfig({
           ko: "ko",
           en: "en",
         },
+      },
+    }),
+    AstroPWA({
+      registerType: "autoUpdate",
+      devOptions: {
+        enabled: false,
+      },
+      manifest: {
+        name: "jgjgill",
+        short_name: "jgjgill",
+        description: "프론트엔드 개발자 이종길입니다.",
+        theme_color: "#ffffff",
+        background_color: "#ffffff",
+        display: "standalone",
+        start_url: "/",
+        icons: [
+          {
+            src: "/pwa-192.png",
+            sizes: "192x192",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/pwa-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "any",
+          },
+          {
+            src: "/pwa-maskable-512.png",
+            sizes: "512x512",
+            type: "image/png",
+            purpose: "maskable",
+          },
+        ],
+      },
+      workbox: {
+        navigateFallback: "/404.html",
+        globPatterns: ["**/*.{html,css,js}"],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "font-cache",
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365,
+              },
+            },
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|svg|webp|gif)$/i,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "image-cache",
+              expiration: {
+                maxEntries: 200,
+                maxAgeSeconds: 60 * 60 * 24 * 30,
+              },
+            },
+          },
+        ],
       },
     }),
   ],
