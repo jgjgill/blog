@@ -77,7 +77,6 @@ export default defineConfig({
         ],
       },
       workbox: {
-        navigateFallback: "/404.html",
         globPatterns: ["**/*.{html,css,js}"],
         runtimeCaching: [
           {
