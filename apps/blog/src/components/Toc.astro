@@ -83,18 +83,23 @@ const filtered = headings.filter((h) => h.depth <= 3);
 
     if (!toggle || !list || !chevron || !currentLabel) return;
 
+    const listEl = list as HTMLElement;
+    const chevronEl = chevron as HTMLElement;
+    const currentLabelEl = currentLabel as HTMLElement;
+    const toggleEl = toggle as HTMLElement;
+
     // 토글 열기/닫기
     let isOpen = true;
 
     function setOpen(open: boolean) {
       isOpen = open;
-      list.style.gridTemplateRows = open ? "1fr" : "0fr";
-      chevron.style.transform = open ? "" : "rotate(180deg)";
-      currentLabel.classList.toggle("hidden", open);
-      toggle.setAttribute("aria-expanded", String(open));
+      listEl.style.gridTemplateRows = open ? "1fr" : "0fr";
+      chevronEl.style.transform = open ? "" : "rotate(180deg)";
+      currentLabelEl.classList.toggle("hidden", open);
+      toggleEl.setAttribute("aria-expanded", String(open));
     }
 
-    toggle.addEventListener("click", () => setOpen(!isOpen));
+    toggleEl.addEventListener("click", () => setOpen(!isOpen));
 
     // smooth scroll
     links.forEach((link) => {
