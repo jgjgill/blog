@@ -55,6 +55,17 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
 
     <ClientRouter />
 
+    <!-- PWA Service Worker -->
+    {import.meta.env.PROD && (
+      <script is:inline>
+        if ('serviceWorker' in navigator) {
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js');
+          });
+        }
+      </script>
+    )}
+
     <!-- Google Analytics -->
     {import.meta.env.PROD && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-S95JST1DGN"></script>}
     {import.meta.env.PROD && (

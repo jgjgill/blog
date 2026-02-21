@@ -43,6 +43,7 @@ export default defineConfig({
     }),
     AstroPWA({
       registerType: "autoUpdate",
+
       devOptions: {
         enabled: false,
       },
