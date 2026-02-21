@@ -1,0 +1,24 @@
+---
+title: 'memory cache vs disk cache'
+date: '2024-01-17'
+---
+
+![memory cache and disk cache](../../images/memory-cache-and-disk-cache.png)
+
+캐시에 대해 알아보다가 `memory cache`와 `disk cache`가 눈에 띄었다.
+
+어떤 점이 다른 것일까?
+
+## memory cache
+
+- 주로 RAM와 CPU 간의 속도 차이를 극복하기 위해 사용
+- CPU와 함께 있는 프로세스 내 레벨1, 레벨2, 레벨3 캐시 등의 위치
+- 작은 용량(몇 메가바이트 정도), L1 캐시가 가장 작고 빠름
+- CPU와 같은 고속 처리 장치에 가까이 위치해서 매우 빠름
+
+## disk cache
+
+- 주로 하드 디스크나 SSD와 같은 저장 장치와 CPU 간의 속도 차이를 극복하기 위해 사용
+- 주로 시스템 메모리(RAM)에 위치
+- 보통 몇 십 메가바이트 ~ 수백 메가바이트
+- 메모리 캐시보다 상대적으로 느림

@@ -1,0 +1,113 @@
+---
+title: '자바스크립트에서 이루어지는 비교 연산자 알아보기'
+description: '자바스크립트에서 이루어지는 비교 연산자에 대해 정리합니다.'
+date: '2023-05-16'
+thumbnail: './images/equality-thumbnail.png'
+thumbnail_alt: 'equality-thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 자바스크립트에서 제공하는 비교 연산자인 ==, ===, Object.is에 대해 정리합니다.
+  피드백은 언제나 환영입니다:)
+</Callout>
+
+## 들어가기
+
+### React에서의 dependecy 비교는 무엇을 사용할까?
+
+새로 바뀐 React 공식 문서에서 `useEffect` 관련 내용들을 읽어보는 과정에서 눈에 띄는 문장을 발견했다.
+
+> React will compare each dependency with its previous value using the **Object.is** comparison.
+
+`dependency`에 할당된 값을 통해 비교 연산이 이루어지는 것은 알고 있었다.
+하지만, 이 과정에서 `===`이 아닌 `Object.is`라는 것을 사용하는 것은 몰랐었다.😅
+
+그러면서 평소에는 비교 연산에서 `===`를 주로 사용했기 때문에 React에서 `dependecy` 값을 비교할 때 `Object.is`를 왜 사용하는지 궁금해졌다.
+이에 `==`, `===`, `Object.is` 개념을 한 번 정리하면 좋겠다는 생각에 글을 작성한다.
+
+## 자바스크립트에서 제공하는 비교 연산자
+
+자바스크립트에서는 총 3가지의 비교 연산자를 제공한다.
+
+### ==를 사용한 비교
+
+**느슨한 동등**(loose equality)은 **타입 변환**이 이루어진다.
+피연산자 양 쪽이 같은 타입이 아니라면 **강제**(coercion)가 적용된다.
+
+```js
+null == undefined // true
+true == 1 // true
+false == 0 // true
+'' == false // true
+```
+
+### ===를 사용한 비교
+
+**`==`와의 차이**
+
+**엄격한 동등**(strict equality)은 타입 변환이 이루어지지 않는다.
+비교하기 전에 다른 값으로 변환되지 않는 것이다.
+
+숫자를 제외한 대부분의 경우에는 명확하게 비교가 된다.
+ex) `+0`과 `-0`, `NaN`
+
+```js
+null === undefined // false
+true === 1 // false
+false === 0 // false
+'' === false // false
+```
+
+### Object.is를 사용한 비교
+
+**`==`와의 차이**
+
+강제(coercion) 적용 유무가 다르다.
+`Object.is`에서는 어느 값도 강제하지 않는다.
+
+**`===`와의 차이**
+
+부호 있는 0과 `NaN` 값이 다르게 처리된다.
+`Object.is`에서는 0이 부호가 다르면 다르게 처리하고 `NaN`은 모두 같게 처리된다.
+
+```js
+Object.is(0, -0) // false
+Object.is(0, +0) // true
+
+0 === -0 // true
+0 === +0 // true
+
+Object.is(NaN, 0 / 0) // true
+Object.is(NaN, Number.NaN) // true
+
+NaN === 0 / 0 // false
+NaN === Number.NaN // flase
+```
+
+세 가지 연산자를 비교하면 `Object.is`에서 가장 명확하게 비교 연산이 이루어져 React에서 `Object.is`를 사용하는 것 같다.
+
+## 나아가기
+
+비교 연산자를 주제로 글을 쓰기로 마음 먹으면서 올바른 지식을 전달하고 싶었다.
+그래서 다른 사람이 작성한 블로그 글이 아닌 MDN 문서에서 관련된 정확한 정보를 얻고자 했다.
+
+이 과정에서 영어 원문이랑 한글로 번역된 문서 간에 차이가 존재하다는 것을 알게 되면서 MDN 오픈 소스 생태계에 관심이 생겼다.
+처음 접하는 사람들도 쉽게 기여할 수 있도록 [가이드 문서](https://github.com/mdn/translated-content/tree/main/docs/ko)가 있어서 어떻게 MDN 번역이 이루어지는지 파악할 수 있었다.
+
+### MDN 기여하기
+
+MDN의 `Object.is` 문서와 관련하여 최신화 작업을 진행하면서 [MDN 오픈 소스에 첫 기여](https://github.com/mdn/translated-content/pull/13108)를 할 수 있었다.
+MDN 생태계를 알아가면서 이전에는 아무 생각없이 받아들었던 번역된 MDN 문서가 번역이 잘못되거나 오래된 버전일수도 있다는 것을 깨달았다.
+그래서 이제는 번역된 MDN 문서를 비판적으로 생각하면서 학습할 수 있게 되었다.
+그러면서 영어 공부의 중요성을 다시 한 번 느끼고 있다...😂
+
+또한, 번역이 미흡하거나 아직 한글로 번역되지 않은 MDN 문서가 여러 존재한다는 것을 알게 되었다.
+그래서 앞으로는 MDN에서 개념 공부과 번역 활동을 같이 하면서 개인적인 성장뿐만 아니라 개발 생태계에 좋은 영향력을 펼칠 것이다.
+한 주에 하나씩 간단한 문서라도 번역하는 목표를 가지고 실천하자!💪
+
+## 출처
+
+- [동치 비교 및 동일성](https://developer.mozilla.org/ko/docs/Web/JavaScript/Equality_comparisons_and_sameness)
+- [Object.is()](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/is)
+- [Equality comparisons and sameness](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Equality_comparisons_and_sameness)

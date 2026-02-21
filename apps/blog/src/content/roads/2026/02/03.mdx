@@ -1,0 +1,101 @@
+---
+title: 'no-store, no-cache, must-revalidate란?'
+date: '2026-02-03'
+---
+
+> HTTP 응답의 Cache-Control 헤더에 사용되는 지시어로,
+> 브라우저와 중간 캐시 서버가 리소스를 어떻게 저장하고 재사용할지 제어하는 명령어
+
+## 기본 개념
+
+- **no-store**: 캐시에 아예 저장하지 말라는 지시어
+- **no-cache**: 캐시에 저장은 하되, 사용 전 반드시 서버에 유효성 검증을 요구하는 지시어
+- **must-revalidate**: 캐시가 만료되면 반드시 원 서버에 재검증을 요청해야 한다는 지시어
+
+## 등장 배경
+
+- **민감한 정보 보호**: 은행 거래 내역, 개인정보 등이 브라우저나 프록시 캐시에 남아있으면 보안 위험
+- **실시간성 보장**: 주식 시세, 뉴스 등 항상 최신 데이터를 보여줘야 하는 경우
+- **캐시 일관성**: 오래된 캐시를 사용하여 발생하는 데이터 불일치 문제
+- **네트워크 프록시 문제**: 중간 프록시 서버가 오래된 데이터를 제공하는 문제
+
+## 동작 원리
+
+### no-store의 동작
+
+- 서버: `Cache-Control: no-store` 헤더 전송
+- 브라우저/프록시: 응답을 메모리에만 임시 보관, 디스크에 저장 안 함
+- 다음 요청: 항상 서버에 새로 요청
+
+### no-cache의 동작
+
+- 서버: `Cache-Control: no-cache` 헤더 전송
+- 브라우저: 응답을 캐시에 저장 (디스크 포함)
+- 다음 요청: 캐시된 리소스 사용 전 서버에 `If-None-Match` 또는 `If-Modified-Since` 헤더로 검증 요청
+- 서버: 변경되지 않았으면 `304 Not Modified` 응답 (캐시 사용)
+- 서버: 변경되었으면 `200 OK`와 새 데이터 응답
+
+### must-revalidate의 동작
+
+- 서버: `Cache-Control: max-age=3600, must-revalidate` 헤더 전송
+- 브라우저: 3600초 동안은 캐시 사용 (서버 접촉 없이)
+- 3600초 경과 후: 반드시 서버에 재검증 요청
+- 네트워크 오류 시: 오래된 캐시 사용 금지, 에러 표시
+
+## 헷갈리기 쉬운 부분
+
+### 오해: must-revalidate와 no-cache는 같다
+
+- no-cache: 매번 검증 (신선도와 관계없이)
+- must-revalidate: max-age 만료 후에만 검증
+
+### 오해: no-store면 브라우저 메모리에도 안 남는다
+
+- 실제: 현재 페이지 렌더링을 위해 메모리에는 임시 보관
+- 디스크 캐시, 히스토리, 뒤로가기 캐시에는 저장 안 됨
+
+### no-cache와 ETag의 관계
+
+```js
+// no-cache를 사용하려면 ETag나 Last-Modified가 필요
+res.set('Cache-Control', 'no-cache')
+res.set('ETag', '"abc123"') // 또는 Last-Modified 필요
+// 없으면 매번 200 응답으로 전체 다운로드
+```
+
+### private vs public
+
+- Cache-Control: no-store, private
+- private: 브라우저 캐시만 허용 (프록시 금지)
+- public: 공유 캐시(CDN, 프록시)도 허용
+- no-store와 함께 쓰면 private가 추가 보안
+
+### stale-while-revalidate와의 차이
+
+- must-revalidate: 만료 후 절대 오래된 캐시 사용 금지
+- stale-while-revalidate: 만료되어도 백그라운드 갱신 중 일시적 사용 허용
+
+## 개념 정리
+
+### no-store, no-cache, must-revalidate가 무엇인가요?
+
+HTTP Cache-Control 헤더의 지시어들로, 리소스 캐싱을 제어하는 명령어입니다.
+
+no-store는 캐시 저장 자체를 금지하는 가장 강력한 지시어입니다.
+은행 계좌 정보나 신용카드 정보처럼 절대 캐시되어서는 안 되는 민감한 데이터에 사용합니다.
+브라우저나 중간 프록시 서버가 응답을 디스크에 저장하지 않으며 매번 서버에 새로 요청합니다.
+
+no-cache는 이름과 달리 캐시를 합니다.
+다만 캐시된 데이터를 사용하기 전에 항상 서버에 검증을 요청해야 합니다.
+ETag나 Last-Modified 헤더와 함께 사용되며 서버는 리소스가 변경되지 않았다면 304 Not Modified를 응답하여 대역폭을 절약합니다.
+
+must-revalidate는 max-age와 함께 사용되며 캐시가 만료되기 전까지는 서버 검증 없이 사용하고 만료 후에는 반드시 재검증을 요구합니다.
+no-cache와의 차이점은 신선한 동안은 검증 없이 사용한다는 점입니다.
+또한 네트워크 오류 시 오래된 캐시 사용을 금지하여 데이터 일관성을 보장합니다.
+
+### 핵심 문장
+
+- HTTP 캐시 제어 지시어
+- no-store는 캐시 저장 자체를 금지
+- no-cache는 캐시하되 사용 전 매번 서버 검증을 요구
+- must-revalidate는 캐시 만료 후 반드시 재검증하도록 강제

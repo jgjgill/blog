@@ -1,0 +1,222 @@
+---
+title: 'fetch에 대해 알아보기'
+description: 'fetch와 관련된 개념들을 이해합니다.'
+date: '2023-11-05'
+thumbnail: './images/learn-about-fetch-thumbnail.png'
+thumbnail_alt: 'learn-about-fetch-thumbnail'
+category: 'development'
+---
+
+<Callout>💡 fetch와 관련된 개념들을 이해합니다. 피드백은 언제나 환영입니다:)</Callout>
+
+## 들어가기
+
+NextJS를 학습하는 과정에서 데이터 패칭과 관련하여 fetch 함수를 접하게 된다.
+그러면서 관련된 내용과 코드를 많이 학습하고 있다.
+
+이 과정에서 이전에는 `Axios`와 같은 비동기 통신 관련 라이브러리를 많이 쓰다 보니 fetch 함수를 쓰는게 익숙지 않았다.
+이를 통해 나 스스로가 fetch 함수에 대해 깊게 학습하지 않았다는 것을 느낄 수 있었다.
+
+그리고 fetch에 대해 곰곰이 고민하면서 다음과 같은 지식의 모호함이 있다는 것을 발견했다.
+
+- NextJS에서는 왜 fetch를 사용할까?
+- fetch와 XMLHttpRequest의 차이점은 무엇일까?
+- fetch는 어떻게 사용해야 할까?
+
+이에 이번 글에서는 fetch를 중점적으로 다루면서 비동기 데이터 통신에 대해 알아보고자 한다.
+
+## AJAX란?
+
+> AJAX is a mnemonic for “Asynchronous JavaScript and XML”, although, strictly speaking, developers didn’t need to use asynchronous methods, JavaScript, or XML.
+> We now use the generic “Ajax” term for any client-side process that fetches data from a server and updates the DOM without requiring a full-page refresh.
+
+AJAX(Asynchronous JavaScript And XML)는 서버에서 데이터를 가져와 전체 페이지를 새로 고치지 않고도 DOM을 업데이트하는 모든 클라이언트 측 과정을 의미한다.
+
+AJAX라는 이름에는 `JavaScript`와 `XML`만 포함되어 있지만 앞서 설명한 기능을 수행하면 일반적으로 AJAX에 포함된다고 생각하면 된다.
+
+### XMLHttpRequest
+
+XMLHttpRequest(XHR)은 **AJAX 요청을 생성하는 JavaScript API**이다.
+XHR의 메서드를 활용하면서 브라우저와 서버의 네트워크 요청을 전송할 수 있다.
+
+XHR은 브라우저에서 제공하는 Web API이기 때문에 브라우저 환경에서만 정상적으로 동작한다. (node 환경에서는 제공x)
+
+<br />
+
+여기서 `Axios`는 XHR을 활용한 라이브러리이다.
+
+그렇다면 `Axios`를 활용하지 않는 XHR를 통한 데이터 통신은 어떻게 이루어질까?
+
+[JSONPlaceholder](https://jsonplaceholder.typicode.com/) API를 활용해 관련 코드를 작성해보자.
+
+```js
+const xhr = new XMLHttpRequest()
+
+function reqListener() {
+  const data = JSON.parse(xhr.responseText)
+  console.log(data)
+}
+
+function reqError(err) {
+  console.log('Fetch Error: ', err)
+}
+
+xhr.onload = reqListener
+xhr.onerror = reqError
+xhr.open('GET', 'https://jsonplaceholder.typicode.com/users')
+xhr.send()
+```
+
+간단하게 API를 호출해서 데이터를 받는 로직이다.
+
+코드를 보면 우선 `XMLHttpRequest` 생성자 함수를 통해 객체를 생성한다.
+관련 메서드에서는 성공 및 에러 처리를 진행하고 HTTP 메서드와 요청 URL을 정의해 호출 과정을 설정한다.
+
+간단한 흐름은 이해할 수 있겠지만, 평소 우리가 써왔던 단순하고 깔끔한 형태로 느껴지지는 않는다.
+
+### fetch의 등장
+
+fetch는 API를 더 단순하고 깔끔한 API 형태를 지원한다.
+
+콜백 기반인 XHR과 달리 fetch는 `promise` 기반이다.
+
+다음과 같이 `promise` 방식을 통해 쉽게 사용할 수 있다.
+
+```js
+fetch('https://jsonplaceholder.typicode.com/users')
+  .then((response) => {
+    if (!response.ok) {
+      throw new Error('Failed to fetch data')
+    }
+
+    return response.json()
+  })
+  .then((data) => console.log(data))
+```
+
+그리고 fetch는 `Request`,`Response`, `Header`에 대한 다양한 속성을 제공하는 구성 가능한 객체를 전달할 수 있다.
+
+**Request**
+
+```js
+const request = new Request('https://jsonplaceholder.typicode.com/users')
+
+console.log(request.url) // https://jsonplaceholder.typicode.com/users
+console.log(request.method) // GET (HTTP method)
+console.log(request.credentials) // same-origin
+```
+
+**Response**
+
+```js
+const res = await fetch(request)
+
+console.log(res.ok) // true (boolean)
+console.log(res.status) // 200  (HTTP status)
+console.log(res.url) // https://jsonplaceholder.typicode.com/users
+
+const json = await res.json() // 본문을 JSON으로 구문 분석
+const text = await res.text() // 본문을 텍스트로 구문 분석
+const formData = await res.formData() // 본문의 폼데이터 표현
+```
+
+**Header**
+
+```js
+const headers = new Headers()
+headers.append('Content-Type', 'text/xml')
+
+const request = new Request('https://jsonplaceholder.typicode.com/users', { headers })
+
+const res = await fetch(request)
+console.log(res.headers.get('Content-Type')) // application/json; charset=UTF-8
+```
+
+(JSONPlaceholder에서는 헤더의 변경이 불가능한 것 같으니 출력만 확인하자!)
+
+<br />
+
+이외에도 `Stream`, CORS나 Credential와 관련된 정책 제어 등의 차이가 있지만 이번 글에서는 자세히 다루지 않고 요약만 하고자 한다.
+
+- fetch() 요청의 응답은 Stream 객체이다. 즉 json() 메서드를 호출하면 스트림 읽기가 비동기식으로 발생하므로 프로미스가 반환된다.
+- fetch는 CORS 및 기타 확장 기능과 같은 고급 HTTP 개념을 HTTP에 통합한다.
+- fech는 서비스 워커에서 쉽게 사용할 수 있는 더 나은 대안을 제공한다.
+
+<br />
+
+이번 글에서는 캐싱에 대해 자세히 살펴보고자 한다.
+
+## HTTP Cache 살펴보기
+
+XHR과 fetch의 주요 차이점으로 **캐싱 제어**를 들 수 있다.
+XHR과 달리 fetch에서는 쉽게 HTTP 캐시를 다룰 수 있다.
+
+이와 관련해서 NextJS에서도 [데이터 패칭(Caching Data)](https://nextjs.org/docs/app/building-your-application/data-fetching/fetching-caching-and-revalidating#caching-data) 부분에서 중요하게 다루어진다.
+
+```js
+fetch('https://...', { cache: 'force-cache' })
+```
+
+캐시 속성에는 다음 값들이 존재한다.
+
+**default**
+
+- 브라우저는 HTTP 캐시에서 일치하는 요청을 찾음
+  - 일치하는 항목이 있고 새 항목(fresh)이면, 캐시에서 반환
+  - 일치하는 항목이 있지만 오래된 항목(stale)이면, 원격 서버에 조건부 요청 -> 리소스 변경 여부에 따라 캐시에서 반환 or 캐시 업데이트
+  - 일치하는 항목 없으면 정상 요청, 캐시 업데이트
+
+<br />
+
+**no-store**
+
+- 캐시 확인 X, 캐시 업데이트 X
+
+<br />
+
+**reload**
+
+- 캐시 확인 X, 캐시 업데이트
+
+<br />
+
+**no-cache**
+
+- 브라우저는 HTTP 캐시에서 일치하는 요청을 찾음
+  - fresh stale 여부 신경 X, 원격 서버에 조건부 요쳥 -> 리소스 변경 여부에 따라 캐시에서 반환 or 캐시 업데이트
+  - 일치하는 항목 없으면 정상 요청, 캐시 업데이트
+
+<br />
+
+**force-cache**
+
+- 브라우저는 HTTP 캐시에서 일치하는 요청을 찾음
+  - fresh stale 여부 신경 X, 캐시에서 반환
+  - 일치하는 항목 없으면 정상 요청, 캐시 업데이트
+
+<br />
+
+**only-if-cached**
+
+- 브라우저는 HTTP 캐시에서 일치하는 요청을 찾음
+  - fresh stale 여부 신경 X, 캐시에서 반환
+  - 일치하는 항목이 없으면, 브라우저는 504 Gateway timeout 상태로 응답
+
+<br />
+
+자세한 내용은 [Request: cache property](https://developer.mozilla.org/ko/docs/Web/API/Request/cache) 문서에서 확인할 수 있다.
+
+## 마무리
+
+fetch에 대해 학습하면서 생각보다 많은 기능을 편리하게 제공한다는 것을 알게 되었고 웹 표준 API에 대해서도 좀 더 깊게 파고 드는 시간이 되었던 것 같다.
+
+NextJS를 학습하면서 역시 기본을 단단히 다지는게 중요하다는 생각을 다시금 하게 된다.
+
+## 참고 문서
+
+- [XMLHttpRequest](https://medium.com/%EA%B0%9C%EB%B0%9C%EC%9E%90%EC%9D%98%ED%92%88%EA%B2%A9/xmlhttprequest-86aa7f2207b4)
+- [fetch() global function](https://developer.mozilla.org/en-US/docs/Web/API/fetch)
+- [Using the Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+- [fetch() 소개](https://web.dev/articles/introduction-to-fetch?hl=ko)
+- [Ajax Battle: XMLHttpRequest Vs The Fetch API](https://blog.openreplay.com/ajax-battle-xmlhttprequest-vs-fetch/)
+- [Request: cache property](https://developer.mozilla.org/en-US/docs/Web/API/Request/cache)

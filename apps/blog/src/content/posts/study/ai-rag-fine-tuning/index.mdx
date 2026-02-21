@@ -1,0 +1,142 @@
+---
+title: 'RAG vs Fine Tuning'
+description: 'RAG와 Fine Tuning에 대해서 알아봅니다.'
+date: '2025-11-07'
+thumbnail: './images/ai-rag-fine-tuning-thumbnail.png'
+thumbnail_alt: 'AI RAG Fine Tuning Thumbnail'
+category: 'study'
+---
+
+<Callout>💡 RAG와 Fine Tuning에 대해서 알아봅니다.</Callout>
+
+> Rag for knowledge, fine tuning for getting it to learn patterns
+
+## 기존 LLM의 문제점
+
+![LLM 문제점](./images/llm-problem.png)
+
+<br />
+
+- 정보 부족
+    - 특정 정보로 훈련되지 않았을 때 정확하거나 최신 정보에 입각한 답변을 제공할 수 없음
+- 일반적인 성격
+    - 모델의 일반성 때문에 특정 조직이나 지식 도메인에 특화된 정보를 다루는데 어려움
+- 환각 및 투명성 문제
+    - 부정확하거나 환각(hallucinated)된 답변 생성
+    - 오답을 제시하거나 출처를 알 수 없는 정보 제공
+
+
+## Fine-tuning: 특정 분야의 전문가로 AI 다루기
+
+![Fine Tuning 구조](./images/fine-tuning-structure.png)
+
+<br />
+
+- 사전 학습된 모델의 가중치를 특정 도메인이나 작업에 맞게 조정하는 과정, 구워 넣는(baking in) 방식
+- 모델 자체를 변경하는 방법
+- 의과대학 졸업생(사전학습 모델)이 피부과 전문의(특화 모델)가 되기 위해 추가 수련을 받는 것
+- 일관된 톤과 스타일 유지
+
+### 예시 시나리오: 고객 서비스 챗봇
+
+
+```
+원본 GPT 모델:
+Q: "환불하고 싶어요"
+A: "환불은 일반적으로 구매 후 30일 이내에 가능합니다..."
+
+Fine-tuned 모델 (회사 정책 학습):
+Q: "환불하고 싶어요"
+A: "죄송합니다. 저희 회사는 14일 이내 미개봉 제품만 환불이 
+    가능하며, 고객센터 1234-5678로 연락주시면 됩니다."
+```
+
+### 장단점
+
+**장점**
+
+- 모델이 특정 도메인의 전문 용어 자연스럽게 습득
+- 추론시 추가 컨텐스트 불필요
+
+**단점**
+
+- 비용과 시간이 많이 듦 (대량 데이터 필요)
+- 데이터가 오래되면 재학습 필요
+- 과적합(overfitting) 위험
+- 전문 기술 인력 필요
+
+## RAG (Retrieval-Augmented Generation): 외부 지식으로 AI를 실시간 업데이트
+
+![RAG 구조](./images/rag-structure.png)
+
+<br />
+
+
+- 모델 외부의 지식 베이스에서 관련 정보를 탐색, 해당 정보를 기반으로 답변 생성
+- 모델은 그대로 두고 입력 보강, 프롬프트에 컨텍스트로 추가하면서 모델의 응답 개선
+- 변호사가 판례집을 찾아보고 참고해서 답변, 오픈북 시험
+
+
+### 예시 시나리오: 회사 내부 문서 QA 시스템
+
+```python
+# 1. 지식 베이스에서 검색
+user_question = "우리 회사 휴가 정책은?"
+relevant_docs = vector_db.search(user_question, top_k=3)
+
+# 검색 결과:
+# - "연차는 입사 1년 후 15일 발생..."
+# - "병가는 연 10일까지 유급..."
+# - "출산휴가는 90일 제공..."
+
+# 2. 프롬프트 구성
+prompt = f"""
+다음 문서를 참고해서 답변하세요:
+
+{relevant_docs}
+
+질문: {user_question}
+"""
+
+# 3. LLM에 전달하여 답변 생성
+answer = llm.generate(prompt)
+```
+
+### 장단점
+
+**장점**
+
+- 실시간으로 지식 업데이트 가능
+- 모델 재학습 불필요, 구현 상대적으로 간단
+- 비용 효율적 → 모델 전체를 다시 학습할 필요가 없고 비교적 적은 비용과 시간으로 모델의 지식을 효과적으로 확장
+
+**단점**
+
+- 검색 품질에 따라 답변 품질 좌우
+- 추론 시간, 토큰 사용량 증가
+- 복잡한 추론 한계
+
+## Use Case
+
+### Fine-tuning을 선택해야 할 때
+
+- 특정 스타일/톤이 중요 (예: 법률 문서 작성)
+- 실시간 응답 속도가 중요 (예: 고객 상담)
+- 학습 데이터가 충분하고 안정적
+- 특수한 추론 능력 필요 (예: 복잡한 수학 문제)
+
+### RAG를 선택해야 할 때
+
+- 지식이 자주 업데이트됨 (예: 뉴스, 제품 매뉴얼)
+- 답변의 출처가 중요 (예: 의학 정보, 법률 자문)
+- 빠른 프로토타이핑 필요 (예: MVP)
+- 비용 제약 (예: 스타트업)
+
+### 하이브리드 (둘 다 사용)
+- Fine-tuning으로 전문성 확보 + RAG로 최신 정보 보강
+- 예: 의료 AI (Fine-tuning: 진단 패턴, RAG: 최신 논문)
+
+## 참고 문서
+
+- [RAG vs Fine-Tuning , What would you pick and why?](https://www.reddit.com/r/LLMDevs/comments/1j5fzjn/rag_vs_finetuning_what_would_you_pick_and_why/)
+- [RAG vs. Fine Tuning](https://www.youtube.com/watch?v=00Q0G84kq3M)

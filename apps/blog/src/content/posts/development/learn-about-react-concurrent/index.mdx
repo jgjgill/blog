@@ -1,0 +1,550 @@
+---
+title: 'React 동시성에 대해 알아보기'
+description: 'React에서 사용되는 동시성과 관련된 개념들을 이해합니다.'
+date: '2023-12-16'
+thumbnail: './images/learn-about-react-concurrent-thumbnail.png'
+thumbnail_alt: 'learn-about-react-concurrent-thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 React에서 사용되는 동시성과 관련된 개념들을 이해합니다. 피드백은 언제나 환영입니다:)
+</Callout>
+
+## React Concurrent
+
+React 18에서 Concurrent, 동시성이라는 말이 등장한다.
+
+React는 어떤 문제점을 해결하고자 한 것일까?
+
+왜 동시성을 도입하려고 했을까?
+
+## Blocking Rendering 문제
+
+![react-rendering-change](./images/react-rendering-change.png)
+
+기존 렌더링 방식에서는 **한 번에 하나씩 렌더링이 처리**가 되었다.
+
+이는 한 번 렌더링 연산에 들어가면 **중지할 수 없음**을 의미한다.
+
+이때 이 연산이 매우 길어질 때 문제가 발생하는 것이다.
+
+### 기존 방식의 한계
+
+문제를 해결하고자 디바운스, 쓰로틀링같은 방식들이 사용되었다.
+
+**디바운스**
+
+> 연이어 호출되는 함수들 중 일정 시간 이후 마지막 함수 (또는 제일 처음)만 호출하도록 한다.
+
+**쓰로틀링**
+
+> 마지막 함수가 호출된 후 일정 시간이 지나기 전에 다시 호출되지 않도록 한다.
+
+하지만 이 두 가지 방식이 블로킹 렌더링의 근본적인 문제를 해결하지는 못한다.
+
+<br />
+
+다음과 같은 단점들이 존재한다.
+
+- 성능이 나쁜 기기에서 주기를 짧게 가져가면 버벅거림이 심해짐
+- 성능이 좋은 기기에서는 설정한 주기로 인해 불필요한 지연 시간이 발생
+- 성능과 상관없이 무조건 일정 시간 대기
+- 사용자 입력 중에는 작업의 처리가 이루어지지 않음
+
+<br />
+
+이러한 문제 상황 속에서 **더 나은 사용자 경험을 제공**할 필요가 있었다.
+
+이를 해결하기 위해 **동시성**이 나온 것이다.
+
+동시성은 개발자가 설정한 지연 시간에 의존하는 것이 아니라 **사용자 기기 성능에 좌우**되도록 한다.
+
+<br />
+
+다음으로 넘어가기 전에 현재 흐름을 정리하자.
+
+- 한 번에 하나씩만 렌더링 연산되는 상황 (Blocking Rendering)
+- 매우 큰 연산 시 나쁜 사용자 경험 제공
+- 의도적인 지연(디바운스, 쓰로틀링)으로도 문제를 온전히 해결할 수 없음
+- 이를 해결하고자 동시성 등장
+
+## 동시성이란?
+
+왜 React 18에서 동시성이 나오게 됐는지 흐름은 이해했다.
+
+하지만 동시성이란 말이 익숙하지 않다보니 모호하게 느껴진다.
+
+우선 동시성이 무엇을 의미하는지 이해하기 위해 GPT에게 물어보자.
+
+### 동시성
+
+> 동시성에 대해 설명해줘
+
+- **여러 작업이 동시에 진행**되는 것을 나타내는 개념
+- 프로그래밍에서 **하나의 프로그램이 동시에 여러 작업을 처리**하도록 하는 것을 의미
+- 이는 **다양한 컨텍스트**에서 다룰 수 있음
+
+### 병렬성과의 차이
+
+동시성에 대해 찾아보면 관련 개념으로 **병렬성**에 대해서도 설명한다.
+
+헷갈리기 쉬워서 같이 정리하고자 한다.
+
+- 동시성(concurrency): 여러 작업이 동시에 진행되는 것처럼 보이지만, 실제로는 **각 작업이 작은 단위로 번갈아 가면서 실행**
+- 병렬성(parallelism): **여러 작업이 동시에 실제로 동작**
+
+<br />
+
+GO(동시성을 지원하는데 탁월한 언어)를 개발한 개발자는 다음과 같이 동시성과 병렬성을 설명했다.
+
+- 동시성은 **독립적으로 실행되는 프로세스들의 조합**이다.
+- 병렬성은 **연관된 복수의 연산들**을 동시에 실행하는 것이다.
+
+<br />
+
+- 동시성은 여러 일을 **한꺼번에 다루는 문제**에 관한 것이다.
+- 병렬성은 여러 일을 **한꺼번에 실행하는 방법**에 관한 것이다.
+
+[Concurrency is not parallelism](https://go.dev/blog/waza-talk)
+
+<br />
+
+정리하면 동시성은 **여러 일이 동시에 일어나는 것처럼 보이게 하는 것**이다.
+
+## React에서의 동시성
+
+> Concurrency is not a feature, per se.
+> It’s a new behind-the-scenes mechanism that enables React to prepare multiple versions of your UI at the same time.
+
+그러면 React에서는 동시성을 어떻게 대할까?
+
+React는 **동시에 여러 버전의 UI를 준비할 수 있게 해주는 새로운 비하인드 메커니즘**으로 다룬다.
+
+이는 **React 핵심 렌더링 모델에 대한 기초적인 업데이트**라고 설명한다.
+
+<br />
+
+Concurrent React의 핵심 속성은 **렌더링이 중단되지 않는 것**이다.
+
+앞서 살펴본 기존 렌더링 방식에서는 일단 렌더링이 진행되면 방해할 수 없었다.
+
+<br />
+
+하지만 동시성 렌더링은 그렇지 않다.
+
+업데이트 렌더링을 시작하고 중간에 중지하고 나중에 계속할 수 있다.
+
+심지어는 진행 중인 렌더링을 완전히 중단시킬 수도 있다고 한다.
+렌더링이 중단되어도 UI가 일관되게 보장한다.
+
+<br />
+
+동시성 렌더링은 `Suspense`, `transitions`, `streaming`, `server rendering` 등 여러 기능에 활용된다.
+
+## 동시성 사용해보기
+
+이번 글에서 다룰 동시성 기능은 `useDefaerredValue`와 `useTransition`이다.
+
+이 둘은 **우선 순위를 낮추는 공통점**이 있다.
+
+세부 내용에서는 다른 부분들이 존재하지만 사용하는 느낌은 `useCallback`과 `useMemo`와 비슷하다.
+
+<br />
+
+사용에 앞서 관련 용어들을 정리하자.
+
+### Transitions
+
+> ”사용자는 물리적인 행위에 대해서 즉각적인 반응을 기대한다.
+> 그렇지않다면 사용자는 뭔가 잘못되고 있다고 느낄 수 있다.
+> 반면 A0 -> A1의 전환은 느릴수 있다고 무의식적으로 인지하고 있으며,
+> 모든 전환에 대한 즉각적인 반응을 기대하지 않는다.”
+
+앞으로 이 글에서는 `Transitions`을 "**전환**"으로 사용하고자 한다.
+
+전환은 이전 결과를 건너뛴다.
+현재 상태만 반영하도록 하여 중간 상태 반영을 생략한다.
+
+이것이 `setTimeout`과 다른 점이다.
+`setTimeout`은 `Task Queue`에 들어간 작업이 순서대로 처리되고 취소할 수 없다.
+
+<br />
+
+#### 긴급 업데이트(Urgent Update)
+
+- React18에서 기본적으로 처리되는 방식
+- 사용자가 즉각적으로 나올 것이라고 예상
+
+<br />
+
+#### 전환 업데이트(Transition Update)
+
+- 전환되는 중간 과정 생략
+- 사용자가 늦을 것이라고 예상
+
+### useDeferredValue
+
+```tsx
+const deferredValue = useDeferredValue(value)
+```
+
+**UI의 일부 업데이트를 지연시킬 수 있는 훅**이다.
+
+해당 값의 렌더를 뒤로 미뤄도 된다는 것을 의미한다.
+
+초기 렌더링 중에 반환되는 지연 값은 제공된 값과 동일하다.
+업데이트 동안에는 먼저 이전 값으로 렌더링을 시도하고 백그라운드에서 새 값으로 렌더링을 다시 시도한다.
+
+어떻게 값이 나오는지 확인해보자.
+
+```tsx
+const [first, setFirst] = useState(0)
+const [second, setSecond] = useState(0)
+const [third, setThird] = useState(0)
+
+const deferredSecond = useDeferredValue(second)
+
+console.log('first', first)
+console.log('second', second)
+console.log('third', third)
+console.log('deferredSecond', deferredSecond)
+console.log('--------------')
+```
+
+![use-deffered-value-test](/images/posts/learn-about-react-concurrent/use-deffered-value-test.gif)
+
+#### 연산 비교해보기
+
+매우 큰 연산에서 동작이 어떻게 이루어지는지 알아보자.
+
+<br />
+
+**무거운 작업이 이루어진 컴포넌트**
+
+```tsx
+import { memo } from 'react'
+
+const SlowList = memo(function SlowList({ text }: { text: string }) {
+  // Log once. The actual slowdown is inside SlowItem.
+  console.log('[ARTIFICIALLY SLOW] Rendering 250 <SlowItem />')
+
+  const items = []
+  for (let i = 0; i < 250; i++) {
+    items.push(<SlowItem key={i} text={text} />)
+  }
+  return <ul className="items">{items}</ul>
+})
+
+function SlowItem({ text }: { text: string }) {
+  const startTime = performance.now()
+  while (performance.now() - startTime < 1) {
+    // Do nothing for 1 ms per item to emulate extremely slow code
+  }
+
+  return <li className="item">Text: {text}</li>
+}
+
+export default SlowList
+```
+
+무거운 작업이 발생하도록 하여 렌더링 작업이 오래 걸리도록 했다.
+
+여기서 최적화를 할 때 중요한 부분은 `memo`로 감싸야 한다는 것이다.
+
+- 텍스트가 변경될 때마다 부모 컴포넌트 빠르게 다시 렌더링
+- 다시 렌더링하는 동안 `deferredText`는 여전히 이전 값
+- 여기서 `memo` 를 통해 동일한 props로 이전 값을 가지고 있어서 렌더링 생략
+
+<br />
+
+**일반적인 코드 상황**
+
+```tsx
+// page.tsx
+const [text, setText] = useState('')
+...
+
+return (
+	<input value={text} onChange={(e) => setText(e.target.value)} />
+      <SlowList text={text} />
+)
+```
+
+![use-deferred-value-before](/images/posts/learn-about-react-concurrent/use-deferred-value-before.gif)
+
+인풋을 입력할 때 버벅거림이 발생한다.
+
+<br />
+
+**useDeferredValue가 적용된 상황**
+
+```tsx
+// page.tsx
+const [text, setText] = useState('')
+  const deferredText = useDeferredValue(text)
+...
+
+return (
+	<input value={text} onChange={(e) => setText(e.target.value)} />
+      <SlowList text={deferredText} />
+)
+```
+
+![use-deferred-value-after](/images/posts/learn-about-react-concurrent/use-deferred-value-after.gif)
+
+인풋을 입력할 때 자연스럽게 넘어간다.
+
+**사용자가 원하는(기대하는) 반응**이다.
+
+<br />
+
+### useTransition
+
+```ts
+const [isPending, startTransition] = useTransition()
+```
+
+> Because this state update is marked as a transition,
+> a slow re-render did not freeze the user interface.
+
+**UI를 막지 않고 상태를 업데이트할 수 있는 훅**이다.
+
+반환값은 `isPending`, `startTransition`이다.
+
+<br />
+
+`useTransition`은 훅으로 컴포넌트나 사용자 정의 훅 내부에서만 호출할 수 있다.
+만약 다른 곳에서 사용하고 싶으면 `startTransition`을 호출하면 된다.
+둘의 차이점은 `isPending` 제공 여부이다.
+
+<br />
+
+또한, React는 현재 진행 중인 `transition`이 여러 개인 경우 함께 **일괄 처리**한다.
+이는 향후 릴리즈에서 제거될 가능성이 높은 제한 사항이라고 한다.
+
+<br />
+
+#### 연산 비교해보기
+
+이번에는 Tab을 이동하는 예제로 확인해보자.
+
+세 개의 Tab 중 `PostTab`은 앞서 `SlowList` 처럼 무거운 작업이 이루어지는 컴포넌트이다.
+
+<br />
+
+**PostTab.tsx**
+
+```tsx
+import { memo } from 'react'
+
+const PostsTab = memo(function PostsTab() {
+  // Log once. The actual slowdown is inside SlowPost.
+  console.log('[ARTIFICIALLY SLOW] Rendering 500 <SlowPost />')
+
+  const items = []
+  for (let i = 0; i < 500; i++) {
+    items.push(<SlowPost key={i} index={i} />)
+  }
+  return <ul className="items">{items}</ul>
+})
+
+function SlowPost({ index }: { index: number }) {
+  const startTime = performance.now()
+  while (performance.now() - startTime < 1) {
+    // Do nothing for 1 ms per item to emulate extremely slow code
+  }
+
+  return <li className="item">Post #{index + 1}</li>
+}
+
+export default PostsTab
+```
+
+**기타 Tab 코드**
+
+```tsx
+// AboutTab.tsx
+export default function AboutTab() {
+  return <p>Welcome to my profile!</p>
+}
+
+// ContactTab.tsx
+export default function ContactTab() {
+  return (
+    <>
+      <p>You can find me online here:</p>
+      <ul>
+        <li>admin@mysite.com</li>
+        <li>+123456789</li>
+      </ul>
+    </>
+  )
+}
+```
+
+**일반적인 코드 상황**
+
+```tsx
+function selectTab(nextTab: string) {
+  console.log('click', nextTab)
+
+  setTab(nextTab)
+}
+```
+
+![use-transition-before](/images/posts/learn-about-react-concurrent/use-transition-before.gif)
+
+`PostTab`을 클릭하고 다른 Tab을 클릭해도 넘어가지 않는다.
+
+<br />
+
+**startTransition이 적용된 상황**
+
+```tsx
+function selectTab(nextTab: string) {
+  console.log('click', nextTab)
+
+  startTransition(() => {
+    setTab(nextTab)
+  })
+}
+```
+
+![use-transition-after](/images/posts/learn-about-react-concurrent/use-transition-after.gif)
+
+`PostTab`을 클릭하고 다른 Tab을 클릭해도 바로 넘어간다.
+
+## 언제 사용할 수 있을까
+
+연산을 비교하면서 알아봤을 때 **굉장히 많은 렌더링 작업이 이루어지는 컴포넌트**에서 활용이 가능하다.
+
+무거운 컴포넌트를 렌더링하려고 기다리는 시간 동안 마음이 바뀔 수 있다.
+
+이때 **렌더링 작업이 완료되기 전에 다른 렌더링이 추가되면 그거를 우선시할 수 있는 것**이다.
+
+## 잘못 사용하는 상황
+
+해당 훅들을 사용할 때 몇몇 잘못 사용하는 경우가 존재한다.
+
+### 인풋을 전환에 사용하는 경우
+
+```tsx
+const [text, setText] = useState('')
+// ...
+function handleChange(e) {
+  // ❌ 제어된 인풋 상태에서는 전환을 사용할 수 없음
+  startTransition(() => {
+    setText(e.target.value)
+  })
+}
+// ...
+return <input value={text} onChange={handleChange} />
+```
+
+사용자는 인풋에 대해 **즉각적인 반응**을 기대한다.
+
+따라서 인풋을 업데이트하는 것은 **동기적**으로 이루어져야 한다.
+
+<br />
+
+만약 인풋에 대한 응답으로 전환을 실행하고 싶으면 2가지 방법이 있다.
+
+- 두 개의 상태 변수 선언. 하나는 입력 상태를 동기적 업데이트, 하나는 전환으로 업데이트
+- 실제 값보다 지연되는 `useDeferredValue` 추가. `non-blocking` 렌더링이 따라잡기 위해 트리거
+
+### 상태 변경을 전환 이후에 처리하는 경우
+
+이번 경우는 말이 조금 헷갈리는데 코드로 이해해보자.
+
+```tsx
+startTransition(() => {
+  // ✅ 전환 호출 중(during) 상태 설정
+  setPage('/about')
+})
+```
+
+상태 업데이트를 전환 호출 중에 사용하는 것은 괜찮다.
+
+```tsx
+startTransition(() => {
+  // ❌ 전환 호출 이후에(after) 상태 설정
+  setTimeout(() => {
+    setPage('/about')
+  }, 1000)
+})
+```
+
+`startTransition`은 **동기식**이어야 한다.
+
+전환 이후에 발생하는 상태 업데이트는 사용할 수 없다.
+
+대신에 이렇게는 사용할 수 있다.
+
+```tsx
+setTimeout(() => {
+  startTransition(() => {
+    // ✅ 전환 호출 중(during) 상태 설정
+    setPage('/about')
+  })
+}, 1000)
+```
+
+### startTransition을 비동기식으로 사용하는 경우
+
+`startTransition`은 동기식이어야 한다.
+`setTimeout`과 다르다.
+
+**startTransition 호출 상황**
+
+```tsx
+console.log(1)
+
+startTransition(() => {
+  console.log(2)
+})
+
+console.log(3)
+
+// 1 2 3
+```
+
+![start-transition-console](/images/posts/learn-about-react-concurrent/start-transition-console.gif)
+
+**setTimeout 호출 상황**
+
+```tsx
+useEffect(() => {
+  console.log(1)
+
+  setTimeout(() => {
+    console.log(2)
+  })
+
+  console.log(3)
+}, [])
+
+// 1 3 2
+```
+
+![set-timeout-console](/images/posts/learn-about-react-concurrent/set-timeout-console.gif)
+
+## 마무리
+
+처음 동시성이라는 단어를 접했을 때는 낮설고 어렵게만 느껴졌다.
+
+그래도 **왜 동시성을 도입하려고 했는지**부터 하나씩 살펴보니 동시성의 필요성을 이해하게 되었다.
+
+새로 도입된 기능들을 활용한 개선 예제들도 직접 적용해보면서 많이 배울 수 있었다.
+
+<br />
+
+해당 기능들을 언제 사용해야 하는지 이해하면서 적절하게 사용하여 사용자 경험의 디테일을 챙기도록 하자!
+
+## 참고 문서
+
+- [React v18.0](https://react.dev/blog/2022/03/29/react-v18)
+- [Inside React(동시성을 구현하는 기술)](https://tv.naver.com/v/23652451)
+- [[번역] What is React Concurrent Mode?](https://kelly-kh-woo.medium.com/%EB%B2%88%EC%97%AD-what-is-react-concurrent-mode-45e4cdc3de17)
+- [useTransition](https://react.dev/reference/react/useTransition)
+- [useDeferredValue](https://react.dev/reference/react/useDeferredValue)

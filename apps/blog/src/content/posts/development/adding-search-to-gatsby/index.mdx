@@ -1,0 +1,297 @@
+---
+title: 'Gatsby - 검색 기능 구현하기'
+description: 'Gatsby에서 검색 기능을 구현한 과정을 정리합니다.'
+date: '2023-03-29'
+thumbnail: './images/gatsby-thumbnail.png'
+thumbnail_alt: 'gatsby-thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 Gatsby에서 검색 기능 구현과 리팩토링 과정을 남기고자 합니다. 피드백은 언제나
+  환영입니다:)
+</Callout>
+
+## 검색 기능 구현하기
+
+블로그에 글이 많아질 경우 원하는 게시물을 찾기 힘들어질 것입니다.
+이에 검색 기능은 블로그에 있어서 필수적이라는 생각이 들었습니다.
+그래서 Gastby에서 어떻게 하면 검색 기능을 구현할 수 있을지 알아봤습니다.
+
+검색 기능과 관련하여 Gatsby 공식 문서 [Adding Search](https://www.gatsbyjs.com/docs/how-to/adding-common-features/adding-search/)에서 제안하는 방식이 있습니다.
+Client-side serach에서의 `js-search`, API-based search engine에서의 `Algolia`, `Meilisearch`, `Typesense` 등을 제안합니다.
+
+우선, 저의 상황을 고려했을 때 검색 기능은 처음 구현해보는 기능이어서 API-based search engine 방식은 빠르게 도입하기 어려울 것이라는 판단을 했습니다.
+그래서 Client-side search로 방향을 잡고 다른 사람들은 어떻게 구현했나 살펴봤습니다.
+
+다행히도 `js-search`보다 더 쉽게 검색 기능을 도와주는 플러그인이 존재했습니다.
+[gatsby-plugin-fusejs](https://www.gatsbyjs.com/plugins/gatsby-plugin-fusejs/?=fusejs)을 사용하면 쉽고 빠르게 검색 기능을 구현할 수 있습니다.
+
+### gatsby-plugin-fusejs 설정하기
+
+우선 해당 플러그인을 설치합니다.
+
+```bash
+yarn add gatsby-plugin-fusejs
+```
+
+gatsby-config 파일에서 관련된 설정을 해줍니다.
+
+```js
+{
+  resolve: 'gatsby-plugin-fusejs',
+  options: {
+    query: `
+      {
+        allMdx {
+          nodes {
+            id
+            frontmatter {
+              title
+              date
+              slug
+              category
+            }
+            excerpt
+          }
+        }
+      }
+    `,
+    keys: ['frontmatter.title', 'excerpt'],
+    normalizer: ({ data }) =>
+      data.allMdx.nodes.map((node) => ({
+        id: node.id,
+        frontmatter: {
+          title: node.frontmatter.title,
+          slug: node.frontmatter.slug,
+          date: node.frontmatter.date,
+          category: node.frontmatter.category,
+        },
+        excerpt: node.excerpt,
+      })),
+  },
+},
+```
+
+코드를 구체적으로 살펴보면 다음과 같습니다.
+
+```js
+query: `
+  {
+    allMdx {
+      nodes {
+        id
+        frontmatter {
+          title
+          date
+          slug
+          category
+        }
+        excerpt
+      }
+    }
+  }
+`,
+```
+
+query에서는 만들고자 하는 데이터를 받습니다.
+
+```js
+keys: ['frontmatter.title', 'excerpt'],
+```
+
+keys에서는 검색에 사용할 부분을 인덱스로 정합니다.
+[Fuse.createIndex](https://fusejs.io/api/indexing.html#fuse-createindex)
+
+저는 제목인 **title**과 게시물별로 미리볼 수 있는 텍스트인 **excerpt**로 정했습니다.
+
+```js
+normalizer: ({ data }: any) =>
+  data.allMdx.nodes.map((node: any) => ({
+    id: node.id,
+    frontmatter: {
+      title: node.frontmatter.title,
+      slug: node.frontmatter.slug,
+      date: node.frontmatter.date,
+      category: node.frontmatter.category,
+    },
+    excerpt: node.excerpt,
+  })),
+```
+
+`normalizer`는 쿼리에서 반환된 데이터를 정규화하는 함수라고 설명되어 있습니다.
+GraphQL의 결과물로 확인할 수 있습니다.
+
+![graphql-allfusejs-data](./images/graphql-allfusejs-data.png)
+
+index에는 앞서 keys에 넣었던 데이터들이 검색으로 활용될 수 있도록 변형된 것을 확인할 수 있습니다.
+
+![graphql-allfusejs-index](./images/graphql-allfusejs-index.png)
+
+### Gatsby에서 fuse.js 적용하기
+
+gatsby-plugin-fusejs에서는 **react-use-fusejs**와 함께 사용할 것을 추천합니다.
+하지만 저의 경우 react-use-fusejs와 함께 사용할 시 에러가 발생하더라구요.😂
+
+그래서 react-use-fusejs [내부 코드](https://github.com/johnny-mh/blog2/blob/main/packages/react-use-fusejs/src/index.ts)를 찾아봤습니다.
+내부 코드를 살펴봤을 때 `useGatsbyPluginFusejs` 함수만 사용하는 것 같았습니다.
+이 정도면 제가 커스텀해서 사용해도 괜찮겠다는 생각을 하게 되었습니다.
+
+```tsx
+export function useGatsbyPluginFusejs<T>(
+  query: string,
+  fusejs: { data: T[]; index: string },
+  fuseOpts?: Fuse.IFuseOptions<T>,
+  parseOpts?: Fuse.FuseIndexOptions<T>,
+  searchOpts?: Fuse.FuseSearchOptions,
+) {
+  const [instance, setInstance] = useState<null | Fuse<T>>(null)
+
+  useEffect(() => {
+    if (!fusejs?.data || !fusejs?.index) {
+      setInstance(null)
+      return
+    }
+
+    const inst = new Fuse<T>(
+      fusejs.data,
+      fuseOpts,
+      Fuse.parseIndex(JSON.parse(fusejs.index), parseOpts),
+    )
+
+    setInstance(inst)
+  }, [fusejs])
+
+  return useMemo(() => {
+    if (!query || !instance) {
+      return []
+    }
+
+    return instance?.search(query, searchOpts) || []
+  }, [query, instance])
+}
+```
+
+여기서 제가 필요한 부분만 골라서 사용하면 될 것 같습니다.
+
+코드를 하나씩 살펴봤을 때 `new Fuse`에서 만든 데이터가 `search` 메서드를 통해 검색 결과로 변환되는 것 같네요.
+
+[Fuse.parseIndex](https://fusejs.io/api/indexing.html#fuse-parseindex)는 문서와 코드의 흐름을 봤을 때 GraphQL에서 만들었던 index로 보입니다.
+
+어떠한 흐름인지 파악했으니 이 부분을 저에게 맞게 작업하면 될 것 같습니다.
+
+이를 위해 [fuse.js](https://fusejs.io/)를 설치합니다.
+
+```bash
+yarn add fuse.js
+```
+
+**useSearch.ts**
+
+```ts
+import Fuse from 'fuse.js'
+import { useMemo } from 'react'
+
+export default function useSearch<T>(
+  query: string,
+  fusejs: { data: T[]; index: string },
+) {
+  const fuse = useMemo(() => {
+    return new Fuse()<T>(
+      fusejs.data,
+      undefined,
+      Fuse.parseIndex(JSON.parse(fusejs.index)),
+    )
+  }, [fusejs])
+
+  return fuse.search(query)
+}
+```
+
+해당 훅은 정말 간소화한 버전임을 참고하시기 바랍니다.😅
+
+이렇게 만든 훅을 검색 페이지에 사용하면 되겠습니다.
+
+**search.tsx**
+
+```tsx
+import styled from '@emotion/styled'
+import App from 'App'
+import { Layout, Post, PostList } from 'components'
+import { Flex } from 'components/@shared'
+import { graphql, useStaticQuery } from 'gatsby'
+import useIntersectionObserver from 'hooks/useIntersectionObserver'
+import useSearch from 'hooks/useSearch'
+import React, { useState } from 'react'
+import { Content } from 'types/content'
+
+interface searchPost {
+  fusejs: {
+    index: string
+    data: Content[]
+  }
+}
+
+const Search = () => {
+  const search: searchPost = useStaticQuery(graphql`
+    {
+      fusejs {
+        index
+        data
+      }
+    }
+  `)
+  const [query, setQuery] = useState('')
+  const nodes = useSearch(query, search.fusejs)
+  const { ref, page } = useIntersectionObserver(nodes.length)
+
+  return (
+    <App>
+      <Layout>
+        <Flex flexDirection="column" gap={20}>
+          <Input
+            placeholder="Search"
+            value={query}
+            onChange={(e) => setQuery(e.currentTarget.value)}
+          />
+
+          {query !== '' && (
+            <span>
+              &apos;<strong>{query}</strong>&apos; 검색 결과 ({nodes.length}개)
+            </span>
+          )}
+
+          <PostList
+            render={nodes.slice(0, page).map((node) => (
+              <Post key={node.refIndex} node={node.item} />
+            ))}
+          />
+          <div ref={ref} />
+        </Flex>
+      </Layout>
+    </App>
+  )
+}
+
+export default Search
+
+const Input = styled.input`
+  border-radius: 10px;
+  width: 100%;
+  padding: 10px 20px;
+  border: 3px solid ${({ theme }) => theme.colors.secondary.light};
+
+  &:focus {
+    outline: none;
+  }
+`
+```
+
+## 마무리
+
+![search](/images/posts/adding-search-to-gatsby/search.gif)
+
+플러그인의 도움을 통해 검색 기능도 쉽고 빠르게 할 수 있었습니다.
+해당 과정에서는 플러그인 내부의 코드도 살펴보며 커스터마이징하는 과정을 거쳤습니다. 다행히 성공적으로 구현하여 만족스럽네요.
+
+이번 글을 통해 Gatsby에서 검색 기능을 구현하려는 분들에게 도움이 되었으면 합니다.🙇‍♂️

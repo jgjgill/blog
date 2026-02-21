@@ -1,0 +1,319 @@
+---
+title: '자바스크립트로 구글 스프레드시트 활용하기'
+description: '자바스크립트로 구글 스프레드시트를 활용하는 방법에 대해 알아봅니다.'
+date: '2024-04-14'
+thumbnail: './images/google-spreadsheet-with-javascript-thumbnail.png'
+thumbnail_alt: 'Google Spreadsheet With Javascript Thumbnail'
+category: 'development'
+---
+
+<Callout>
+  💡 자바스크립트로 구글 스프레드시트를 활용하는 방법에 대해 알아봅니다. 피드백은 언제나
+  환영입니다:)
+</Callout>
+
+## 스프레드시트와 함께 일잘러 되기
+
+> 개발자와 기획자 간에 소통을 도와줄 도구로 무엇이 있을까?
+
+타직군과의 협업 및 업무의 효율성을 높이기 위한 방안으로 **구글 스프레드시트**가 흥미롭게 다가왔다.
+
+이번 글에서는 `Node.js` 환경에서 간단하게 구글 스프레드시트를 활용하는 방법에 대해 알아보자.
+
+<br />
+
+## 구글 계정 설정
+
+우선 구글 계정과 관련된 설정부터 진행하고자 한다.
+
+### 계정 세팅
+
+[Google Developers Console](https://console.developers.google.com/) 이동한다.
+
+새 프로젝트를 생성하자.
+
+![새 프로젝트 생성](./images/new-project-create.png)
+
+<br />
+
+프로젝트에 **Sheets API**를 사용하기 위해 API를 검색해서 적용할 수 있도록 한다.
+
+![시트 API 사용](./images/sheet-api-use.png)
+
+<br />
+
+### 서비스 계정 생성
+
+스프레드 시트를 수정 및 추가하기 위한 **서비스 계정**을 추가한다.
+
+`API 및 서비스` → `사용자 인증 정보` → `사용자 인증 정보 만들기` → `서비스 계정` 경로로 진행한다.
+
+![서비스 계정 생성 과정 1](./images/service-account-create-process-1.png)
+
+<br />
+
+**이름, 계정 ID, 설명**을 입력해서 계정을 생성한다.
+
+![서비스 계정 생성 과정 2](./images/service-account-create-process-2.png)
+
+<br />
+
+다음과 같이 생성된다.
+
+![서비스 계정 생성 과정 3](./images/service-account-create-process-3.png)
+
+### API 키 생성
+
+구글 시트에 접근을 허용할 **API 키**를 생성한다.
+
+`API 및 서비스` → `사용자 인증 정보` → `사용자 인증 정보 만들기` → `API 키` 경로로 진행한다.
+
+![API 키 생성 과정 1](./images/api-key-create-process-1.png)
+
+<br />
+
+다음과 같이 바로 생성이 된다.
+
+![API 키 생성 과정 2](./images/api-key-create-process-2.png)
+
+<br />
+
+보안에 조금 더 신경 쓴다면 생성된 API 키에 들어가서 `API 제한사항`에서 `키 제한`을 선택한다.
+
+지금은 구글 시트만을 사용하기 때문에 1개만 적용한다.
+
+![API 키 생성 과정 3](./images/api-key-create-process-3.png)
+
+## 스프레트 시트 설정
+
+여기까지 진행했다면 구글과 관련된 계정 설정 부분은 마무리된 것이다.
+
+이제 스프레드 시트로 넘어가자.
+
+### 스프레드 시트 권한 설정 및 시트 추가
+
+사용할 시트를 만든다.
+
+스프레드 시트는 다음과 같은 URL 형식으로 구성된다.
+
+`https://docs.google.com/spreadsheets/d/{스프레드_시트_ID}/edit#gid={시트_ID}`
+
+![스프레드시트 설정 과정 1](./images/spreadsheet-setting-process-1.png)
+
+<br />
+
+여기서 `스프레드_시트_ID`랑 `시트_ID`는 코드에서 쓰이기 때문에 변수로 관리하면 편리하다.
+
+<br />
+
+만들어진 스프레드 시트에는 `공유하기`를 통해 공유할 이메일 계정을 추가할 수 있다.
+
+여기서 앞서 생성한 **서비스 계정**도 추가해준다.
+
+코드 상으로 구글 시트에 접근하기 위해 필요하다.
+
+![스프레드시트 설정 과정 2](./images/spreadsheet-setting-process-2.png)
+
+### 구글 시트 접근자 정보 구성하기
+
+코드에서 구글 시트에 접근할 수 있어야 한다.
+
+이를 위해 앞서 생성한 **서비스 계정에서 키를 생성**한다.
+
+서비스 계정을 클릭(`IAM 및 관리자` → `서비스 계정`)해서 새로운 키를 생성한다.
+
+![구글 시트 접근자 정보 구성 과정 1](./images/google-sheet-accessor-information-configuration-process-1.png)
+
+<br />
+
+`JSON` 유형으로 생성한다.
+
+![구글 시트 접근자 정보 구성 과정 2](./images/google-sheet-accessor-information-configuration-process-2.png)
+
+### 코드 적용하기
+
+여기서 우리가 지금 당장 관심있는 값은 `client_email` 와 `private_key` 이다.
+
+생성된 `JSON` 파일과 시트에 대한 정보를 `.env` 에 관리할 수 있도록 하자.
+
+```bash
+SPREADSHEET_DOC_ID=구글시트 ID
+GOOGLE_SERVICE_ACCOUNT_EMAIL=JSON파일 client_email(서비스 계정)
+GOOGLE_PRIVATE_KEY=JSON파일 private_key
+```
+
+<br />
+
+`Node.js` 환경에서 구글 스프레드시트를 활용할 것이다.
+
+다음 라이브러리들을 설치하자.
+
+지금 예시는 간단하게 과정을 보여주는 것이기에 자바스크립트로 진행하고자 한다.
+
+```bash
+pnpm i google-spreadsheet google-auth-library dotenv
+```
+
+<br />
+
+다음은 **계정에 대한 접근 및 간단하게 시트 제목을 출력**하는 예시 코드이다.
+
+```js
+import { JWT } from 'google-auth-library'
+import { GoogleSpreadsheet } from 'google-spreadsheet'
+import 'dotenv/config'
+
+const serviceAccountAuth = new JWT({
+  email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+  key: process.env.GOOGLE_PRIVATE_KEY,
+  scopes: ['https://www.googleapis.com/auth/spreadsheets'],
+})
+
+const spreadsheetDocId = process.env.SPREADSHEET_DOC_ID
+
+const doc = new GoogleSpreadsheet(spreadsheetDocId, serviceAccountAuth)
+
+await doc.loadInfo()
+
+console.log(doc.title) // google-spreadsheet-playground
+```
+
+<br />
+
+`node 파일명.js`를 입력하면 성공적으로 콘솔이 출력될 것이다.
+
+<br />
+
+예제 코드와 별개로 노드 버전에 따라 [Top-level await](https://v8.dev/features/top-level-await) 을 허용하지 않을 수 있다.
+
+그때는 다음과 같이 비동기 함수를 래핑하는 형식으로 사용해야 한다.
+
+```js
+;(async function () {
+  await someAsyncFunction()
+})()
+```
+
+<br />
+
+여기까지의 과정을 담은 코드는 [해당 저장소](https://github.com/jgjgill/google-spreadsheet-playground/tree/d8ee2da72ad4f030482b4e6dbde83fef0964ee94)에서 확인할 수 있다.
+
+## 간단한 동작 예시
+
+`google-spreadsheet` 가 제공해주는 기본적인 기능들을 활용해보자.
+
+주로 사용되는 개념은 `sheet`, `row`, `cell`이다.
+
+<br />
+
+### sheet 관련 작업
+
+시트는 **스프레드시트 내 페이지 또는 탭**을 의미한다.
+
+URL에서 봤던 gid=sheetId 부분이다.
+
+<br />
+
+새로운 시트를 추가한다.
+
+```js
+await doc.addSheet({ title: '새로운 시트' })
+```
+
+![시트 추가 예제](./images/add-sheet-exmaple.png)
+
+<br />
+
+방금 추가한 시트를 삭제해보자.
+
+<br />
+
+`Id`, `Index`, `Title`와 같은 정보로 시트 정보를 가져올 수 있다.
+
+삭제는 `delete` 메서드를 통해 이루어진다.
+
+```js
+const newSheet = doc.sheetsByTitle['새로운 시트']
+await newSheet.delete()
+```
+
+![시트 삭제 예제](/images/posts/google-spreadsheet-with-javascript/delete-sheet-example.gif)
+
+<br />
+
+### row 관련 작업
+
+`row`와 관련된 동작을 살펴보자.
+
+<br />
+
+우선 `HeaderRow`에 값을 설정하는 것이 필요하다.
+
+첫 번째 행을 `HeaderRow`로 정의하는 것으로 보여진다.
+
+<br />
+
+`setHeaderRow`을 활용할 수 있다.
+
+```js
+sheet.setHeaderRow(['nickname', 'blog'])
+```
+
+![HeaderRow 추가 예제](./images/set-header-row-example.png)
+
+<br />
+
+추가된 `HeaderRow`에 데이터들을 추가할 수 있다.
+
+`addRow`, `getRows` 메서드를 통해 추가 및 읽기 동작을 진행한다.
+
+```javascript
+await sheet.addRow({
+  nickname: 'jgjgill',
+  blog: 'https://jgjgill-blog.netlify.app/',
+})
+
+const rows = await sheet.getRows()
+
+console.log(rows[0].get('nickname'), rows[0].get('blog'))
+```
+
+![Row 추가 예제](./images/add-row-example.png)
+
+### cell 관련 작업
+
+`cell` 같은 경우 조금 다른 방식으로 작업이 진행된다.
+
+로드한 값을 반환하지 않고 **로컬 캐시에 보관**하는 방식으로 진행된다.
+
+<br />
+
+`loadCells`로 셀을 가져오고 `saveUpdatedCells`를 통해 변경된 데이터를 저장한다.
+
+여기서 주의할 점은 `saveUpdatedCells`은 행 기반 방법이 아닌 **셀 기반 방법을 사용하여 변경한 내용만 저장**된다.
+
+<br />
+
+간단하게 `nickname` 영역을 `name`으로 변경해보자.
+
+```javascript
+await sheet.loadCells('A1:E10') // 셀 범위를 로컬 캐시에 로드 - 셀 반환하지 않음
+console.log(sheet.cellStats) // nonEmpty, loaded, total
+
+const a1 = sheet.getCell(0, 0) // zero-based index
+const a2 = sheet.getCell(1, 0)
+
+console.log(a1.value, a2.value)
+
+a1.value = 'name'
+a2.value = '이종길'
+a1.textFormat = { bold: true }
+
+await sheet.saveUpdatedCells()
+```
+
+![Cell 기능 예제](./images/cell-example.png)
+
+<br />
+
+이외에도 `google-spreadsheet`에는 시트와 관련된 여러 유용한 기능을 제공해주고 있기에 스프레드시트를 다양하게 활용해보자..! 🧐

@@ -1,0 +1,79 @@
+---
+title: 'JSON.stringify(error)는 {}이다?'
+date: '2024-05-22'
+---
+
+## 문제 상황
+
+에러 상황에서 발생한 로그를 문자열로 변환해서 확인해야 하는 일이 발생했다. 😵
+
+처음에는 단순히 문자열로 바꾸면 된다고 생각해서 `JSON.stringify()`를 활용했다.
+
+```js
+try {
+  throw new Error('에러가 발생했습니다..!')
+} catch (err) {
+  console.error(JSON.stringify(err))
+}
+```
+
+<br />
+
+제대로 에러에 대한 정보를 얻을 수 있을 것 같았는데 막상 확인해보니 `{}`가 출력되었다.
+
+![JSON.stringify() Error 콘솔](../../images/stringify-error-console.png)
+
+## 해결 과정
+
+제대로 동작하게 만들어주는 코드부터 살펴보면 다음과 같다.
+
+```ts
+JSON.stringify(err, Object.getOwnPropertyNames(err))
+```
+
+### Error 객체는 열거 가능한 속성이 존재하지 않는다.
+
+왜 이런 현상이 발생한 것일까?
+
+`JSON.stringify()`를 사용할 때 객체의 경우 **열거 가능한 속성만 직렬화가 가능**하다.
+
+<br />
+
+하지만 `Error` 객체의 모든 속성은 `enumerable`값이 `false`로 열거 가능한 속성이 존재하지 않는다.
+
+`Object.getOwnPropertyDescriptors()`를 통해 객체의 모든 속성 설명자를 확인할 수 있다.
+
+```js
+Object.getOwnPropertyDescriptors(new Error({ test: 'jgjg' }))
+```
+
+![getOwnPropertyDescriptors 예제](../../images/get-own-property-descriptors-example.png)
+
+<br />
+
+그래서 `Error`의 속성들을 열거 가능하도록 바꾸는 것이 필요하다.
+
+<br />
+
+`Object.getOwnPropertyNames()`는 열거할 수 없는 속성을 포함한 모든 속성을 배열로 반환한다.
+
+해당 값을 `JSON.stringify()`의 두 번째 매개변수에 넣어 변환에 포함시키자.
+
+```js
+try {
+  throw new Error('에러가 발생했습니다..!')
+} catch (err) {
+  console.error(JSON.stringify(err, Object.getOwnPropertyNames(err)))
+}
+```
+
+<br />
+
+이렇게 수정하면 정상적으로 에러가 출력이 된다. 🧐
+
+![JSON.stringify() 정상 출력](../../images/stringify-success.png)
+
+## 참고 문서
+
+- [Is it not possible to stringify an Error using JSON.stringify?](https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify)
+- [Stringify and Parse Errors in JavaScript](https://zirkelc.dev/posts/stringify-and-parse-errors-in-javascript)

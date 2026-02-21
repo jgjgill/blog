@@ -1,0 +1,68 @@
+---
+title: 'fetchQuery vs prefetchQuery'
+date: '2024-01-08'
+---
+
+## SSR 환경에서 TanStack Query 사용할 때
+
+초기 설정하는 부분은 생략하고 데이터를 `dehydrate` 및 `hydrate`하는 부분을 살펴볼 때 공식 문서에서는 다음과 같이 안내한다.
+
+```jsx
+export default async function PostsPage() {
+  const queryClient = new QueryClient()
+
+  await queryClient.prefetchQuery({
+    queryKey: ['posts'],
+    queryFn: getPosts,
+  })
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <Posts />
+    </HydrationBoundary>
+  )
+}
+```
+
+react query 관점에서 서버 컴포넌트는 데이터를 `prefetch`하는 장소이다.
+
+### queryClient.prefetchQuery
+
+주로 쿼리가 필요하기 전(서버에서) 미리 가져올 때 사용하는 비동기 메서드이다.
+**데이터를 던지거나 반환하지 않는다**는 점을 제외하면 `fetchQuery`와 동일하게 작동한다.
+
+### SSR환경에서는 queryClient.fetchQuery는 사용하면 안되는가?
+
+사용해도 된다.
+하지만 예상치 못한 상황이 발생할 수도 있다.
+
+```jsx
+export default async function PostsPage() {
+  const queryClient = new QueryClient()
+
+  const posts = await queryClient.fetchQuery({
+    queryKey: ['posts'],
+    queryFn: getPosts,
+  })
+
+  return (
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <div>Nr of posts: {posts.length}</div>
+      <Posts />
+    </HydrationBoundary>
+  )
+}
+```
+
+서버 컴포넌트에서는 **데이터 소유권과 재검증**에 대해 생각하는 것이 중요하다.
+
+예시의 경우 초기 페이지 렌더링에는 문제가 없다.
+하지만 이후에 `staleTime`이 지난 뒤 클라이언트에서 쿼리 유효성을 검사하게 되면 문제가 발생한다.
+
+`TanStack Query`는 서버 컴포넌트의 재검증을 할 수 없다.
+그래서 `posts.length`가 제대로 동기화되지 않게 된다.
+
+## 참고 문서
+
+- [queryClient.prefetchQuery](https://tanstack.com/query/latest/docs/react/reference/QueryClient#queryclientprefetchquery)
+- [Advanced Server Rendering](https://tanstack.com/query/v5/docs/react/guides/advanced-ssr)

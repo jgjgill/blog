@@ -1,0 +1,397 @@
+---
+title: '러닝 타입스크립트 CHAPTER 15 - 타입 운영'
+description: "러닝 타입스크립트 CHAPTER 15 '타입 운영'에 대해 알아보겠습니다."
+date: '2023-05-19'
+thumbnail: '../images/learing-typescript-thumbnail.png'
+thumbnail_alt: 'learing-typescript-thumbnail'
+category: 'study'
+---
+
+<Callout>💡 조건부, 매핑 같은 타입의 강력한 힘에는 큰 혼란이 따릅니다.</Callout>
+
+## 매핑된 타입
+
+타입스크립트는 **다른 타입의 속성을 기반으로 새로운 타입을 생성**하는 구문을 제공합니다.
+즉, 하나의 타입에서 다른 타입으로 **매핑**합니다.
+매핑된 타입은 다른 타입을 가져와서 해당 타입의 각 속성에 대해 일부 작업을 수행하는 타입입니다.
+
+매핑된 타입은 키 집합의 각 키에 대한 새로운 속성을 만들어 새로운 타입을 생성합니다.
+
+```ts
+type NewType = {
+  [K in OriginalType]: NewProperty
+}
+```
+
+매핑된 타입의 일반적인 예시는 유니언 타입에 존재하는 각 문자열 리터럴 키를 가진 객체를 생성하는 것입니다.
+
+```ts
+type Animals = 'alligator' | 'baboon' | 'cat'
+
+type AnimalCounts = {
+  [K in Animals]: number
+}
+// {
+//   alligator: number;
+//   baboon: number;
+//   cat: number;
+// }
+```
+
+### 타입에서 매핑된 타입
+
+매핑된 타입은 존재하는 타입에 `keyof` 연산자를 사용해 키를 가져올 수도 있습니다.
+
+```ts
+interface AnimalVariants {
+  alligator: boolean
+  baboon: number
+  cat: string
+}
+
+type AnimalCounts = {
+  [K in keyof AnimalVariants]: number
+}
+
+// {
+//   alligator: number;
+//   baboon: number;
+//   cat: number;
+// }
+```
+
+**매핑된 타입과 시그니처**
+
+인터페이스 멤버를 함수로 선언하는 방법에는 두 가지가 있습니다.
+
+- **member(): void 같은 메서드 구문**: 인터페이스의 멤버가 객체의 멤버로 호출되도록 의도된 함수임을 선언
+- **member: () => void 같은 속성 구문**: 인터페이스의 멤버가 독립 실행형 함수와 같다고 선언
+
+매핑된 타입은 객체 타입의 메서드와 속성 구문을 구분하지 않습니다.
+매핑된 타입은 메서드를 원래 타입의 속성으로 취급합니다.
+
+```ts
+interface Researcher {
+  researchMethod(): void
+  researchProperty: () => string
+}
+
+type JustProperties<T> = {
+  [K in keyof T]: T[K]
+}
+
+type ResearcherProperties = JustProperties<Researcher>
+
+// {
+//   researchMethod: () => void;
+//   researchProperty: () => string;
+// }
+```
+
+대부분의 실용적인 타입스크립트 코드에서 메서드와 속성의 차이는 잘 나타나지 않습니다.
+
+### 제한자 변경
+
+매핑된 타입은 원래 타입의 멤버에 대해 접근 제어 제한자인 `readonly`와 `?`도 변경 가능합니다.
+
+```ts
+interface Environmentalist {
+  area: string
+  name: string
+}
+
+type ReadonlyEnvironmentalist = {
+  readonly [K in keyof Environmentalist]: Environmentalist[K]
+}
+
+// {
+//   readonly area: string;
+//   readonly name: string;
+// }
+
+type OptionalReadonlyEnvironmentalist = {
+  [K in keyof ReadonlyEnvironmentalist]?: ReadonlyEnvironmentalist[K]
+}
+
+// {
+//   readonly area?: string | undefined;
+//   readonly name?: string | undefined;
+// }
+```
+
+새로운 타입의 제한자 앞에 `-`를 추가해 제한자를 제거할 수도 있습니다.
+`-readonly`나 `-?`을 사용합니다.
+
+### 제네릭 매핑된 타입
+
+매핑된 타입은 제네릭과 결합해 단일 타입의 매핑을 다른 타입에서 재사용할 수 있을 때 강력한 힘을 발휘합니다.
+
+```ts
+type MakeReadonly<T> = {
+  readonly [K in keyof T]: T[K]
+}
+
+interface Species {
+  genus: string
+  name: string
+}
+
+type ReadonlySpecies = MakeReadonly<Species>
+
+// {
+//   readonly genus: string;
+//   readonly name: string;
+// }
+```
+
+## 조건부 타입
+
+타입스크립트의 타입 시스템은 **이전 타입에 대한 논리적인 검사**를 바탕으로 새로운 구성(타입)을 생성합니다.
+**조건부 타입**의 개념은 기존 타입을 바탕을 두 가지 가능한 타입 중 하나로 확인되는 타입입니다.
+
+```ts
+type CheckStringAgainstNumber = string extends number ? true : false // false
+```
+
+### 제네릭 조건부 타입
+
+조건부 타입에서도 재사용 가능한 제네틱 타입을 적용할 수 있습니다.
+
+```ts
+type CheckAgainstNumber<T> = T extends number ? true : false
+
+type CheckString = CheckAgainstNumber<'parakeet'> // false
+
+type CheckNumber = CheckAgainstNumber<1981> // true
+```
+
+### 타입 분산
+
+조건부 타입은 유니언에 **분산**됩니다.
+결과 타입은 각 구성 요소에 조건부 타입을 적용하는 유니언이 됨을 의미합니다.
+`ConditionalType<T | U>`는 `Conditional<T> | Conditional<U>`와 같습니다.
+
+```ts
+type ArrayifyUnlessString<T> = T extends string ? T : T[]
+
+type HalfArrayified = ArrayifyUnlessString<string | number> // string | number[]
+```
+
+### 유추된 타입
+
+제공된 타입의 멤버에 접근하는 것은 타입의 멤버로 저장된 정보에 대해서는 잘 작동하지만 함수 매개변수 또는 반환 타입과 같은 다른 정보에 대해서는 알 수 없습니다.
+조건부 타입은 `extends` 절에 `infer` 키워드를 사용해 조건의 임의의 부분에 접근합니다.
+
+```ts
+type ArrayItems<T> = T extends (infer Item)[] ? Item : T
+
+type StringItem = ArrayItems<string> // string
+
+type StringArrayItem = ArrayItems<string[]> // string
+
+type String2DItem = ArrayItems<string[][]> // string[]
+```
+
+### 매팽된 조건부 타입
+
+메핑된 타입과 조건부 타입을 함께 사용하여 제네릭 템플릿 타입의 각 멤버에 조건부 로직을 적용할 수 있습니다.
+
+```ts
+type MakeAllMembersFunctions<T> = {
+  [K in keyof T]: T[K] extends (...args: any[]) => any ? T[K] : () => T[K]
+}
+
+type MemberFuntions = MakeAllMembersFunctions<{
+  alreadyFunction: () => string
+  notYetFunction: number
+}>
+
+// {
+//   alreadyFunction: () => string;
+//   notYetFunction: () => number;
+// }
+```
+
+## never
+
+올바른 위치에 `never` 타입 애너테이션을 추가하면 타입스크립트가 이전 런타임 예제 코드뿐만 아니라 타입 시스템에서 맞지 않는 **코드 경로를 더 공격적으로 탐지**합니다.
+
+### never와 교차, 유니언 타입
+
+bottom 타입인 `never`는 **존재할 수 없는 타입**이라는 의미를 가지고 있습니다.
+`never`가 교차 타입(&)과 유니언 타입(|)을 함께 사용하면 흥미롭게 작동합니다.
+
+- **교차 타입**(&)에 있는 `never`는 교차 타입을 `never`로 만듭니다.
+- **유니언 타입**(|)에 있는 `never`는 무시됩니다.
+
+```ts
+type NeverIntersection = never & string // never
+
+type NeverUnion = never | string // string
+
+// 값 필터링
+```
+
+### never와 조건부 타입
+
+`never`는 유니언에서 무시되기 때문에 유니언 타입에서 제네릭 조건부의 결과는 `never`가 아닌 것이 됩니다.
+
+```ts
+type OnlyStrings<T> = T extends string ? T : never
+
+type RedOrBlue = OnlyStrings<'red' | 'blue' | 0 | false> // 'red' | 'blue'
+```
+
+### never와 매핑된 타입
+
+유니언에서 `never`의 동작은 매핑된 타입에서 멤버를 필터링할 때도 유용합니다.
+
+- 유니언에서 `never`는 무시됩니다.
+- 매핑된 타입은 타입의 멤버를 매핑할 수 있습니다.
+- 조건부 타입은 조건이 충족되는 경우 타입을 `never`로 변환하는데 사용할 수 있습니다.
+
+```ts
+type OnlyStringProperties<T> = {
+  [K in keyof T]: T[K] extends string ? K : never
+}[keyof T]
+
+interface AllEventData {
+  participants: string[]
+  location: string
+  name: string
+  year: number
+}
+
+type OnlyStringEventData = OnlyStringProperties<AllEventData>
+```
+
+## 템플릿 리터럴 타입
+
+문자열 값을 입력하기 위한 전략으로 두 가지를 제시했습니다.
+
+- **원시 string 타입**: 값이 세상의 모든 문자열이 될 수 있는 경우
+- **''와 'abc' 같은 리터럴 타입**: 값이 오직 한 가지 타입만 될 수 있는 경우
+
+그러나 경우에 따라 문자열이 일부 문자열 패턴과 일치함을 나타내고 싶을 수 있습니다.
+이때 타입스크립트 구문으로 **템플릿 리터럴 타입**을 사용할 수 있습니다.
+
+```ts
+type Greeting = `Hello${string}`
+let matches: Greeting = 'Hello, world' // OK
+```
+
+템플릿 리터럴 타입을 **더 좁은 문자열 패턴으로 제한**하기 위해 포괄적인 `string` 원시 타입 대신 문자열 리터럴 타입과 유니언을 타입 보간법에 사용할 수 있습니다.
+
+```ts
+type Brightness = 'dark' | 'light'
+type Color = 'blue' | 'red'
+
+type BrightnessAndColor = `${Brightness}-${Color}` // 'dark-blue' | 'dark-red' | 'light-blue' | 'light-red'
+
+let colorOk: BrightnessAndColor = 'dark-blue' // OK
+```
+
+### 고유 문자열 조작 타입
+
+문자열 타입 작업을 지원하기 위해 타입스크립트는 **고유 제네릭 유틸리티 타입**을 제공합니다.
+
+- **Uppercase**: 문자열 리터럴 타입을 대문자로 변환
+- **Lowercase**: 문자열 리터럴 타입을 소문자로 변환
+- **Capitalize**: 문자열 리터럴 타입의 첫 번째 문자를 대문자로 변환
+- **Uncapitalize**: 문자열 리터럴 타입의 첫 번째 문자를 소문자로 변환
+
+### 템플릿 리터럴 키
+
+템플릿 리터럴 타입은 원시 문자열 타입과 문자열 리터럴 사이의 중간 지점이므로 여전히 **문자열**입니다.
+템플릿 리터럴 타입은 문자열 리터럴을 사용할 수 있는 모든 위치에서 사용 가능합니다.
+
+```ts
+type DataKey = 'location' | 'name' | 'year'
+
+type ExistenceChecks = {
+  [K in `check${Capitalize<DataKey>}`]: () => boolean
+}
+
+// {
+//   checkLocation: () => boolean;
+//   checkName: () => boolean;
+//   checkYear: () => boolean;
+// }
+```
+
+### 매핑된 타입 키 다시 매핑하기
+
+타입스크립트는 템플릿 리터럴 타입을 사용해 원래 멤버를 기반으로 매핑된 타입의 멤버에 대한 새로운 키를 생성할 수 있습니다.
+매핑된 타입에서 인덱스 시그니처에 대한 템플릿 리터럴 타입 다음에 `as` 키워드를 배치하면 결과 타입의 키는 템플릿 리터럴 타입과 일치하도록 변경됩니다.
+이렇게 하면 매핑된 타입은 **원래 값을 계속 참조**하면서 **각 매핑된 타입 속성에 대한 다른 키**를 가질 수 있습니다.
+
+```ts
+interface DataEntry<T> {
+  key: T
+  value: string
+}
+
+type DataKey = 'location' | 'name' | 'year'
+
+type DataEntryGetters = {
+  [K in DataKey as `get${Capitalize<K>}`]: () => DataEntry<K>
+}
+
+// {
+//     getLocation: () => DataEntry<"location">;
+//     getName: () => DataEntry<"name">;
+//     getYear: () => DataEntry<"year">;
+// }
+```
+
+키를 다시 매핑하는 작업과 다른 타입 운영을 결합해 기존 타입 형태를 기반으로 하는 매핑된 타입을 생성하는 것입니다.
+
+자바스크립트에서 객체 키는 `string` 또는 `symbol`이 될 수 있고,
+`symbol` 키는 원시 타입이 아니므로 템플릿 리터럴 타입으로 사용할 수 없습니다.
+
+```ts
+type TurnIntoGettersDirect<T> = {
+  [K in keyof T as `get${K}`]: () => T[K]
+}
+
+// Type 'K' is not assignable to type 'string | number | bigint | boolean | null | undefined'.
+//   Type 'keyof T' is not assignable to type 'string | number | bigint | boolean | null | undefined'.
+//     Type 'string | number | symbol' is not assignable to type 'string | number | bigint | boolean | null | undefined'.
+//       Type 'symbol' is not assignable to type 'string | number | bigint | boolean | null | undefined'.
+```
+
+이러한 제한 사항을 피하기 위해 `string`과 교차 타입(&)을 사용하여 **문자열이 될 수 있는 타입만 사용하도록 강제**합니다.
+`string & symbol`은 `never`가 되므로 전체 템플릿 문자열은 `never`가 되고 타입스크립트는 이를 무시하게 됩니다.
+
+```ts
+const someSymbol = Symbol('')
+
+interface HasStringAndSymbol {
+  StringKey: string
+  [someSymbol]: number
+}
+
+type TurnIntoGetters<T> = {
+  [K in keyof T as `get${string & K}`]: () => T[K]
+}
+
+type GettersJustString = TurnIntoGetters<HasStringAndSymbol>
+
+// {
+//     getStringKey: () => string;
+// }
+```
+
+## 타입 운영과 복잡성
+
+> 애초에 디버깅은 코드를 작성하는 것보다 두 배나 더 어렵습니다.
+> 따라서 코드를 가능한 한 영리하게 작성하는 사람일지라도,
+> 디버그할 정도로 똑똑하지는 않습니다.
+
+## 마치며
+
+- 기존 타입을 새로운 타입으로 변환하기 위해 **매핑된 타입** 사용하기
+- **조건부 타입**을 사용해서 타입 운영에 로직 도입하기
+- 교차, 유니언, 조건부 타입, 매핑된 타입과 `never`가 상호작용하는 방법 배우기
+- **템플릿 리터럴 타입**을 사용해서 **문자열 타입의 패턴** 나타내기
+- **타입 키를 수정**하기 위해 **템플릿 리터럴 타입과 매핑된 타입 결합**하기

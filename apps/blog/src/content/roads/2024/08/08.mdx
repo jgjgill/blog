@@ -1,0 +1,53 @@
+---
+title: 'robots.txt 정리'
+date: '2024-08-08'
+---
+
+커뮤니티 관련 작업을 진행하다 보니 SEO 관련 작업 중요도가 높다.
+
+`robots.txt` 관련 작업을 하면서 알게 된 내용을 다시 정리하고자 한다.
+
+## 크롤러
+
+크롤러는 웹사이트의 페이지를 탐색하고 인덱싱하는데 사용된다. ex) Googlebot
+
+다음과 같은 동작을 한다고 한다.
+
+- 시드 URL: 시드 URL(seed URL)이라고 불리는 초기 URL 목록에서 시작
+- 링크 추적: 시드 URL에서 시작하여 페이지 내의 모든 링크를 추적
+- 페이지 분석: 페이지의 콘텐츠, 메타 태그, 링크 등을 분석하여 검색 엔진의 인덱스에 저장
+- 주기적 재방문: 주기적으로 웹사이트를 재방문하여 변경된 내용을 업데이트
+
+## robots.txt
+
+여기서 크롤러가 웹사이트의 어떤 부분을 크롤링할 수 있는지 또는 크롤링할 수 없는지를 지시할 수 있도록 해주는 것이 `robots.txt`이다.
+
+<br />
+
+보통 다음과 같이 사용된다.
+
+**robots.txt**
+
+```plaintext
+User-agent: *
+Disallow: /private/
+Allow: /private/public-page.html
+Sitemap: http://www.example.com/sitemap.xml
+```
+
+<br />
+
+- `User-agent`: 특정 검색 엔진 크롤러 지정
+- `Disallow`: 크롤러가 접근하지 못하도록 할 URL 경로 지정
+- `Allow`: 크롤러가 접근할 수 있도록 허용할 URL 경로 지정
+- `Sitemap`: 크롤러에게 효율적으로 페이지 탐색 및 인덱싱 돕는 역할
+
+### noindex 메타 태그
+
+`robots.txt` 파일을 사용하지 않고도 개별 페이지에서 `noindex` 메타 태그를 사용하면 페이지의 인덱싱을 막을 수 있다고 한다.
+
+```html
+<head>
+  <meta name="robots" content="noindex" />
+</head>
+```

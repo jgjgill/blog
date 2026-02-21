@@ -1,0 +1,40 @@
+---
+title: 'zsh: command not found: code'
+date: '2024-01-23'
+---
+
+## zsh: command not found: code
+
+세팅할 때마다 매번 검색하기 귀찮아서 한 번 정리하고자 한다.
+
+VSCode에서 `Command Palatte`를 실행한다. (command + shift + p)
+
+그 다음 `Shell Conmmand: Install 'code' command in PATH` 명령어를 실행한다.
+
+![Command Palatte](../../images/command-palatte.png)
+
+### EACCES: permission denied, unlink '/usr/local/bin/code'
+
+다음과 같은 에러가 발생했다.
+
+![EACCES Error](../../images/eacces-error.png)
+
+해당 코드를 입력한다.
+
+```bash
+cd /usr/local/bin
+sudo rm -rf code
+```
+
+![EACCES Solution](../../images/eacces-solution.png)
+
+다시 `Shell Conmmand: Install 'code' command in PATH` 명령어를 실행하면 제대로 넘어간다.
+
+<div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+  <div>
+    ![zsh code solution 1](../../images/zsh-code-solution-1.png)
+  </div>
+  <div>
+    ![zsh code solution 2](../../images/zsh-code-solution-2.png)
+  </div>
+</div>

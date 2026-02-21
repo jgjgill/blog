@@ -1,0 +1,44 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n';
+
+const locale = 'ko';
+const t = useTranslations(locale);
+
+const posts = (await getCollection('posts'))
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 5);
+
+function getSlug(id: string) {
+  return id.split('/').at(-1) ?? id;
+}
+---
+
+<BaseLayout title="jgjgill">
+  <section class="space-y-12">
+    <div>
+      <h1 class="text-2xl font-bold">jgjgill</h1>
+      <p class="mt-2 text-muted">{t.home.description}</p>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="font-semibold">최근 글</h2>
+        <a href="/post" class="text-sm text-muted hover:text-fg transition-colors">
+          전체 보기 →
+        </a>
+      </div>
+      <ul class="space-y-4">
+        {posts.map((post) => (
+          <li>
+            <a href={`/post/${getSlug(post.id)}`} class="group block">
+              <p class="font-medium group-hover:underline underline-offset-2">{post.data.title}</p>
+              <p class="text-sm text-muted mt-0.5">{post.data.date}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { getLocaleFromUrl } from '../i18n';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalUrl?: string;
+}
+
+const { title, description, ogImage, canonicalUrl } = Astro.props;
+const locale = getLocaleFromUrl(Astro.url);
+const siteUrl = 'https://jgjgill.com';
+const defaultDescription =
+  locale === 'ko' ? '프론트엔드 개발자 이종길입니다.' : 'Frontend developer jgjgill.';
+const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
+---
+
+<!doctype html>
+<html lang={locale}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description ?? defaultDescription} />
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <!-- OG -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description ?? defaultDescription} />
+    <meta property="og:url" content={canonicalUrl ?? siteUrl} />
+    <meta property="og:site_name" content="jgjgill" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:locale" content={locale === 'ko' ? 'ko_KR' : 'en_US'} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+
+    <!-- RSS -->
+    <link rel="alternate" type="application/rss+xml" title="jgjgill" href="/rss.xml" />
+
+    <!-- Pretendard -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css"
+    />
+
+    <ClientRouter />
+
+    <!-- Google Analytics -->
+    {import.meta.env.PROD && <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-FYFKVCHDP2"></script>}
+    {import.meta.env.PROD && (
+      <script is:inline>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { window.dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-FYFKVCHDP2', { send_page_view: false });
+
+        document.addEventListener('astro:page-load', () => {
+          gtag('event', 'page_view', {
+            page_location: window.location.href,
+          });
+        });
+      </script>
+    )}
+
+    <!-- Google AdSense -->
+    {import.meta.env.PROD && (
+      <script
+        is:inline
+        async
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2173037699636228"
+        crossorigin="anonymous"
+      ></script>
+    )}
+  </head>
+  <body class="flex flex-col min-h-dvh">
+    <Header locale={locale} />
+    <main class="flex-1 w-full max-w-2xl mx-auto px-4 py-8 md:py-12">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+
+</html>

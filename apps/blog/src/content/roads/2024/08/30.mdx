@@ -1,0 +1,49 @@
+---
+title: 'cache.modify 정리'
+date: '2024-08-30'
+---
+
+GraphQL에서는 `cache.modify`를 통해 캐싱된 필드의 값을 직접 수정할 수 있다.
+
+<br />
+
+### `writeQuery` `writeFragment`와의 공통점
+
+수정된 필드에 의존하는 모든 활성 쿼리가 새로 고침된다.
+
+(`broadcast: false` 옵션을 줬을 때는 예외이다.)
+
+<br />
+
+### `writeQuery` `writeFragment`와의 차이점
+
+`modify`는 [merge function](https://www.apollographql.com/docs/react/caching/cache-field-behavior/#the-merge-function)을 우회한다.
+
+그래서 필드가 항상 지정한 값으로 정확하게 덮어쓰게 된다.
+
+`modify`는 캐시에 존재하지 않은 필드는 사용할 수 없다.
+
+<br />
+
+### `broadcast` `optimistic` 옵션
+
+`cache.modify`에는 `Apollo Client`의 내부 동작을 제어하는 옵션으로 `broadcast`, `optimistic`가 존재한다.
+
+이 옵션들은 캐시의 변경 사항이 어떻게 다른 부분에 반영되는지를 결정한다.
+
+<br />
+
+**broadcast**
+
+- 캐시가 수정되었을 때 `Apollo Client`가 해당 변경 사항과 관련된 쿼리의 새로고침 여부를 결정한다.
+- 기본값은 `true`이다.
+
+**optimistic**
+
+- 캐시된 값도 수정하는 낙관적 업데이트로 수행 여부를 결정한다.
+- 기본값은 `false`이다.
+
+## 참고 문서
+
+- [Using cache.modify](https://www.apollographql.com/docs/react/caching/cache-interaction/#using-cachemodify)
+- [modify](https://www.apollographql.com/docs/react/api/cache/InMemoryCache/#modify)

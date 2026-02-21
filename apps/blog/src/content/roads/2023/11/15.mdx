@@ -1,0 +1,53 @@
+---
+title: '내가 걸어온 길'
+date: '2023-11-15'
+---
+
+## My Road
+
+블로그를 풍부하게 만들고 싶어서 새로운 기능을 추가해봤다.
+
+금방 할 줄 알았는데 간만에 Gatsby 코드를 살펴보느라 조금 고생한 것 같다.. 😇
+
+### 한 페이지에서 여러 mdx파일을 받아올 수 없다니...
+
+원래는 전체 mdx를 받아와서 한 화면에 모든 컨텐츠를 보여주려 했다.
+
+하지만 문제가 발생했는데..
+
+mdx파일에 대한 스타일링으로 `@mdx-js/react` 라이브러리의 `MDXProvider`을 사용하고 있다.
+
+근데 `MDXProvider`은 `children`을 통해 mdx을 꾸며준다.
+
+```tsx
+<MDXProvider components={components}>{children}</MDXProvider>
+```
+
+하지만 여러 MDX파일에 대한 데이터는 `children`에서 데이터가 오지 않는다.
+
+`graphql`을 통해 데이터를 받는 수밖에 없다.
+
+그래서 어떻게 구현할 수 있는지 문서 좀 찾아봤지만 현재로서는 구현하기 힘든 것 같다.
+
+이런 식으로 쓰길 원했는데 현재 버전에서는 `MDXRenderer`가 삭제되었다.. 😂
+
+```tsx
+<MDXProvider components={components}>
+  <MDXRenderer>{mdx.body}</MDXRenderer>
+</MDXProvider>
+```
+
+**관련 이슈**
+
+- [Render multiple mdx file into a single page](https://github.com/gatsbyjs/gatsby/discussions/37301)
+- [MDXRenderer is not working](https://github.com/gatsbyjs/gatsby/discussions/34714)
+
+## 기획을 변경하자!
+
+어쩔 수 없이 기획을 변경했다.
+
+아쉽지만 첫 화면에는 제목을 보여주고 페이지를 이동하는 방식으로 하자..!
+
+구현해놓고 보니 이것도 나쁘지 않는 것 같다.
+
+제목에서 어그로를 끌기 위해 고민 좀 해야겠지만.. 😚

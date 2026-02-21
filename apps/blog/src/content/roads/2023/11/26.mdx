@@ -1,0 +1,49 @@
+---
+title: 'Next.js 13 에러 삽질기 - unable to verify the first certificate'
+date: '2023-11-26'
+---
+
+## 에러 상황
+
+다음과 같은 에러가 발생했다.
+
+![next-js-13-first-certificate-error](../../images/next-js-13-first-certificate-error.png)
+
+처음 에러 문구를 봤을 때 `updateDehydratedSuspenseComponent`, `updateSuspenseComponent`가 있어서 `Suspense`와 관련된 에러로 생각했다.
+
+뭐 `Suspense` 코드를 적용하는 과정에서 발생해서 완전히 틀린 거는 아니지만 정확한 문제 원인은 아니었다.
+
+이것 때문에 잘못된 방향으로 삽질 좀 했다.. 😇
+
+### Axios 관련 에러
+
+브라우저상이 아닌 서버 상에서 생긴 로그를 확인해보면 다음과 같다.
+
+![next-js-13-server-error-log](../../images/next-js-13-server-error-log.png)
+
+이때 `Axios`와 관련된 에러일수도 있겠다는 생각을 했다.
+
+관련해서 자료를 찾아보니 다음과 같은 문제로 발생했던 에러였다.
+
+- 일반적으로 `Axios`는 브라우저에서 비동기 요청을 하는데 사용되는 라이브러리
+- 브라우저에서 수행하면 브라우저가 `Axios`에 대한 인증서 처리
+- 서버에서 `Axios`를 사용하는 경우 응답을 가져올 수 없어서 오류 발생
+
+<br />
+
+따라서 `Axios` 관련해서 다음 코드를 추가해주면 된다.
+
+```ts
+import axios from 'axios';
+import https from 'https';
+
+export const axiosInstance = axios.create({
+  ...
+  httpsAgent: new https.Agent({ rejectUnauthorized: false }),
+});
+```
+
+## 참고 문서
+
+- [AxiosError: self signed certificate](https://github.com/axios/axios/issues/5407)
+- [Solved: Unable to Verify the First Certificate in Axios Request](https://backbencher.dev/solved-unable-to-verify-first-certificate-axios-request)

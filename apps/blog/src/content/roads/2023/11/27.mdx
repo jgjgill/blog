@@ -1,0 +1,35 @@
+---
+title: 'TanStack v5 - cacheTime 사라지다?'
+date: '2023-11-27'
+---
+
+## gcTime 으로 변경되다
+
+`cacheTime` 에서 `gcTime`으로 이름이 변경되었다.
+
+이름을 변경한 이유를 원문 그대로 가져오면 다음과 같다.
+
+> Almost everyone gets cacheTime wrong.
+> It sounds like "the amount of time that data is cached for", but that is not correct.
+
+**데이터가 캐시된 시간**처럼 여겨져서 `cacheTime`을 잘못 이해하는 경우가 많아 변경한 것 같다.
+
+### 쿼리가 stale할 때 시작하자!
+
+해당 개념에서 잊지 말아야 할 주요 포인트는 **쿼리가 사용되지 않을 때 시작한다**는 것이다.
+
+쿼리가 계속 사용되면 `cacheTime`, 즉 `gcTime`은 아무 일도 하지 않고 쿼리가 사용되지 않는 즉시 시작된다.
+
+시간이 지나면 데이터가 가비지 수집된다.
+
+여기서 변경된 네이밍으로 `gc` 는 가비지 수집(garbage collect)을 의미한다.
+
+### 끊임없이 변하는 프론트엔드
+
+벌써 내 정보가 레거시가 되는 것을 경험하게 되었다.. 😂
+
+최신 문서를 가까이 하면서 꾸준하게 공부하자..!
+
+## 참고 문서
+
+- [Rename cacheTime to gcTime](https://tanstack.com/query/v5/docs/react/guides/migrating-to-v5#rename-cachetime-to-gctime)

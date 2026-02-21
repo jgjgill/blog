@@ -1,0 +1,148 @@
+---
+title: '최적화 첫걸음 내딛기'
+date: '2024-12-25'
+---
+
+## 프로젝트의 번들링을 분석하자
+
+너무나도 아픈 곳이 많은 우리 프로젝트.. 🤕
+
+하나씩 개선하고 싶은데 뭐부터 해야할까?
+
+### Next.js + Webpack Bundle Analyzer
+
+우선 지표 및 정보들을 얻는 것이 중요하다.
+
+관련 도구를 설치하자.
+
+<br />
+
+```bash
+npm install @next/bundle-analyzer
+```
+
+<br />
+
+**next.config.js**
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {}
+
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+})
+
+module.exports = withBundleAnalyzer(nextConfig)
+```
+
+<br />
+
+**실행 명령어**
+
+```bash
+ANALYZE=true npm run build
+# or
+ANALYZE=true yarn build
+# or
+ANALYZE=true pnpm build
+```
+
+## 번들 분석 옵션
+
+3개의 차트가 나온다.
+
+<br />
+
+### analyze/client
+
+![analyze/client 차트](../../images/analyze-client-chart.png)
+
+<br />
+
+- 클라이언트 사이드 코드의 번들 분석
+- 브라우저에서 실행되는 코드의 번들 크기
+
+### analyze/server
+
+![analyze/server 차트](../../images/analyze-server-chart.png)
+
+<br />
+
+- 서버 사이드 코드의 번들 분석
+- 서버에서 실행되는 코드 분석
+
+### server/analyze/server
+
+![server/analyze/server 차트](../../images/server-analyze-server-chart.png)
+
+<br />
+
+- 전체 구조 분석
+- `Next.js` 서버 자체의 코드와 서버 사이드 렌더링 관련 코드 포함
+
+## 번들 크기 측정 지표
+
+실행된 차트에서는 다음 지표들을 확인할 수 있다.
+
+### Stat Size (Static Size)
+
+- 파일의 실제 물리적 크기
+- 디스크에 저장된 원본 파일 크기
+
+### Parsed / Compiled Size
+
+- JS 엔진이 코드를 파싱하고 컴파일한 후의 크기
+- 브라우저가 실제 실행할 때 메모리에서 차지하는 크기
+- 주석, 공백 등이 제거된 크기
+
+### Gzipped Size
+
+- 네트워크 통해 전송될 때의 압축 크기
+- 서버에서 gzip 압축을 적용한 후의 크기
+- 실제 사용자가 다운로드한 크기
+
+## 이상하게 배포 환경에서만 에러가 발생?!
+
+![@next/bundle-analyzer 502 에러](../../images/next-bundle-analyzer-502-error.png)
+
+<br />
+
+로컬에서 테스트했을 때는 이상이 없었는데 배포 환경에서 502 에러가 발생했다.. 🫠
+
+<br />
+
+> Note: if installing as a devDependency make sure to wrap the require in
+> a process.env check as next.config.js is loaded during next start as well.
+
+<br />
+
+해당 상황을 팀에 공유했는데 다행히도 빠르게 관련 정보를 파악할 수 있었다. 😂
+
+배포 환경에서는 기본적으로 `devDependencies`의 패키지들이 설치되지 않는다.
+
+<br />
+
+**Before**
+
+```
+"devDependencies": {
+  ...
+  "@next/bundle-analyzer": "12.3.4"
+}
+```
+
+<br />
+
+**After**
+
+```
+"dependencies": {
+  ...
+  "@next/bundle-analyzer": "12.3.4"
+}
+```
+
+<br />
+
+이제 배포 환경에서도 에러가 발생하지 않는다. 😮‍💨

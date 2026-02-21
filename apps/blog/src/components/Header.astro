@@ -1,0 +1,61 @@
+---
+import { useTranslations, getLocalePath, getAlternateLocales, type Locale } from "../i18n";
+import Search from "./Search.astro";
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const prefix = getLocalePath(locale);
+const alternateLocales = getAlternateLocales(locale);
+---
+
+<header class="w-full border-b border-border" transition:persist>
+  <nav class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
+    <a href={`${prefix}/`} class="font-bold text-base tracking-tight">
+      jgjgill
+    </a>
+    <ul class="flex items-center gap-5 text-sm text-muted">
+      <li>
+        <a
+          href={`${prefix}/post`}
+          class="hover:text-fg transition-colors"
+        >
+          {t.nav.post}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`${prefix}/road`}
+          class="hover:text-fg transition-colors"
+        >
+          {t.nav.road}
+        </a>
+      </li>
+      <li>
+        <a
+          href={`${prefix}/about`}
+          class="hover:text-fg transition-colors"
+        >
+          {t.nav.about}
+        </a>
+      </li>
+      {alternateLocales.map((alt) => (
+        <li>
+          <a
+            href={`${getLocalePath(alt)}/`}
+            class="hover:text-fg transition-colors"
+            aria-label="Switch language"
+          >
+            {alt.toUpperCase()}
+          </a>
+        </li>
+      ))}
+      <li>
+        <Search />
+      </li>
+    </ul>
+  </nav>
+</header>

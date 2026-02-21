@@ -1,0 +1,101 @@
+---
+title: '커링을 활용해서 간결한 코드 만들기'
+date: '2023-12-26'
+---
+
+## 초기 코드
+
+난이도에 따른 체크박스를 구현하고자 했다.
+
+우선 초기 코드를 살펴보자.
+
+![커링 리팩터링 과정 1](../../images/currying-first-code.png)
+
+내부 로직을 없애서 핵심적인 부분만 보면 다음과 같다.
+
+```tsx
+<Chechbox onClick={(e) => console.log(e, '하')} />
+```
+
+## 리팩터링 도입
+
+하지만 난이도는 하, 중, 상으로 이루어진다.
+이것을 체크박스마다 일일이 쓸 수는 없다.
+
+`onClick` 함수를 따로 만들 필요가 있다.
+
+![커링 리팩터링 과정 2-1](../../images/currying-second-code-1.png)
+
+![커링 리팩터링 과정 2-2](../../images/currying-second-code-2.png)
+
+이번에도 이해하기 쉽게 핵심만 바라보자.
+
+```tsx
+const onClickToggle = (e, difficulty) => {
+  console.log(e, difficulty)
+}
+
+const onClick = () => <Chechbox onClick={(e) => onClickToggle(e, '하')} />
+const onClick = () => <Chechbox onClick={(e) => onClickToggle(e, '중')} />
+const onClick = () => <Chechbox onClick={(e) => onClickToggle(e, '상')} />
+```
+
+## 커링 적용하기
+
+여기서 커링을 활용하면 코드를 더 깔끔하게 구성할 수 있다.
+
+### 커링이란?
+
+커링은 **함수를 부분적으로 실행하여 새로운 함수를 만들어내는 기법**이다.
+
+텍스트보다는 코드를 보는게 훨씬 이해하기 쉬울 것이다.
+
+```ts
+// 커링을 사용하지 않은 경우
+function add(x, y, z) {
+  return x + y + z
+}
+
+console.log(add(1, 2, 3)) // 출력: 6
+
+// 커링을 적용한 경우
+function curryAdd(x) {
+  return function (y) {
+    return function (z) {
+      return x + y + z
+    }
+  }
+}
+
+console.log(curryAdd(1)(2)(3)) // 출력: 6
+```
+
+### 실전으로
+
+커링을 적용할 수 있는 부분은 다음과 같다.
+
+![커링 간단한 버전](../../images/currying-simple-version.png)
+
+커링을 활용해서 리팩터링을 해보자.
+
+![커링 리팩터링 과정 3-1](../../images/currying-third-code-1.png)
+
+![커링 리팩터링 과정 3-2](../../images/currying-third-code-2.png)
+
+이 흐름을 놓치지 말자.
+
+```tsx
+const onClickToggle = (difficulty) => (e) => {
+  console.log(e, difficulty)
+}
+
+const onClick = () => <Chechbox onClick={onClickToggle('하')} />
+const onClick = () => <Chechbox onClick={onClickToggle('중')} />
+const onClick = () => <Chechbox onClick={onClickToggle('상')} />
+```
+
+## 리팩터링 코드
+
+최종 코드는 다음과 같다.
+
+![커링 리팩터링 최종 코드](../../images/currying-last-code.png)
