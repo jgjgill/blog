@@ -1,5 +1,6 @@
 ---
 import { useTranslations, getLocalePath, getAlternateLocales, type Locale } from "../i18n";
+import Search from "./Search.astro";
 
 interface Props {
   locale: Locale;
@@ -11,7 +12,7 @@ const prefix = getLocalePath(locale);
 const alternateLocales = getAlternateLocales(locale);
 ---
 
-<header class="w-full border-b border-border">
+<header class="w-full border-b border-border" transition:persist>
   <nav class="max-w-2xl mx-auto px-4 h-14 flex items-center justify-between">
     <a href={`${prefix}/`} class="font-bold text-base tracking-tight">
       jgjgill
@@ -52,6 +53,9 @@ const alternateLocales = getAlternateLocales(locale);
           </a>
         </li>
       ))}
+      <li>
+        <Search />
+      </li>
     </ul>
   </nav>
 </header>

@@ -13,20 +13,151 @@ const { headings } = Astro.props;
 const filtered = headings.filter((h) => h.depth <= 3);
 ---
 
-{filtered.length > 1 && (
-  <nav class="toc text-sm">
-    <p class="font-semibold mb-2 text-xs uppercase tracking-wide text-muted">목차</p>
-    <ul class="space-y-1">
-      {filtered.map((h) => (
-        <li style={`padding-left: ${(h.depth - 2) * 0.75}rem`}>
-          <a
-            href={`#${h.slug}`}
-            class="text-muted hover:text-fg transition-colors line-clamp-1"
-          >
-            {h.text}
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
-)}
+{
+  filtered.length > 1 && (
+    <nav
+      id="toc"
+      class="toc text-sm sticky top-4 mb-8 border border-border rounded-lg bg-bg z-10"
+    >
+      <button
+        id="toc-toggle"
+        class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-border/30 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border"
+        aria-expanded="true"
+        aria-controls="toc-list"
+      >
+        <span class="font-semibold text-xs uppercase tracking-wide text-muted">
+          목차
+        </span>
+        <span
+          id="toc-current"
+          class="text-xs text-muted truncate max-w-[70%] text-right hidden"
+        />
+        <svg
+          id="toc-chevron"
+          xmlns="http://www.w3.org/2000/svg"
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="shrink-0 ml-2 transition-transform duration-200"
+        >
+          <path d="m18 15-6-6-6 6" />
+        </svg>
+      </button>
+
+      <div id="toc-list" class="grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows: 1fr">
+      <ul class="min-h-0 overflow-hidden">
+        <div class="px-4 pb-3 space-y-1">
+        {filtered.map((h) => (
+          <li style={`padding-left: ${(h.depth - 2) * 0.75}rem`}>
+            <a
+              href={`#${h.slug}`}
+              data-toc-slug={h.slug}
+              class="toc-link text-muted hover:text-fg transition-colors line-clamp-1 block py-0.5"
+            >
+              {h.text}
+            </a>
+          </li>
+        ))}
+        </div>
+      </ul>
+      </div>
+    </nav>
+  )
+}
+
+<script>
+  function initToc() {
+    const toc = document.getElementById("toc");
+    if (!toc) return;
+
+    const toggle = document.getElementById("toc-toggle");
+    const list = document.getElementById("toc-list");
+    const chevron = document.getElementById("toc-chevron");
+    const currentLabel = document.getElementById("toc-current");
+    const links = toc.querySelectorAll<HTMLAnchorElement>(".toc-link");
+
+    if (!toggle || !list || !chevron || !currentLabel) return;
+
+    // 토글 열기/닫기
+    let isOpen = true;
+
+    function setOpen(open: boolean) {
+      isOpen = open;
+      list.style.gridTemplateRows = open ? "1fr" : "0fr";
+      chevron.style.transform = open ? "" : "rotate(180deg)";
+      currentLabel.classList.toggle("hidden", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    }
+
+    toggle.addEventListener("click", () => setOpen(!isOpen));
+
+    // smooth scroll
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const slug = link.getAttribute("data-toc-slug");
+        if (!slug) return;
+        const target = document.getElementById(slug);
+        target?.scrollIntoView({
+          behavior: window.matchMedia("(prefers-reduced-motion: reduce)")
+            .matches
+            ? "instant"
+            : "smooth",
+        });
+      });
+    });
+
+    // IntersectionObserver: 현재 섹션 하이라이트
+    const headingEls = Array.from(links)
+      .map((l) => document.getElementById(l.dataset.tocSlug ?? ""))
+      .filter((el): el is HTMLElement => el !== null);
+
+    let activeSlug = "";
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            activeSlug = entry.target.id;
+          }
+        }
+
+        links.forEach((link) => {
+          const isActive = link.dataset.tocSlug === activeSlug;
+          link.classList.toggle("text-fg", isActive);
+          link.classList.toggle("text-muted", !isActive);
+          link.classList.toggle("font-medium", isActive);
+        });
+
+        const activeLink = toc.querySelector<HTMLAnchorElement>(
+          `[data-toc-slug="${activeSlug}"]`
+        );
+        if (currentLabel && activeLink) {
+          currentLabel.textContent = activeLink.textContent;
+        }
+      },
+      { rootMargin: "-56px 0px -60% 0px" }
+    );
+
+    headingEls.forEach((el) => observer.observe(el));
+
+    // 스크롤 내리면 자동 접힘
+    const sentinel = document.getElementById("toc-sentinel");
+    if (sentinel) {
+      const collapseObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry.isIntersecting) setOpen(false);
+        },
+        { threshold: 0 }
+      );
+      collapseObserver.observe(sentinel);
+    }
+  }
+
+  document.addEventListener("astro:page-load", initToc);
+</script>

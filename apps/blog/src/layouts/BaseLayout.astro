@@ -62,7 +62,13 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
         window.dataLayer = window.dataLayer || [];
         function gtag() { window.dataLayer.push(arguments); }
         gtag('js', new Date());
-        gtag('config', 'G-FYFKVCHDP2');
+        gtag('config', 'G-FYFKVCHDP2', { send_page_view: false });
+
+        document.addEventListener('astro:page-load', () => {
+          gtag('event', 'page_view', {
+            page_location: window.location.href,
+          });
+        });
       </script>
     )}
 
