@@ -34,7 +34,7 @@ PASS 인증을 구현해야 했다.
 
 여기서 `postMessage`는 SOP를 안전하게 우회하는 제어 메커니즘을 제공한다.
 
-<br />
+
 
 보통 `postMessage`는 다음과 같은 경우에 사용된다.
 
@@ -47,7 +47,7 @@ PASS 인증을 구현해야 했다.
 
 예제 환경은 `vite (react + ts)` , `react router dom`을 활용해서 진행된다.
 
-<br />
+
 
 **main.tsx**
 
@@ -70,14 +70,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 )
 ```
 
-<br />
+
 
 두개의 경로를 지정해준다.
 
 - `/` 경로: 자식 창을 생성하는 페이지 역할
 - `/child` 경로: 자식 창으로 부모 페이지에 데이터 전송하는 팝업 역할
 
-<br />
+
 
 **parent.tsx**
 
@@ -126,17 +126,17 @@ export default function Parent() {
 }
 ```
 
-<br />
+
 
 `onClick` 함수에는 `window.open()` 메서드를 통해 팝업 창을 생성한다.
 `url`, `target`, `windowFeatures`에 적절하게 값을 넣는다.
 
-<br />
+
 
 `useEffect`에서는 이벤트에 대한 동작이 정의된다.
 `message`에 대한 이벤트를 대기시켜 `postMessage`로 전송된 이벤트가 전달된다.
 
-<br />
+
 
 **child.tsx**
 
@@ -157,35 +157,35 @@ export default function Child() {
 }
 ```
 
-<br />
+
 
 `opener` 속성은 `open()` 혹은 `target` 속성이 있는 링크를 탐색하여 창을 연 창에 대한 참조를 반환한다.
 
 `postMessage` 메서드를 통해 부모 페이지에 데이터를 전송한다.
 
-<br />
+
 
 콘솔 및 동작을 살펴보자.
 
-<br />
+
 
 **콘솔**
 
 ![console 예제](./images/console-example.png)
 
-<br />
+
 
 - `data`: `postMessage`에서 전송한 데이터가 전송된다.
 - `origin`: `postMessage`가 호출될 때 메시지를 보낸 창의 `origin`이 전송된다.
 - `soruce`: 메시지를 보낸 `window` 객체의 참조가 전송된다. `window.open()`으로 창을 열 때 설정한 `popup test`가 눈에 띈다.
 
-<br />
+
 
 **동작**
 
 <video src="/videos/development/communicate-from-another-window-with-postmessage/postmessage-example.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
-<br />
+
 
 ### 보안 고려하기
 
@@ -194,7 +194,7 @@ export default function Child() {
 
 현재 `child.tsx` 코드에서 `postMessage`의 `targetOrigin`을 `*`에서 잘못된 `origin url`인 `http://localhost:6000`으로 변경해보자.
 
-<br />
+
 
 **child.tsx**
 
@@ -204,7 +204,7 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 }
 ```
 
-<br />
+
 
 그럼 다음과 같이 에러가 발생한다.
 
@@ -214,11 +214,11 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 (예제의 경우 `http://localhost:5173`)
 
-<br />
+
 
 민감한 정보의 경우 `targetOrigin`을 명시적으로 정의해주자.
 
-<br />
+
 
 ### 부모에서도 자식에 데이터 전송하기
 
@@ -226,7 +226,7 @@ const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
 대문자로 변환해서 자식 창에 전달할 것이다.
 
-<br />
+
 
 **parent.tsx**
 
@@ -253,7 +253,7 @@ useEffect(() => {
 }, [])
 ```
 
-<br />
+
 
 **child.tsx**
 
@@ -275,7 +275,7 @@ useEffect(() => {
 }, [])
 ```
 
-<br />
+
 
 **동작**
 

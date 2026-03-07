@@ -18,13 +18,13 @@ category: 'development'
 
 (관련 글: [최적화 첫걸음 내딛기](https://jgjgill-blog.netlify.app/road/2024-12-25/))
 
-<br />
+
 
 이때 프로젝트 내 많은 번들 사이즈를 차지하는 것 중 `lodash`가 눈에 띄었다.
 
 ![Bundle Analyzer lodash 지표](./images/bundle-analyzer-lodash.png)
 
-<br />
+
 
 처음 봤을 때 지표가 굉장히 불편하게 느껴졌다. 🤔
 
@@ -32,7 +32,7 @@ category: 'development'
 
 측정된 사이즈가 무려 562KB로 잡히는 것이다. 😵‍💫
 
-<br />
+
 
 마치 `lodash`의 모든 함수를 불러오는 느낌이 들었다.
 
@@ -52,7 +52,7 @@ category: 'development'
 
 다음 2개의 예시는 `CommonJS`에서 **코드를 실행해야지 무엇을 `import`하고 `export`하는지 알 수 있는 내용**이다.
 
-<br />
+
 
 ```ts
 var logger
@@ -64,7 +64,7 @@ if (Math.random()) {
 }
 ```
 
-<br />
+
 
 ```ts
 if (Math.random()) {
@@ -72,11 +72,11 @@ if (Math.random()) {
 }
 ```
 
-<br />
+
 
 즉 동적 구조로 런타임에서도 언제든지 변경될 가능성이 존재한다는 것이다.
 
-<br />
+
 
 반면 `ES Modules` 방식에서는 **정적 구조를 통해 컴파일 시점에 `import`, `export`를 결정**할 수 있다.
 
@@ -84,7 +84,7 @@ if (Math.random()) {
 
 그리고 `import`는 `export`를 복사할 필요 없이 직접 참조가 가능해진다고 한다.
 
-<br />
+
 
 ```js
 // lib.js
@@ -96,7 +96,7 @@ import { foo } from './lib.js'
 console.log(foo())
 ```
 
-<br />
+
 
 ```js
 function foo() {}
@@ -104,11 +104,11 @@ function foo() {}
 console.log(foo())
 ```
 
-<br />
+
 
 그래서 번들 과정에서 사용되지 않는 코드를 손쉽게 제거할 수 있는 것이다.
 
-<br />
+
 
 ### Next.js에서 트리쉐이킹 적용
 
@@ -116,7 +116,7 @@ console.log(foo())
 
 `Next.js`에서는 `optimizePackageImports`를 통해 특정 패키지들의 `import`를 자동으로 최적화한다.
 
-<br />
+
 
 여기서 `lodash-es`는 최적화 대상 라이브러리 중 하나로,
 
@@ -124,7 +124,7 @@ console.log(foo())
 
 ([기본 최적화 라이브러리 목록](https://nextjs.org/docs/pages/api-reference/config/next-config-js/optimizePackageImports))
 
-<br />
+
 
 ## lodash와 lodash-es 비교
 
@@ -142,13 +142,13 @@ console.log(foo())
 
 ([Bundlephobia 기준 lodash 지표](https://bundlephobia.com/package/lodash@4.17.21))
 
-<br />
+
 
 ![import lodash](./images/import-lodash.png)
 
 (import 시 파악되는 `lodash` 지표)
 
-<br />
+
 
 ### lodash-es
 
@@ -160,13 +160,13 @@ console.log(foo())
 
 ([Bundlephobia 기준 lodash-es 지표](https://bundlephobia.com/package/lodash-es@4.17.21))
 
-<br />
+
 
 ![import lodash-es](./images/import-lodash-es.png)
 
 (import 시 파악되는 `lodash-es` 지표)
 
-<br />
+
 
 ## 적용하기
 
@@ -176,7 +176,7 @@ npm install lodash-es
 npm install -D @types/lodash-es
 ```
 
-<br />
+
 
 `lodash-es`에서 불러오기만 하면 된다.
 
@@ -184,7 +184,7 @@ npm install -D @types/lodash-es
 import { 함수 } from 'lodash-es'
 ```
 
-<br />
+
 
 ## AS-IS / TO-BE
 
@@ -206,7 +206,7 @@ import { 함수 } from 'lodash-es'
 - `Parsed size` 기준 86.31 KB → 1.16 KB 개선
 - `GZipped size` 기준 27.88 KB → 492 B 개선
 
-<br />
+
 
 ### next build 기준
 
@@ -224,7 +224,7 @@ import { 함수 } from 'lodash-es'
 
 - `First Load JS shared by all` 기준 700KB → 671KB 개선 (29KB, 4% 감소)
 
-<br />
+
 
 ### 네트워크 환경 기준
 
@@ -242,7 +242,7 @@ import { 함수 } from 'lodash-es'
 
 - `JS` 크기 기준 621KB → 596KB 개선 (26KB, 4% 감소)
 
-<br />
+
 
 여러 지표들이 개선된 것을 볼 수 있다.
 

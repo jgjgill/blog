@@ -110,7 +110,7 @@ ul.append(fragment)
 
 `childNodes`는 동적인(live) `NodeList`를 반환한다.
 
-<br />
+
 
 잠시 `NodeList`를 알아보면 `NodeList`는 **노드들의 집합**이다.
 근데 `NodeList`는 정적(static)과 동적(live)인 `NodeList`로 구분된다.
@@ -118,7 +118,7 @@ ul.append(fragment)
 `Node.childNodes`의 경우 DOM에서 발생하는 변화에 자동적으로 업데이트하는 동적 `NodeList`이다.
 반면, `document.querySelectorAll()` 메서드는 정적 `NodeList`로 DOM에서 발생하는 변화에 영향을 받지 않는다.
 
-<br />
+
 
 다시 돌아와서 `childNodes`는 **모든 자식 노드들을 포함**한다.
 그래서 `Element Node`가 아닌 `Text Node`, `Comment Node`인 텍스트와 주석도 포함하는 것이다.

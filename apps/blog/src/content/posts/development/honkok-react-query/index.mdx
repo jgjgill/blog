@@ -94,7 +94,7 @@ const { mutate: createPost } = useCreatePost();
 `useMutation`의 경우 말그대로 뮤테이션이 발생하는, 즉 **변경이 발생하는 함수**이다.
 그래서 `mutation`의 이름은 `동사+명사`로 사용하는게 자연스럽다.
 
-<br />
+
 
 이를 정리해서 다음과 같은 규칙을 만들었다.
 
@@ -114,7 +114,7 @@ const { mutate: createPost } = useCreatePost();
 `React Query`에서는 이와 관련된 기능으로 [useInfiniteQuery](https://tanstack.com/query/v4/docs/react/reference/useInfiniteQuery)를 제공한다.
 혼콕에서는 API를 수정하는데 한계가 있기에 사용되는 부분에 적절하게 변경할 필요가 있었다.
 
-<br />
+
 
 우선 하나씩 사용되는 부분들을 살펴보자.
 
@@ -201,7 +201,7 @@ return (
 
 물론 지속적으로 API 호출이 발생하기에 비효율적인 측면이 있지만 일정 및 제한된 환경인 현 상황에서는 폴링 방식이 적절하다는 생각이 들었다.
 
-<br />
+
 
 `React Query`에서는 폴링과 관련해서 `refetchInterval`와 `refetchIntervalInBackground`을 이용해서 구현할 수 있다.
 각각은 다음과 같은 기능을 제공한다.
@@ -287,7 +287,7 @@ export const useGetChannels = () => {
 
 우리가 작성하는 코드 내부에서는 데이터가 성공적으로 온 결과만을 생각하는 것이 편리하다.
 
-<br />
+
 
 이를 위해 `suspense`, `error boundary`를 적용할 수 있다.
 로딩과 실패에 대한 고려는 코드를 작성하는 내부에서 우리의 관심사가 아니다.
@@ -295,7 +295,7 @@ export const useGetChannels = () => {
 
 코드 내부에서는 오직 데이터가 있는 성공한 상황만을 가정하여 선언적인 형태의 코드를 구성할 수 있도록 하는 것이다.
 
-<br />
+
 
 `React Query`에서는 간단하게 `suspense`를 적용할 수 있다.
 
@@ -320,7 +320,7 @@ export const useGetPost = (postId: string) => {
 - `useQuery`를 활용하여 `undefined`를 없애는 커스텀 훅 만들기
 - 타입적으로 `undefined`를 없애는 `assert` 구문 사용하기
 
-<br />
+
 
 여기서 어떤 방식을 택할까 고민이 되었는데 다음과 같은 이유들로 혼콕에서는 `assert` 구문을 사용하기로 결정했다.
 

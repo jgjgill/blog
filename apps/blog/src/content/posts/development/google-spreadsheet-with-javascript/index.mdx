@@ -20,7 +20,7 @@ category: 'development'
 
 이번 글에서는 `Node.js` 환경에서 간단하게 구글 스프레드시트를 활용하는 방법에 대해 알아보자.
 
-<br />
+
 
 ## 구글 계정 설정
 
@@ -34,13 +34,13 @@ category: 'development'
 
 ![새 프로젝트 생성](./images/new-project-create.png)
 
-<br />
+
 
 프로젝트에 **Sheets API**를 사용하기 위해 API를 검색해서 적용할 수 있도록 한다.
 
 ![시트 API 사용](./images/sheet-api-use.png)
 
-<br />
+
 
 ### 서비스 계정 생성
 
@@ -50,13 +50,13 @@ category: 'development'
 
 ![서비스 계정 생성 과정 1](./images/service-account-create-process-1.png)
 
-<br />
+
 
 **이름, 계정 ID, 설명**을 입력해서 계정을 생성한다.
 
 ![서비스 계정 생성 과정 2](./images/service-account-create-process-2.png)
 
-<br />
+
 
 다음과 같이 생성된다.
 
@@ -70,13 +70,13 @@ category: 'development'
 
 ![API 키 생성 과정 1](./images/api-key-create-process-1.png)
 
-<br />
+
 
 다음과 같이 바로 생성이 된다.
 
 ![API 키 생성 과정 2](./images/api-key-create-process-2.png)
 
-<br />
+
 
 보안에 조금 더 신경 쓴다면 생성된 API 키에 들어가서 `API 제한사항`에서 `키 제한`을 선택한다.
 
@@ -100,11 +100,11 @@ category: 'development'
 
 ![스프레드시트 설정 과정 1](./images/spreadsheet-setting-process-1.png)
 
-<br />
+
 
 여기서 `스프레드_시트_ID`랑 `시트_ID`는 코드에서 쓰이기 때문에 변수로 관리하면 편리하다.
 
-<br />
+
 
 만들어진 스프레드 시트에는 `공유하기`를 통해 공유할 이메일 계정을 추가할 수 있다.
 
@@ -124,7 +124,7 @@ category: 'development'
 
 ![구글 시트 접근자 정보 구성 과정 1](./images/google-sheet-accessor-information-configuration-process-1.png)
 
-<br />
+
 
 `JSON` 유형으로 생성한다.
 
@@ -142,7 +142,7 @@ GOOGLE_SERVICE_ACCOUNT_EMAIL=JSON파일 client_email(서비스 계정)
 GOOGLE_PRIVATE_KEY=JSON파일 private_key
 ```
 
-<br />
+
 
 `Node.js` 환경에서 구글 스프레드시트를 활용할 것이다.
 
@@ -154,7 +154,7 @@ GOOGLE_PRIVATE_KEY=JSON파일 private_key
 pnpm i google-spreadsheet google-auth-library dotenv
 ```
 
-<br />
+
 
 다음은 **계정에 대한 접근 및 간단하게 시트 제목을 출력**하는 예시 코드이다.
 
@@ -178,11 +178,11 @@ await doc.loadInfo()
 console.log(doc.title) // google-spreadsheet-playground
 ```
 
-<br />
+
 
 `node 파일명.js`를 입력하면 성공적으로 콘솔이 출력될 것이다.
 
-<br />
+
 
 예제 코드와 별개로 노드 버전에 따라 [Top-level await](https://v8.dev/features/top-level-await) 을 허용하지 않을 수 있다.
 
@@ -194,7 +194,7 @@ console.log(doc.title) // google-spreadsheet-playground
 })()
 ```
 
-<br />
+
 
 여기까지의 과정을 담은 코드는 [해당 저장소](https://github.com/jgjgill/google-spreadsheet-playground/tree/d8ee2da72ad4f030482b4e6dbde83fef0964ee94)에서 확인할 수 있다.
 
@@ -204,7 +204,7 @@ console.log(doc.title) // google-spreadsheet-playground
 
 주로 사용되는 개념은 `sheet`, `row`, `cell`이다.
 
-<br />
+
 
 ### sheet 관련 작업
 
@@ -212,7 +212,7 @@ console.log(doc.title) // google-spreadsheet-playground
 
 URL에서 봤던 gid=sheetId 부분이다.
 
-<br />
+
 
 새로운 시트를 추가한다.
 
@@ -222,11 +222,11 @@ await doc.addSheet({ title: '새로운 시트' })
 
 ![시트 추가 예제](./images/add-sheet-exmaple.png)
 
-<br />
+
 
 방금 추가한 시트를 삭제해보자.
 
-<br />
+
 
 `Id`, `Index`, `Title`와 같은 정보로 시트 정보를 가져올 수 있다.
 
@@ -239,19 +239,19 @@ await newSheet.delete()
 
 ![시트 삭제 예제](/images/posts/google-spreadsheet-with-javascript/delete-sheet-example.gif)
 
-<br />
+
 
 ### row 관련 작업
 
 `row`와 관련된 동작을 살펴보자.
 
-<br />
+
 
 우선 `HeaderRow`에 값을 설정하는 것이 필요하다.
 
 첫 번째 행을 `HeaderRow`로 정의하는 것으로 보여진다.
 
-<br />
+
 
 `setHeaderRow`을 활용할 수 있다.
 
@@ -261,7 +261,7 @@ sheet.setHeaderRow(['nickname', 'blog'])
 
 ![HeaderRow 추가 예제](./images/set-header-row-example.png)
 
-<br />
+
 
 추가된 `HeaderRow`에 데이터들을 추가할 수 있다.
 
@@ -286,13 +286,13 @@ console.log(rows[0].get('nickname'), rows[0].get('blog'))
 
 로드한 값을 반환하지 않고 **로컬 캐시에 보관**하는 방식으로 진행된다.
 
-<br />
+
 
 `loadCells`로 셀을 가져오고 `saveUpdatedCells`를 통해 변경된 데이터를 저장한다.
 
 여기서 주의할 점은 `saveUpdatedCells`은 행 기반 방법이 아닌 **셀 기반 방법을 사용하여 변경한 내용만 저장**된다.
 
-<br />
+
 
 간단하게 `nickname` 영역을 `name`으로 변경해보자.
 
@@ -314,6 +314,6 @@ await sheet.saveUpdatedCells()
 
 ![Cell 기능 예제](./images/cell-example.png)
 
-<br />
+
 
 이외에도 `google-spreadsheet`에는 시트와 관련된 여러 유용한 기능을 제공해주고 있기에 스프레드시트를 다양하게 활용해보자..! 🧐

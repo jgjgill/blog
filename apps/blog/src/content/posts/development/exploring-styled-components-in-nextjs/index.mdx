@@ -14,7 +14,7 @@ category: 'development'
 
 > 해당 글의 버전은 Next.js v14(Page Router), styled-components v6으로 진행됩니다.
 
-<br />
+
 
 프로젝트에서 `Next.js`와 `styled-omponents`를 사용하고 있다.
 
@@ -26,7 +26,7 @@ category: 'development'
 
 기본 환경 세팅은 `npx create-next-app@latest`으로 진행했다.
 
-<br />
+
 
 예제 코드는 다음과 같다.
 
@@ -72,7 +72,7 @@ const Button = styled.button`
 `
 ```
 
-<br />
+
 
 우선 `next.config.js`에서 `styledComponents: true`로 설정한다.
 
@@ -86,7 +86,7 @@ const nextConfig = {
 export default nextConfig
 ```
 
-<br />
+
 
 이거만 해도 화면에서는 제대로 스타일이 적용되는 것을 볼 수 있다.
 
@@ -94,7 +94,7 @@ export default nextConfig
   ![sc example](./images/sc-example.png)
 </div>
 
-<br />
+
 
 하지만 현재 상황은 클라이언트에서만 스타일을 받아오는 상황이다.
 
@@ -102,25 +102,25 @@ export default nextConfig
 
 예제 코드에서 사용된 `#00800`을 네트워크 탭에서 검색하면 `index.js` 번들에 포함된 것을 확인할 수 있다.
 
-<br />
+
 
 **index.js 번들에 스타일이 포함된 모습**
 
 ![index.js bundle](./images/index-bundle.png)
 
-<br />
+
 
 따라서 지금과 같은 상황에서 `styled-components`는 클라이언트에서만 스타일을 받아오게 된다.
 
 하지만 `Next.js`와 같이 미리 서버에서 렌더링이 일어나는 경우 **깜빡이는 문제와 스타일이 적용되지 않은 문서**를 볼 수 있다.
 
-<br />
+
 
 **깜빡이는 문제**
 
 <video src="/videos/development/exploring-styled-components-in-nextjs/sc-problem-1.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
-<br />
+
 
 **스타일이 적용되지 않은 문서**
 
@@ -159,23 +159,23 @@ export default class MyDocument extends Document {
 }
 ```
 
-<br />
+
 
 세부적인 내용은 나중에 살펴보고 결과부터 보면 기대하는 바와 일치한다.
 
-<br />
+
 
 더 이상 깜빡거리지 않는다.
 
 <video src="/videos/development/exploring-styled-components-in-nextjs/sc-solution-1.mp4" controls style="max-width:100%;max-height:400px;display:block;margin:1.5rem auto;border-radius:0.5rem;" />
 
-<br />
+
 
 처음 문서에도 스타일이 적용된 상태로 오는 것을 확인할 수 있다.
 
 ![sc 해결 2](./images/sc-solution-2.png)
 
-<br />
+
 
 ## styled-components는 어떻게 해결했을까?
 
@@ -183,7 +183,7 @@ export default class MyDocument extends Document {
 
 크게 3가지 부분으로 나눌 수 있을 것 같다.
 
-<br />
+
 
 우선 서버 시트를 생성한다.
 
@@ -191,7 +191,7 @@ export default class MyDocument extends Document {
 const sheet = new ServerStyleSheet()
 ```
 
-<br />
+
 
 해당 로직에서는 `sheet.collectStyles`을 통해 컴포넌트에서 작성했던 스타일들을 수집한다.
 
@@ -205,7 +205,7 @@ ctx.renderPage = () =>
   })
 ```
 
-<br />
+
 
 `html`에 스타일 태그를 추가한다.
 
@@ -218,7 +218,7 @@ return {
 }
 ```
 
-<br />
+
 
 **추가된 스타일 태그**
 
@@ -230,20 +230,20 @@ return {
 
 [ServerStyleSheet 코드](https://github.com/styled-components/styled-components/blob/770d1fa2bc1a4bfe3eea1b14a0357671ba9407a4/packages/styled-components/src/models/ServerStyleSheet.tsx)
 
-<br />
+
 
 시작점인 `ServerStyleSheet`을 통해 생성된 인스턴스에서 앞서 살펴본 2가지 동작이 발생한다.
 
 - `collectStyles`: 스타일 수집
 - `getStyleElement`:수집된 스타일을 `React` `Element`로 반환
 
-<br />
+
 
 `collectStyles`의 코드는 다음과 같다.
 
 [collectStyles 코드](https://github.com/styled-components/styled-components/blob/770d1fa2bc1a4bfe3eea1b14a0357671ba9407a4/packages/styled-components/src/models/ServerStyleSheet.tsx#L37-L43)
 
-<br />
+
 
 **collectStyles**
 
@@ -257,13 +257,13 @@ collectStyles(children: any): JSX.Element {
 }
 ```
 
-<br />
+
 
 `StyleSheetManager`가 등장한다.
 
 [StyleSheetManager 코드](https://github.com/styled-components/styled-components/blob/770d1fa2bc1a4bfe3eea1b14a0357671ba9407a4/packages/styled-components/src/models/StyleSheetManager.tsx)
 
-<br />
+
 
 **StyleSheetManager**
 
@@ -297,13 +297,13 @@ export function StyleSheetManager(props: IStyleSheetManager): JSX.Element {
 
 해당 컨텍스트를 통해 스타일을 수집 및 변환해서 `StyleSheetManager`에서 주입한 `sheet`에 반영될 것으로 예상된다.
 
-<br />
+
 
 다음으로 `getStyleElement` 코드이다.
 
 [getStyleElement 코드](https://github.com/styled-components/styled-components/blob/770d1fa2bc1a4bfe3eea1b14a0357671ba9407a4/packages/styled-components/src/models/ServerStyleSheet.tsx#L53-L73)
 
-<br />
+
 
 **getStyleElement**
 

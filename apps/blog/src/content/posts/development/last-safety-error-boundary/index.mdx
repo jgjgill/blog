@@ -17,11 +17,11 @@ category: 'development'
 
 > `Next.js Pages Router` 방식과 관련된 글입니다.
 
-<br />
+
 
 현재 `Next.js` 를 사용하고 있기 때문에 일반적인 에러 상황에 대해서는 [\_error.tsx](https://nextjs.org/docs/pages/building-your-application/routing/custom-error#more-advanced-error-page-customizing) 로 대처하고 있었다.
 
-<br />
+
 
 **\_error.tsx**
 
@@ -40,7 +40,7 @@ export default Error
 
 하지만 `_error.tsx` 로도 처리하지 못하는 상황이 발생할 수 있는데 **런타임 에러**가 해당된다.
 
-<br />
+
 
 대표적으로 다음과 같은 타입 에러가 발생할 수 있다.
 
@@ -62,12 +62,12 @@ export default Error
 
 > Fault tolerance is the property that enables a system to continue operating properly in the event of the failure of some (one or more faults within) of its components.
 
-<br />
+
 
 `React`에서는 렌더링 도중 에러가 발생할 때 최소한의 UI를 표시할 수 있는 도구로 `ErrorBoundary`를 사용할 수 있다.
 공식 문서에서는 다음과 같은 코드를 제공한다.
 
-<br />
+
 
 **ErrorBoundary 예제 코드**
 
@@ -111,7 +111,7 @@ class ErrorBoundary extends React.Component {
 export default ErrorBoundary
 ```
 
-<br />
+
 
 `ErrorBoundary`의 주요 코드를 한 번 알아보자.
 
@@ -120,25 +120,25 @@ export default ErrorBoundary
 오류에 대한 응답으로 상태를 업데이트하거나 사용자에게 오류 메시지를 표시할 수 있는 역할을 한다.
 렌더링 도중 자식 컴포넌트에서 오류가 발생하면 호출되는 흐름으로 이를 통해 에러 메시지를 표시할 수 있게 된다.
 
-<br />
+
 
 파라미터로 `error`를 받으며 일반적으로는 `Error`의 인스턴스이지만,
 문자열이나 `null`을 포함한 모든 값을 받을 수 있다.
 반환 값은 컴포넌트에 에러 메시지를 표시할 상태를 반환하면 된다.
 
-<br />
+
 
 주의할 점으로 `static getDerivedStateFromError`은 순수 함수이어야 한다.
 사이드 이펙트가 필요하면 `componentDidCatch`를 활용할 수 있다.
 
-<br />
+
 
 ### componentDidCatch
 
 에러 발생 시 추가 로직을 구성할 수 있는 역할을 한다.
 예를 들어 에러를 로깅할 때 사용할 수 있다.
 
-<br />
+
 
 파라미터로 `error`와 `info`를 받는다.
 
@@ -148,11 +148,11 @@ export default ErrorBoundary
 `info`는 오류에 대한 추가 정보가 포함된 객체이다.
 `componentStack` 필드의 경우에는 오류가 발생한 컴포넌트의 스택 추적, 상위 컴포넌트의 이름 및 소스 위치 포함된다고 한다.
 
-<br />
+
 
 `componentDidCatch`에서는 어느 것도 반환하지 않는다.
 
-<br />
+
 
 ## 커스텀하게 사용하기
 
@@ -163,7 +163,7 @@ export default ErrorBoundary
 프로젝트에 새로운 의존성이 추가되는게 부담스러운 상황이었다.
 따라서 오픈 소스에서 구현된 코드를 참고하여 현재 요구 상황에 맞게 간단한 `ErrorBoundary`를 만들어보자.
 
-<br />
+
 
 크게 다음과 같은 기능을 추가할 것이다.
 
@@ -171,11 +171,11 @@ export default ErrorBoundary
 - `reset`: 재실행 함수
 - `onError`: 에러가 발생했을 때 실행시키는 함수
 
-<br />
+
 
 코드로 구성하면 다음과 같다.
 
-<br />
+
 
 **ErrorBoundary 코드**
 
@@ -262,7 +262,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 export default ErrorBoundary
 ```
 
-<br />
+
 
 이렇게 구성한 코드를 프로젝트에 적용해보자.
 
@@ -279,7 +279,7 @@ export default ErrorBoundary
 </ErrorBoundary>
 ```
 
-<br />
+
 
 이제 다음과 같이 화면을 구성할 수 있게 된다.
 
@@ -293,7 +293,7 @@ export default ErrorBoundary
 - QA 과정에서 빠른 원인 파악
 - 에러를 선언적으로 관리해서 코드 내 관심사 분리
 
-<br />
+
 
 좀 더 알아보니 `app router` 방식의 [error-handling](https://nextjs.org/docs/app/building-your-application/routing/error-handling)에서는 `error.tsx` `global-error.tsx` 방식으로 대처가 가능해서 더 편리하게 적용할 수 있어 보인다. 🧐
 

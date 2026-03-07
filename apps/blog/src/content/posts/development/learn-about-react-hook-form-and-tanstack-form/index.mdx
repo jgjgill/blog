@@ -1,0 +1,362 @@
+---
+title: "React Hook Form, TanStack Form 이해하기"
+description: "타이핑 시 불필요한 리렌더링을 막는다 — 같은 목표, 다른 무기"
+date: "2026-03-07"
+thumbnail: "./images/learn-about-react-hook-form-and-tanstack-form-thumbnail.webp"
+thumbnail_alt: "learn-about-react-hook-form-and-tanstack-form-thumbnail"
+category: "development"
+---
+
+<Callout>타이핑 시 불필요한 리렌더링을 막는다 — 같은 목표, 다른 무기</Callout>
+
+## React Hook Form의 원리
+
+### 비제어 (Uncontrolled) 방식
+
+폼을 다룰 때 사용자가 타이핑한 값을 어딘가에 저장해야 한다.
+
+이때 저장 주체가 **DOM이냐 React 상태냐에** 따라 방식을 구분할 수 있다.
+
+**비제어 방식은 DOM이 값을 직접 기억**한다.
+
+React는 전혀 모르고 필요한 순간 (ex: 제출) 에만 `ref.current.value`로 DOM에서 가져온다.
+
+```tsx title="비제어 방식"
+function UncontrolledForm() {
+  const inputRef = useRef(null);
+
+  const handleSubmit = () => {
+    // 제출 시점에 ref로 DOM에서 직접 값을 읽음
+    console.log(inputRef.current.value);
+  };
+
+  return (
+    // defaultValue: "이 값으로 시작해" — 이후엔 React가 관여 안 함
+    <input ref={inputRef} defaultValue="" />
+  );
+}
+```
+
+**제어 방식은 React 상태가 값을 기억**한다.
+
+React 일반적인 상태로 접근하는 방식이다.
+
+```tsx title="제어 방식"
+function ControlledForm() {
+  const [value, setValue] = useState("");
+
+  return (
+    // value: React 상태가 화면을 제어
+    // onChange: 타이핑할 때마다 상태 업데이트
+    <input value={value} onChange={(e) => setValue(e.target.value)} />
+  );
+}
+```
+
+**RHF는 기본적으로 비제어 방식을 활용**한다.
+
+```tsx title="RHF 예시 코드"
+const {
+  register,
+  handleSubmit,
+  formState: { errors },
+} = useForm({
+  defaultValues: { email: "", password: "" },
+});
+
+<form onSubmit={handleSubmit(onSubmit)}>
+  <input
+    {...register("email", {
+      required: "필수",
+      pattern: { value: /\S+@\S+/, message: "형식 오류" },
+    })}
+  />
+  {errors.email && <span>{errors.email.message}</span>}
+
+  <input
+    {...register("password", {
+      required: "필수",
+      minLength: { value: 8, message: "8자 이상" },
+    })}
+    type="password"
+  />
+  {errors.password && <span>{errors.password.message}</span>}
+
+  <button type="submit">제출</button>
+</form>;
+```
+
+<video
+  src="/videos/development/learn-about-react-hook-form-and-tanstack-form/rhf-basic.mov"
+  controls
+/>
+
+그래서 RHF에서는 제어 방식으로 `watch`를 제공한다.
+
+`email`이 바뀔 때마다 컴포넌트 전체가 리렌더링된다.
+
+```tsx title="watch 예시 코드"
+function Form() {
+  const { register, watch } = useForm();
+
+  // 훅 → email이 바뀔 때마다 Form 전체 리렌더링
+  const email = watch("email");
+
+  return (
+    <form>
+      <input {...register("email")} />
+      <input {...register("username")} /> {/* watch 대상 아닌데도 같이 리렌더링 */}
+      <span>{email}</span>
+    </form>
+  );
+```
+
+<video
+  src="/videos/development/learn-about-react-hook-form-and-tanstack-form/rhf-watch.mov"
+  controls
+/>
+
+## RHF의 한계
+
+### 비제어 방식의 구조적 문제
+
+결국 실시간 값이 필요한 순간에는 `watch`를 사용해야 하기 때문에 제어 방식이 섞이게 된다.
+
+ex) 입력값을 화면에 실시간으로 보여주기, 다른 필드 값에 따라 UI 조건부 변경
+
+또한 `watch`는 훅으로 호출한 컴포넌트 전체가 리렌더링되어서 컴포넌트 범위도 고려해야 한다.
+
+## TanStack Form이란?
+
+TanStack Form은 React 바깥에 `Store`를 두는 것이 핵심이다.
+이를 통해 제어 방식이면서도 리렌더링을 최소화하고자 한다.
+
+### 외부 스토어 + 구독 모델
+
+TanStack Form의 내부 Store는 Solid.js의 Signal과 유사한 구독 모델을 사용한다.
+
+React 외부에 Store를 둔다.
+`useForm()`이 반환하는 `form` 객체는 React 상태가 아닌 React 바깥에 존재하는 일반 객체이다.
+
+필드가 Store를 직접 구독한다.
+`form.Field`로 관심있는 필드 상태만 구독한다.
+필드 변경시 구독한 컴포넌트만 리렌더링된다.
+
+`useForm()`을 호출한 부모 컴포넌트는 어떤 필드가 바뀌어도 리렌더링되지 않는 것이다.
+
+```tsx
+function Form() {
+  const form = useForm({ defaultValues: { email: "", username: "" } });
+  // form 자체는 React 상태가 아님 → 이 컴포넌트는 리렌더링 안 됨
+
+  return (
+    <form>
+      <form.Field name="email">
+        {(field) => <input ... />} {/* email 바뀔 때 이 Field만 리렌더링 */}
+      </form.Field>
+      <form.Field name="username">
+        {(field) => <input ... />} {/* email 바뀌어도 무관 */}
+      </form.Field>
+    </form>
+  );
+}
+```
+
+<video
+  src="/videos/development/learn-about-react-hook-form-and-tanstack-form/rhf-watch.mov"
+  controls
+/>
+
+### 제어 방식 접근의 장점
+
+> TanStack Form is firmly in the controlled camp.
+
+출처: [Controlled is Cool](https://tanstack.com/form/latest/docs/philosophy#controlled-is-cool)
+
+- 예측 가능성: 폼의 현재 상태가 항상 JS 변수로 존재 (`field.state.value`)
+- 테스트 용이성: DOM 없이 순수 JS로 폼 상태를 검증 가능
+- DOM 미지원 환경: React Native, SSR 등 DOM이 없는 환경에서도 동작
+- 향상된 조건 로직: 실시간으로 값 접근 가능해서 조건부 로직 자연스럽게 작성 가능
+- 디버깅: `form.Subscribe`로 현재 폼 전체 상태를 언제든 확인 가능
+
+### 타입 시스템
+
+> Generics are grim
+
+RHF는 타입을 사용자가 직접 선언해야 한다.
+타입의 근거가 개발자가 선언한 제네릭에 있다.
+
+```ts
+useForm<MyForm>();
+```
+
+반면 TanStack Form은 타입을 `defaultValues`에서 자동으로 추론한다.
+타입과 초기값이 항상 일치한다.
+
+```ts
+interface Person {
+  name: string;
+  age: number;
+}
+
+const defaultPerson: Person = { name: "Bill Luo", age: 24 };
+
+useForm({
+  defaultValues: defaultPerson,
+});
+```
+
+### render props 패턴
+
+TanStack Form에서는 `form.Field`와 `form.Subscribe`에서 render props 패턴을 활용한다.
+`render props`는 **무엇을 렌더링할 지 함수로 위임받는 패턴**이다.
+
+```tsx
+function DataProvider({ children }) {
+  const [data, setData] = useState("hello");
+  return <div>{children(data)}</div>;
+  //           ↑ 상태를 인자로 넘겨 children 함수 호출
+}
+
+// 사용: 어떻게 보여줄지는 호출자가 결정
+<DataProvider>{(data) => <p>{data}</p>}</DataProvider>;
+```
+
+앞서 RHF의 watch는 호출한 컴포넌트 전체가 리렌더링 범위에 포함되었다.
+
+TanStack Form이 활용한 방식에서 `form.Subscribe`는 `render props`이기 때문에 `children` 함수만 재실행되고,
+부모 컴포넌트는 관여하지 않는다.
+
+```tsx
+// TanStack: Subscribe는 render props → children 함수만 재실행
+function Form() {
+  return (
+    <div>
+      {/* email 바뀌어도 Form은 리렌더링 안 됨 */}
+      <form.Subscribe selector={(s) => s.values.email}>
+        {(email) => <span>{email}</span>} {/* 이것만 재실행 */}
+      </form.Subscribe>
+    </div>
+  );
+}
+```
+
+### 사용법
+
+일반적으로 2가지 방식으로 폼 상태를 구성할 수 있다.
+
+#### createFormHook
+
+프로젝트 전체에서 공유할 폼 훅을 미리 만들어둔다.
+공통 필드 컴포넌트, 유효성 검사 등을 한 곳에서 관리한다.
+
+```tsx
+import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
+
+const { fieldContext, formContext } = createFormHookContexts();
+
+export const { useAppForm, withForm } = createFormHook({
+  fieldComponents: {},
+  formComponents: {},
+  fieldContext,
+  formContext,
+});
+
+// 사용
+const form = useAppForm({
+  defaultValues: { email: "", password: "" },
+  onSubmit: async ({ value }) => console.log(value),
+});
+```
+
+#### useForm
+
+간단하게 사용할 때는 폼에서 직접 사용해도 된다.
+
+```tsx
+import { useForm } from "@tanstack/react-form";
+
+const form = useForm({
+  defaultValues: { email: "", password: "" },
+  onSubmit: async ({ value }) => console.log(value),
+});
+```
+
+### Field vs AppField
+
+`fieldContext` 주입 여부가 차이다.
+`AppField`는 내부에 `context`를 사용해서 필드 컴포넌트를 재사용할 때 유용하다.
+
+```tsx
+// form.Field: 기본 제공, fieldContext 없음
+<form.Field name="email">
+  {(field) => <input value={field.state.value} onChange={...} />}
+</form.Field>
+
+// AppField: createFormHook으로 만든 커스텀 필드
+// fieldContext가 주입되어 있어 내부에서 useFieldContext()로 field에 접근 가능
+<form.AppField name="email">
+  <EmailInput /> {/* 내부에서 useFieldContext()로 field 접근 */}
+</form.AppField>
+```
+
+### 배열 패턴
+
+동적으로 필드를 추가, 삭제할 때는 `mode="array"`를 활용한다.
+
+```tsx
+<form.Field name="members" mode="array">
+  {(field) => (
+    <>
+      {field.state.value.map((_, i) => (
+        <form.Field key={i} name={`members[${i}].name`}>
+          {(subField) => (
+            <input
+              value={subField.state.value}
+              onChange={(e) => subField.handleChange(e.target.value)}
+            />
+          )}
+        </form.Field>
+      ))}
+
+      <button type="button" onClick={() => field.pushValue({ name: "" })}>
+        추가
+      </button>
+    </>
+  )}
+</form.Field>
+```
+
+### 디버깅
+
+`form.Subscribe`을 활용해서 현재 구성한 폼의 전체 상태를 확인할 수 있다.
+
+```tsx
+// form 태그 안팎 어디서든 가능
+<form.Subscribe selector={(state) => state.values}>
+  {(values) => <pre>{JSON.stringify(values, null, 2)}</pre>}
+</form.Subscribe>
+
+<form.Subscribe selector={(state) => ({
+  errors: state.errors,
+  isSubmitting: state.isSubmitting,
+  canSubmit: state.canSubmit,
+})}>
+  {(state) => <pre>{JSON.stringify(state, null, 2)}</pre>}
+</form.Subscribe>
+```
+
+### 정리하며
+
+두 라이브러리 모두 같은 문제를 풀고 있다.
+타이핑할 때마다 발생하는 불필요한 리렌더링을 막고자 한다.
+
+다만 접근 방식이 다르다.
+
+RHF는 React 렌더링 사이클 자체를 우회했다.
+DOM이 값을 기억하게 두고,
+React는 필요한 순간에만 개입한다.
+
+TanStack Form은 React 안에 머물렀다.
+값을 제어 방식으로 다루되,
+외부 Store와 구독 패턴으로 리렌더링 범위를 필드 단위로 좁혔다.
