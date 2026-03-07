@@ -1,5 +1,6 @@
 ---
 import { getCollection, render } from "astro:content";
+import { Image } from "astro:assets";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Toc from "../../components/Toc.astro";
 import { useTranslations } from "../../i18n";
@@ -27,15 +28,39 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? "";
   title={post.data.title}
   description={post.data.description}
   canonicalUrl={`https://jgjgill.com/post/${Astro.params.slug}`}
+  ogImage={post.data.thumbnail
+    ? `https://jgjgill.com${post.data.thumbnail.src}`
+    : undefined}
 >
   <article>
     <header class="mb-8">
+      {
+        post.data.thumbnail && (
+          <div
+            class="mb-6 rounded-xl overflow-hidden aspect-video bg-border"
+            transition:name={`post-thumbnail-${Astro.params.slug}`}
+          >
+            <Image
+              src={post.data.thumbnail}
+              alt={post.data.thumbnail_alt ?? post.data.title}
+              width={672}
+              height={378}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        )
+      }
       <p class="text-sm text-muted mb-2">
         {post.data.date}
         {readingTime && ` · ${readingTime}`}
         · {t.post.category[post.data.category]}
       </p>
-      <h1 class="text-2xl font-bold leading-snug">{post.data.title}</h1>
+      <h1
+        class="text-2xl font-bold leading-snug"
+        transition:name={`post-title-${Astro.params.slug}`}
+      >
+        {post.data.title}
+      </h1>
     </header>
 
     <div id="toc-sentinel"></div>

@@ -36,14 +36,22 @@ function getSlug(id: string) {
         <div>
           <h2 class="text-sm font-semibold text-muted mb-3">{year}</h2>
           <ul class="space-y-3">
-            {byYear[year].map((road) => (
-              <li>
-                <a href={`/road/${getSlug(road.id)}`} class="group flex gap-4 items-baseline">
-                  <span class="text-sm text-muted shrink-0 w-16">{road.data.date.slice(5)}</span>
-                  <span class="text-sm group-hover:underline underline-offset-2 line-clamp-1">{road.data.title}</span>
-                </a>
-              </li>
-            ))}
+            {byYear[year].map((road) => {
+              const slug = getSlug(road.id);
+              return (
+                <li>
+                  <a href={`/road/${slug}`} class="group flex gap-4 items-baseline">
+                    <span class="text-sm text-muted shrink-0 w-16">{road.data.date.slice(5)}</span>
+                    <span
+                      class="text-sm group-hover:underline underline-offset-2 line-clamp-1"
+                      transition:name={`road-title-${slug}`}
+                    >
+                      {road.data.title}
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
           </ul>
         </div>
       ))}

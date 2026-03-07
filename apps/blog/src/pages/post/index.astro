@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { useTranslations } from '../../i18n';
 
@@ -34,17 +35,41 @@ function getSlug(id: string) {
     </div>
 
     <ul class="space-y-6">
-      {allPosts.map((post) => (
-        <li class="border-b border-border pb-6 last:border-0">
-          <a href={`/post/${getSlug(post.id)}`} class="group block">
-            <p class="text-muted text-sm mb-1">
-              {post.data.date} · {t.post.category[post.data.category]}
-            </p>
-            <h2 class="font-semibold group-hover:underline underline-offset-2">{post.data.title}</h2>
-            <p class="text-sm text-muted mt-1 line-clamp-2">{post.data.description}</p>
-          </a>
-        </li>
-      ))}
+      {allPosts.map((post) => {
+        const slug = getSlug(post.id);
+        return (
+          <li class="border-b border-border pb-6 last:border-0">
+            <a href={`/post/${slug}`} class="group flex gap-4">
+              {post.data.thumbnail && (
+                <div
+                  class="shrink-0 w-24 h-24 rounded-lg overflow-hidden bg-border"
+                  transition:name={`post-thumbnail-${slug}`}
+                >
+                  <Image
+                    src={post.data.thumbnail}
+                    alt={post.data.thumbnail_alt ?? post.data.title}
+                    width={192}
+                    height={192}
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              )}
+              <div class="flex-1 min-w-0">
+                <p class="text-muted text-sm mb-1">
+                  {post.data.date} · {t.post.category[post.data.category]}
+                </p>
+                <h2
+                  class="font-semibold group-hover:underline underline-offset-2"
+                  transition:name={`post-title-${slug}`}
+                >
+                  {post.data.title}
+                </h2>
+                <p class="text-sm text-muted mt-1 line-clamp-2">{post.data.description}</p>
+              </div>
+            </a>
+          </li>
+        );
+      })}
     </ul>
   </section>
 </BaseLayout>
