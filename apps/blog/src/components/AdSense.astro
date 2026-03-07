@@ -1,0 +1,33 @@
+---
+const publisherId = 'ca-pub-2173037699636228';
+const desktopSlot = '6154008098';
+const mobileSlot = '8557857579';
+---
+
+{import.meta.env.PROD && (
+  <!-- 광고 크기를 미리 확보하여 CLS 방지: 모바일 50px / 데스크탑(sm 이상) 90px -->
+  <div id="adsense-container" class="my-4 flex justify-center h-12.5 sm:h-22.5"></div>
+  <script is:inline define:vars={{ publisherId, desktopSlot, mobileSlot }}>
+    function mountAd() {
+      const container = document.getElementById('adsense-container');
+      if (!container || container.querySelector('ins')) return;
+
+      const isDesktop = window.matchMedia('(min-width: 640px)').matches;
+      const slot = isDesktop ? desktopSlot : mobileSlot;
+      const width = isDesktop ? 728 : 320;
+      const height = isDesktop ? 90 : 50;
+
+      const ins = document.createElement('ins');
+      ins.className = 'adsbygoogle';
+      ins.style.cssText = `display:inline-block;width:${width}px;height:${height}px`;
+      ins.setAttribute('data-ad-client', publisherId);
+      ins.setAttribute('data-ad-slot', slot);
+      container.appendChild(ins);
+
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    }
+
+    mountAd();
+    document.addEventListener('astro:page-load', mountAd);
+  </script>
+)}

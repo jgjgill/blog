@@ -6,6 +6,7 @@ import Toc from "../../components/Toc.astro";
 import { useTranslations } from "../../i18n";
 import Callout from "../../components/mdx/Callout";
 import Comment from "../../components/Comment";
+import AdSense from "../../components/AdSense.astro";
 
 export async function getStaticPaths() {
   const posts = await getCollection("posts");
@@ -65,6 +66,8 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? "";
 
     <div id="toc-sentinel"></div>
     <Toc headings={headings} />
+
+    <AdSense />
 
     <div class="prose mt-8">
       <Content components={{ Callout }} />
