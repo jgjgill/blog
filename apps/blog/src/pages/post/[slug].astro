@@ -64,10 +64,10 @@ const readingTime = remarkPluginFrontmatter?.minutesRead ?? "";
       </h1>
     </header>
 
+    <AdSense />
+
     <div id="toc-sentinel"></div>
     <Toc headings={headings} />
-
-    <AdSense />
 
     <div class="prose mt-8">
       <Content components={{ Callout }} />

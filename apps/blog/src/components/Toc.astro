@@ -49,22 +49,26 @@ const filtered = headings.filter((h) => h.depth <= 3);
         </svg>
       </button>
 
-      <div id="toc-list" class="grid transition-[grid-template-rows] duration-300 ease-in-out" style="grid-template-rows: 1fr">
-      <ul class="min-h-0 overflow-hidden">
-        <div class="px-4 pb-3 space-y-1">
-        {filtered.map((h) => (
-          <li style={`padding-left: ${(h.depth - 2) * 0.75}rem`}>
-            <a
-              href={`#${h.slug}`}
-              data-toc-slug={h.slug}
-              class="toc-link text-muted hover:text-fg transition-colors line-clamp-1 block py-0.5"
-            >
-              {h.text}
-            </a>
-          </li>
-        ))}
-        </div>
-      </ul>
+      <div
+        id="toc-list"
+        class="grid transition-[grid-template-rows] duration-300 ease-in-out"
+        style="grid-template-rows: 0fr"
+      >
+        <ul class="min-h-0 overflow-hidden">
+          <div class="px-4 pb-3 space-y-1">
+            {filtered.map((h) => (
+              <li style={`padding-left: ${(h.depth - 2) * 0.75}rem`}>
+                <a
+                  href={`#${h.slug}`}
+                  data-toc-slug={h.slug}
+                  class="toc-link text-muted hover:text-fg transition-colors line-clamp-1 block py-0.5"
+                >
+                  {h.text}
+                </a>
+              </li>
+            ))}
+          </div>
+        </ul>
       </div>
     </nav>
   )
@@ -89,7 +93,7 @@ const filtered = headings.filter((h) => h.depth <= 3);
     const toggleEl = toggle as HTMLElement;
 
     // 토글 열기/닫기
-    let isOpen = true;
+    let isOpen = false;
 
     function setOpen(open: boolean) {
       isOpen = open;
