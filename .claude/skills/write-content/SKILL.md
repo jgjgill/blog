@@ -35,9 +35,7 @@ category: "development"
 - MDX 포맷 (React 컴포넌트 사용 가능)
 
 ```mdx
-<Callout>
-  이 글에서 다루는 핵심 내용 또는 문제 정의
-</Callout>
+<Callout>이 글에서 다루는 핵심 내용 또는 문제 정의</Callout>
 
 ## 개요
 
@@ -46,4 +44,19 @@ category: "development"
 ## 본문 섹션
 
 ...
+```
+
+## 커밋 컨벤션
+
+글 작성 완료 후 커밋 시 다음 형식을 사용한다.
+
+```
+post: {글 제목}
+```
+
+예시:
+
+```
+post: React Hook Form, TanStack Form 이해하기
+post: npx에 대해 알아보기
 ```
