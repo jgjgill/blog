@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./pagefind.css";
+@import "./callout.css";
 @plugin "@tailwindcss/typography";
 
 @theme {
@@ -11,6 +12,7 @@
   --color-border: #e5e7eb;
   --color-accent: #111111;
 }
+
 
 @layer base {
   *,
