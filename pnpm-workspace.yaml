@@ -2,3 +2,4 @@ packages:
   - 'apps/*'
   - 'packages/*'
   - 'playground/*'
+  - 'playground/nodejs-module-system-troubleshooting/*'

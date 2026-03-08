@@ -1,0 +1,9 @@
+{
+  "name": "nodejs-module-system-troubleshooting",
+  "private": true,
+  "workspaces": [
+    "pattern-a-cjs",
+    "pattern-b-esm",
+    "pattern-c-tsup"
+  ]
+}

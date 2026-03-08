@@ -1,0 +1,364 @@
+---
+title: "Node.js 모듈 시스템 트러블슈팅"
+description: "ERR_REQUIRE_ESM — 번들러가 숨겨온 청구서"
+date: "2026-03-08"
+thumbnail: "./images/nodejs-module-system-troubleshooting-thumbnail.webp"
+thumbnail_alt: "Node.js 로고와 module 말풍선들, 경고 삼각형이 그려진 스케치 스타일 썸네일"
+category: "development"
+---
+
+<Callout>ERR_REQUIRE_ESM — 번들러가 숨겨온 청구서</Callout>
+
+## 들어가며
+
+lighthouse로 페이지 성능을 측정하고 결과를 슬랙으로 보내는 스크립트를 구성하고자 했다.
+
+간단한 작업으로 보여 처음에는 특별한 번들러 없이 코드를 구성해봤는데 다음 에러가 발생했다.
+
+```
+Error [ERR_REQUIRE_ESM]: require() of ES Module not supported
+```
+
+해당 에러가 왜 발생했고 어떻게 하면 해결할 수 있는지 알아본 과정을 정리한다.
+
+> 이 글의 실습 환경: [playground/nodejs-module-system-troubleshooting](https://github.com/jgjgill/blog/tree/main/playground/nodejs-module-system-troubleshooting)
+
+---
+
+## 번들러가 해주던 일
+
+Vite, webpack, Next.js의 내장 번들러는 빌드 타임에 여러 TypeScript/JavaScript 파일을 읽어서 하나(또는 소수)의 파일로 합친다. 이 과정에서 모듈 탐색도 번들러가 직접 처리한다.
+
+```
+src/index.ts
+src/config.ts   →  번들러  →  dist/index.js (하나로 합쳐짐)
+src/utils.ts
+```
+
+내부 파일끼리의 `import` 구문은 번들 결과물에서 사라진다.
+번들러가 모든 파일을 읽어 인라인으로 합친다.
+
+그래서 코드를 작성할 때 `import { config } from './config'`처럼 확장자를 빠뜨려도, CJS 환경에서 ESM 전용 패키지를 써도 런타임에 Node.js가 직접 파일을 탐색할 일이 없다.
+번들러가 빌드 타임에 다 해결하는 것이다.
+
+번들러 없이 Node.js를 직접 실행하는 순간, 이 모든 걸 Node.js가 직접 처리해야 한다.
+
+번들러가 숨겨온 두 모듈 시스템에 대해 알아보자.
+
+## CJS vs ESM
+
+Node.js에는 두 가지 모듈 시스템이 공존한다.
+
+### CommonJS (CJS)
+
+Node.js 초창기(2009)부터 사용된 방식이다.
+
+```js
+// 가져오기
+const express = require("express");
+const { foo } = require("./foo");
+
+// 내보내기
+module.exports = { bar };
+```
+
+- 확장자 생략 가능 (`require('./foo')` → `foo.js` 자동 탐색)
+- **동기적**으로 파일 로드
+- `__dirname`, `__filename` 변수 사용 가능
+
+### ES Module (ESM)
+
+브라우저 표준 모듈 시스템으로,
+Node.js는 v12부터 공식 지원했다.
+
+```js
+// 가져오기
+import express from "express";
+import { foo } from "./foo.js";
+
+// 내보내기
+export const bar = () => {};
+export default baz;
+```
+
+- 확장자 생략 불가 (Node.js ESM 규칙)
+- **비동기적**으로 파일 로드
+- `import.meta.url`로 현재 파일 경로 접근
+
+### 왜 ESM에서는 확장자가 필수인가?
+
+ESM은 **브라우저 표준**을 그대로 따른다.
+
+브라우저에서 모듈은 네트워크 요청으로 불러온다.
+서버에 정확한 URL을 전달해야 해서 경로가 모호하면 404 에러가 발생한다.
+
+```html
+<script type="module">
+  import { foo } from "./config"; // 서버에 '/config' 요청 → 404
+  import { foo } from "./config.js"; // 서버에 '/config.js' 요청 → 200
+</script>
+```
+
+Node.js는 파일 시스템이 존재한다.
+CJS의 `require()`는 Node.js 자체 구현으로 처음부터 파일 시스템 탐색 로직을 자유롭게 설계했다.
+
+그래서 `config` → `config.js` → `config/index.js` 순으로 탐색하는게 가능하다.
+
+하지만 Node.js ESM은 이 편의 기능을 **브라우저 표준과의 일관성**을 위해 의도적으로 채택하지 않았다.
+
+### CJS에서 ESM을 왜 못 쓰나?
+
+구조적인 문제다.
+CJS의 `require()`는 **동기** 함수이고 ESM은 **비동기** 로드로 설계되어 있다.
+
+```
+require('lighthouse')  →  동기 함수가 비동기 모듈을 기다릴 수 없음  →  ERR_REQUIRE_ESM
+```
+
+반대로 ESM에서 CJS를 불러오는 건 가능하다.
+ESM은 비동기이므로 CJS를 기다릴 수 있다.
+
+```js
+import cjsPackage from "cjs-package"; // ESM → CJS: 가능 (default export로 처리)
+```
+
+npm 생태계는 CJS에서 ESM으로 점점 이전하고 있다.
+lighthouse v10+, chalk v5+, node-fetch v3+ 같은 패키지들은 ESM 전용으로 전환했다.
+
+여기서 CJS로 구성된 프로젝트들이 패키지들을 업그레이드하면 갑자기 `ERR_REQUIRE_ESM`이 발생하는 경우가 생기는 것이다.
+
+---
+
+## TypeScript 컴파일 도구 비교
+
+여기에 TypeScript가 끼어들면서 고려할 것이 하나 더 늘어난다.
+
+TypeScript는 Node.js가 직접 실행할 수 없으므로 JavaScript로 변환이 필요하다.
+도구마다 동작 방식이 달라 선택이 중요하다.
+
+### tsc
+
+TypeScript 공식 컴파일러로 파일을 1:1로 변환한다.
+
+```
+src/index.ts   →        dist/index.js
+src/config.ts  →  tsc → dist/config.js
+src/slack.ts   →        dist/slack.js
+```
+
+`tsconfig.json`의 `module` 설정이 출력 방식을 결정한다.
+
+```json
+{ "module": "CommonJS" }
+// import { foo } from './config'  →  const { foo } = require('./config')
+
+{ "module": "NodeNext" }
+// import { foo } from './config.js'  →  import { foo } from './config.js'  (그대로)
+```
+
+`module: CommonJS`로 설정하면 출력이 CJS다.
+lighthouse처럼 ESM 전용 패키지를 `require()`로 불러오려 하면 `ERR_REQUIRE_ESM`이 발생한다.
+
+#### `moduleResolution`
+
+`module`이 출력 형식을 결정한다면,
+`moduleResolution`은 TypeScript가 **타입 체크 시** import 경로를 어떻게 해석할지를 결정한다.
+런타임 동작과는 별개다.
+
+```
+"moduleResolution": "node"
+  - 구형 Node.js CJS 방식
+  - './config' → config.ts, config/index.ts 순으로 탐색
+  - 확장자 생략 허용
+
+"moduleResolution": "NodeNext"
+  - Node.js ESM 방식을 그대로 따름
+  - './config.js' 처럼 확장자 명시 필수
+  - "module": "NodeNext"와 함께 사용
+
+"moduleResolution": "Bundler"
+  - 번들러가 모듈을 처리한다고 선언
+  - 확장자 생략 허용 (번들러가 빌드 타임에 찾아줌)
+  - "module": "ESNext"와 함께 사용
+```
+
+`moduleResolution: "Bundler"`를 사용하면 TypeScript 타입 체크는 통과하지만,
+번들러 없이 Node.js로 직접 실행하면 에러가 난다.
+
+타입 체크 규칙과 런타임 규칙이 분리되어 있기 때문이다.
+
+```
+moduleResolution: "Bundler" + tsup
+  TypeScript: './config' 타입 체크 통과
+  esbuild:    './config.ts' 빌드 타임에 탐색 후 인라인
+  Node.js:    내부 import가 이미 사라짐 → 문제 없음
+
+moduleResolution: "Bundler" + tsc만 사용 (잘못된 조합)
+  TypeScript: './config' 타입 체크 통과
+  Node.js:    './config' 런타임 탐색 → 파일 없음 → ERR_MODULE_NOT_FOUND
+```
+
+### tsx
+
+[tsx(TypeScript Execute)](https://github.com/privatenumber/tsx)는 Node.js 환경에서 빌드 단계 없이 TypeScript 파일을 바로 실행하는 도구이다.
+
+```bash
+tsc && node dist/index.js  # 기존 방식
+tsx src/index.ts           # tsx: 빌드 없이 바로 실행
+```
+
+내부적으로 esbuild를 사용해 메모리에서 변환 후 즉시 실행한다.
+타입 체크를 생략하므로 tsc보다 훨씬 빠르다.
+
+#### lighthouse와의 충돌
+
+tsx는 esbuild로 변환할 때 `import` 구문을 `require()`로 바꾸지 않고 그대로 유지한다.
+그래서 lighthouse를 `import` 하는 것 자체는 성공한다.
+
+문제는 그 다음이다.
+lighthouse 내부에는 이런 코드가 있다.
+
+```js
+// lighthouse 내부 (ESM)
+import { fileURLToPath } from "url";
+const __dirname = fileURLToPath(import.meta.url);
+```
+
+`import.meta.url`은 ESM 컨텍스트에서만 런타임이 값을 채워준다.
+`package.json`에 `"type": "module"`이 없으면 Node.js는 CJS 컨텍스트로 실행하는데,
+이 경우 `import.meta.url`이 `undefined`가 된다.
+
+```
+tsx 실행 흐름
+
+1. import lighthouse from 'lighthouse'  → 성공 (import 구문 유지)
+2. lighthouse 내부 코드 실행
+3. import.meta.url → undefined (CJS 컨텍스트에서 값이 없음)
+4. fileURLToPath(undefined) → ERR_INVALID_ARG_TYPE
+```
+
+tsc+CJS는 `require('lighthouse')`로 변환하므로 **import 단계**에서 바로 막힌다.
+tsx는 import 자체는 성공하지만 lighthouse **내부 실행 단계**에서 막힌다.
+
+에러 메시지가 달라서 처음엔 원인이 다른 것처럼 보인다.
+
+### tsup
+
+번들러를 적용하자.
+[tsup](https://github.com/egoist/tsup)은 esbuild 기반의 TypeScript 번들러다.
+
+```
+src/index.ts
+src/config.ts   →  tsup  →  dist/index.js (하나로 합쳐짐)
+src/slack.ts
+```
+
+esbuild가 빌드 타임에 자체 탐색 알고리즘으로 내부 파일을 찾아 인라인으로 합친다.
+런타임에 Node.js가 내부 파일을 탐색할 필요가 없어진다.
+
+```js
+// 소스 코드 (src/index.ts)
+import { config } from './config';  // 확장자 없음
+
+// tsup 번들 결과 (dist/index.js)
+// config.ts 내용이 직접 인라인됨 → import 구문 자체가 사라짐
+const config = { ... };
+```
+
+Vite/Next.js와 같은 원리로 모듈 문제를 해결한다.
+
+---
+
+## 실제 프로젝트 패턴
+
+### 패턴 A: tsc + CJS
+
+```json
+// tsconfig.json
+{ "module": "CommonJS", "moduleResolution": "node" }
+```
+
+- 확장자 생략 가능, 설정이 단순
+- ESM 전용 패키지(chalk v5+, lighthouse v10+ 등)와 충돌
+
+```ts
+// tsc가 require()로 변환 → ERR_REQUIRE_ESM
+import chalk from "chalk";
+```
+
+### 패턴 B: tsc + ESM (Node.js 공식 방식)
+
+```json
+// tsconfig.json
+{ "module": "NodeNext", "moduleResolution": "NodeNext" }
+
+// package.json
+{ "type": "module" }
+```
+
+```ts
+import { config } from "./config.js"; // .js 확장자 필수
+import chalk from "chalk"; // ESM 전용 패키지 사용 가능
+```
+
+- Node.js ESM 표준을 정확히 따름
+- ESM 전용 패키지 호환
+- 내부 파일 import 시 `.js` 확장자 명시 불편
+
+### 패턴 C: tsup + ESM (번들러 방식)
+
+```json
+// tsconfig.json
+{ "module": "ESNext", "moduleResolution": "Bundler" }
+
+// package.json
+{ "type": "module" }
+```
+
+```ts
+// tsup.config.ts
+import { defineConfig } from "tsup";
+
+export default defineConfig({
+  entry: ["src/index.ts"],
+  format: ["esm"],
+  outDir: "dist",
+  clean: true,
+});
+```
+
+```ts
+import { config } from "./config"; // 확장자 생략 가능
+import chalk from "chalk"; // ESM 전용 패키지 사용 가능
+```
+
+- 확장자 생략 가능 (번들러가 처리)
+- ESM 전용 패키지 호환
+- Vite/Next.js와 같은 원리
+
+---
+
+## 마치며
+
+```
+TypeScript 소스 (.ts)
+        │
+        ├─── tsc + CJS ────────────────► 여러 .js 파일 (CJS)
+        │                                    └─ require() → 확장자 불필요
+        │                                    └─ ESM 전용 패키지 충돌 가능
+        │
+        ├─── tsc + ESM (NodeNext) ─────► 여러 .js 파일 (ESM)
+        │                                    └─ import → 확장자 필수
+        │                                    └─ ESM 전용 패키지 호환
+        │
+        ├─── tsx ──────────────────────► 빌드 없이 직접 실행
+        │                                    └─ import.meta.url 사용 패키지 충돌 가능
+        │
+        └─── tsup (번들러) ────────────► 단일 .js 번들
+                                             └─ 번들러가 모듈 탐색 처리
+                                             └─ 확장자 불필요
+                                             └─ ESM 전용 패키지 호환
+```
+
+번들러가 숨겨줬던 복잡성이 직접 Node.js를 다루는 순간 한꺼번에 드러난다.
+모듈 시스템 이슈를 알아보면서 번들러에 대한 감사함을 다시 한 번 느낀다.
