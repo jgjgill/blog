@@ -5,8 +5,7 @@
   "scripts": {
     "blog": "pnpm --filter blog dev",
     "build:blog": "pnpm --filter blog build",
-    "playground": "pnpm --filter playground dev",
-    "format": "biome format --write .",
+"format": "biome format --write .",
     "lint": "biome lint .",
     "check": "biome check --write ."
   },
