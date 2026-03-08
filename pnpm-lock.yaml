@@ -85,7 +85,7 @@ importers:
         specifier: ^1.9.4
         version: 1.9.4
 
-  apps/playground:
+  playground/learn-about-react-hook-form-and-tanstack-form:
     dependencies:
       '@hookform/resolvers':
         specifier: ^3.10.0
