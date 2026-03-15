@@ -1,0 +1,154 @@
+---
+title: "BuildIndex: 배열 최대 개수로 유효한 인덱스 유니온 타입 만들기"
+date: "2026-03-15"
+---
+
+## 개요 / 배경
+
+배열의 최대 개수가 정해진 경우,
+유효한 인덱스를 타입으로 표현하고 싶은 상황이 있다.
+
+직접 작성하면 최대 개수가 바뀔 때마다 타입도 수동으로 수정해야 한다.
+
+```ts
+const MAX_COUNT = 3;
+
+// 직접 작성 — 최대 개수가 바뀌면 타입도 수동으로 수정해야 함
+type RangeIndex = 0 | 1 | 2;
+```
+
+`number`로 처리하면 어떨까?
+
+```ts
+type IndexedFields = `items.${number}`;
+type Fields = "default" | IndexedFields;
+
+declare function onSelect(field: Fields): void;
+
+onSelect("items.999"); // 타입 에러 없음 — 범위 초과 허용
+onSelect(""); // 자동완성: 'default' 만 표시 (items.0, items.1 ... 제안 없음)
+```
+
+두 가지 문제가 있다.
+
+첫째, `number`는 너무 넓어서 범위를 초과한 인덱스도 타입 에러 없이 통과한다.
+
+둘째, IDE 자동완성이 제대로 동작하지 않는다.
+
+- TypeScript는 자동완성 후보를 열거할 때 유한한 문자열 리터럴 타입만 표시
+- `items.${number}`는 가능한 값이 무한하기 때문에 후보 목록에 올라오지 않고 유니온에 함께 있는 `'default'`만 표시
+
+## 동작 원리
+
+### BuildIndex 타입
+
+```ts
+type BuildIndex<
+  N extends number,
+  T extends number[] = []
+> = T["length"] extends N ? T[number] : BuildIndex<N, [...T, T["length"]]>;
+```
+
+재귀적으로 배열 `T`를 하나씩 늘려가며,
+길이가 `N`에 도달하면 `T[number]`로 유니온을 반환한다.
+
+`BuildIndex<3>` 동작 과정:
+
+```
+1. T = []         → T['length'] = 0, 0 extends 3? No  → BuildIndex<3, [0]>
+2. T = [0]        → T['length'] = 1, 1 extends 3? No  → BuildIndex<3, [0, 1]>
+3. T = [0, 1]     → T['length'] = 2, 2 extends 3? No  → BuildIndex<3, [0, 1, 2]>
+4. T = [0, 1, 2]  → T['length'] = 3, 3 extends 3? Yes → T[number] = 0 | 1 | 2
+```
+
+결과: `0 | 1 | 2`
+
+### 핵심 메커니즘
+
+| 표현                  | 의미                                 |
+| --------------------- | ------------------------------------ |
+| `T['length']`         | 배열 T의 현재 길이 (숫자 타입)       |
+| `[...T, T['length']]` | T에 현재 길이값을 추가한 새 배열     |
+| `T[number]`           | 배열 T의 모든 요소를 유니온으로 추출 |
+
+배열 `[0, 1, 2]`에서 `T[number]`는 `0 | 1 | 2`가 된다.
+이 트릭 덕분에 배열이 곧 누적된 인덱스 목록이 되고 유니온으로 꺼낼 수 있다.
+
+## 활용 예시
+
+```ts
+const MAX_COUNT = 3;
+
+type RangeIndex = BuildIndex<typeof MAX_COUNT>;
+// → 0 | 1 | 2
+
+type IndexedFields = `items.${RangeIndex}`;
+// → 'items.0' | 'items.1' | 'items.2'
+
+type Fields = "default" | IndexedFields;
+
+declare function onSelect(field: Fields): void;
+
+onSelect("items.2"); // ✅
+onSelect("items.3"); // ❌ 타입 에러 — MAX 초과
+```
+
+**IDE 자동완성도 동작한다.**
+`'items.'`까지 입력하면 `0`, `1`, `2`를 자동완성으로 제안받을 수 있다.
+
+**최대 개수 변경 시 타입이 자동으로 동기화된다.**
+
+```ts
+const MAX_COUNT = 5;
+
+type RangeIndex = BuildIndex<typeof MAX_COUNT>;
+// → 0 | 1 | 2 | 3 | 4  (자동으로 확장)
+```
+
+타입을 직접 수정할 필요 없이 상수 하나만 바꾸면 된다.
+
+## 주의사항
+
+`BuildIndex`는 재귀 타입이라 N이 커질수록 TypeScript가 처리해야 할 타입 인스턴스가 많아진다.
+N이 1000 이상이 되면 다음 에러가 발생한다.
+
+```
+Type instantiation is excessively deep and possibly infinite. (2589)
+```
+
+실용적인 범위(수십~수백)에서는 문제없지만,
+매우 큰 N이 필요한 경우에는 이 타입 유틸리티를 사용할 수 없다.
+
+## Playground 비교
+
+```ts
+type BuildIndex<
+  N extends number,
+  T extends number[] = []
+> = T["length"] extends N ? T[number] : BuildIndex<N, [...T, T["length"]]>;
+
+const MAX_COUNT = 5;
+
+type RangeIndex = BuildIndex<typeof MAX_COUNT>;
+// 0 | 1 | 2 | 3 | 4
+
+type IndexedFieldsSafe = `items.${RangeIndex}`;
+type IndexedFieldsUnsafe = `items.${number}`;
+
+type FieldsSafe = "default" | IndexedFieldsSafe;
+type FieldsUnsafe = "default" | IndexedFieldsUnsafe;
+
+declare function onSelectSafe(field: FieldsSafe): void;
+declare function onSelectUnsafe(field: FieldsUnsafe): void;
+
+onSelectSafe("items.4"); // ✅
+onSelectSafe("items.5"); // ❌ 타입 에러
+
+onSelectUnsafe("items.999"); // 타입 에러 없음
+
+// 자동완성 비교
+onSelectSafe(""); // → 'default', 'items.0', 'items.1', 'items.2', 'items.3', 'items.4' 제안
+onSelectUnsafe(""); // → 'default' 만 제안
+```
+
+[TypeScript Playground에서 직접 확인하기](https://www.typescriptlang.org/play/?#code/C4TwDgpgBAQgrgSwDYBMCSA7FEAeAeAWACgooA5KXYCLAZygzgFsAjCAJwBpjSAVSnNToNmbdgG0AulAC8UKcQB8sqL3EAiJDQDmwABbrpVGinoUA-KvGNWHaQC5YiVJmz4yneQDofvT2s0dfUNJRQBuYmIAYwB7DFpgKABZAEEADQB9AGEAeQBVMn45AFYIomJQSCgAJQBDDG0IV1wVeGR0LFw8SogYgDNk9Oz8wvDiAHpxqAAGKAAfKABGeagAJhWAZhWAFkiiHqhmnAgUADEECFRaAGVavug5AAMEaiZaLwASAG86hqbOnAAX0eZQORxO50upjy8TuDygz1e72+NjEwLKFXA0EhV1u9xU6mwfVqcCQwHUK3BZwuuLhoKxUBx0Nh+LkhIgxNJ5MpAIhNOZtDpe2wUSQtXY0D6cAwUWACDiUDi10uEFleIgAAo+vzHEybnCAJSOABuMQQKDKIrFEqgUplcoVSpVsphgvuWp1jP5tFdhpNZoteydWjVcI16heEDeXm26gNYSgkyggFByYjB1XAdXhyPR4pxhNJwAy5FBAAMLgFDxqCABdHADftQYwypDwF97ojSK8AE5O-nE1Ny1Xq1BAGOjgBlxvZJwAJ44BN5sAImOARkGoIARPsACrVp+vOzNh9TdpOAJMIoAByIkksn7zz7nPvaang8XryLa-nturB+3jYvtvbfdQQA4E4AJUdXDYZs2mpbvGPZQHuh4csewBfoAM50-r+QA)
