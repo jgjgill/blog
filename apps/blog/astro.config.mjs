@@ -77,6 +77,7 @@ export default defineConfig({
         ],
       },
       workbox: {
+        navigateFallback: null,
         globPatterns: ['**/*.{html,css,js}'],
         globIgnores: ['**/_astro/giscus-*.js'],
         runtimeCaching: [
