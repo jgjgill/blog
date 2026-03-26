@@ -11,6 +11,7 @@ description: Use when the user asks to write or create a blog post. Creates the 
 초안 없이 글을 작성하지 않는다.
 
 초안은 다음 형태로 제공된다:
+
 - 파일 참조: `@파일명.md` (예: `@module-system-guide.md`)
 - 직접 텍스트 붙여넣기
 
@@ -19,6 +20,7 @@ description: Use when the user asks to write or create a blog post. Creates the 
 > 글의 초안 또는 정리해둔 내용이 있으면 공유해주세요. 초안을 바탕으로 글을 같이 의논하면서 만듭니다.
 
 초안을 받은 후:
+
 1. 초안의 핵심 내용과 구조를 파악
 2. 글의 흐름과 섹션 구성을 초안 기반으로 설계
 3. 초안에 없는 내용을 임의로 추가 방지
@@ -73,14 +75,21 @@ category: "development"
 - 단순 요약("이 글에서는 X를 다룹니다") 금지
 
 **좋은 예시:**
+
 ```mdx
 <Callout>ERR_REQUIRE_ESM — 번들러가 숨겨온 청구서</Callout>
 ```
 
 **피해야 할 예시:**
+
 ```mdx
 <Callout>이 글에서 다루는 핵심 내용 또는 문제 정의</Callout>
 ```
+
+## 이미지 가이드라인
+
+썸네일 / OG 이미지: 1200 × 630 ⭐ 가장 표준
+본문 설명 이미지: 1200 × 675 16:9
 
 ## 커밋 컨벤션
 
