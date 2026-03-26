@@ -13,7 +13,7 @@ import AstroPWA from '@vite-pwa/astro';
 
 export default defineConfig({
   site: 'https://jgjgill.com',
-  trailingSlash: 'never',
+  trailingSlash: 'always',
 
   i18n: {
     defaultLocale: 'ko',
