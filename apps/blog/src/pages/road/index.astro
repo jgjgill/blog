@@ -40,7 +40,7 @@ function getSlug(id: string) {
               const slug = getSlug(road.id);
               return (
                 <li>
-                  <a href={`/road/${slug}`} class="group flex gap-4 items-baseline">
+                  <a href={`/road/${slug}/`} class="group flex gap-4 items-baseline">
                     <span class="text-sm text-muted shrink-0 w-16">{road.data.date.slice(5)}</span>
                     <span
                       class="text-sm group-hover:underline underline-offset-2 line-clamp-1"

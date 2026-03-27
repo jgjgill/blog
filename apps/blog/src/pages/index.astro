@@ -86,7 +86,7 @@ function getSlug(id: string) {
           const slug = getSlug(post.id);
           return (
             <li>
-              <a href={`/post/${slug}`} class="group flex gap-3 items-center">
+              <a href={`/post/${slug}/`} class="group flex gap-3 items-center">
                 {post.data.thumbnail && (
                   <div
                     class="shrink-0 w-10 h-10 rounded-md overflow-hidden bg-border"
