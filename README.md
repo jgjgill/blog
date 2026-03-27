@@ -1,29 +1,40 @@
 # 기록과 공유를 실천하는 블로그
 
-## 프로젝트 소개
+배운 것, 고민한 것, 틀렸던 것을 글로 남깁니다.
+쓰는 과정에서 생각을 정리하고 누군가에게는 도움이 되었으면 하는 마음을 가집니다.
 
-- [배포](https://jgjgill-blog.netlify.app)
-- [스토리북](https://www.chromatic.com/builds?appId=6433edb6543cdd6d8553e27a)
+## AI 시대의 글쓰기
 
-## 기술 스택
+AI를 활용해 글을 씁니다. 초안을 다듬고 표현을 가다듬는 데 함께합니다.
 
-|Category|Stack|
-|---|---|
-|Language| <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=TypeScript&logoColor=white"/> |
-|Framework|<img src="https://img.shields.io/badge/Gatsby-663399?logo=Gatsby&logoColor=white"/>|
-|Library|<img src="https://img.shields.io/badge/React-61DAFB?logo=React&logoColor=white"/>|
-|Styling|<img src="https://img.shields.io/badge/Emotion-C43BAC?logo=Emotion&logoColor=white"/> <img src="https://img.shields.io/badge/Storybook-FF4785?logo=Storybook&logoColor=white"/>|
-|Formatter|<img src="https://img.shields.io/badge/Eslint-4B32C3?logo=Eslint&logoColor=white"/> <img src="https://img.shields.io/badge/Prettier-F7B93E?logo=Prettier&logoColor=white"/>|
-|Deploy|<img src="https://img.shields.io/badge/Netlify-00C7B7?logo=Netlify&logoColor=white"/> <img src="https://img.shields.io/badge/Chromatic-FC521F?logo=Chromatic&logoColor=white"/>|
+글의 출발점은 여전히 저의 고민과 경험입니다.
+AI가 대신할 수 없는 내가 왜 이 문제를 마주했는지, 어떤 방식으로 생각했는지 풀어냅니다.
 
-## 트러블 슈팅
+해당 과정을 AI와 함께 자연스럽게 녹여내고자 합니다.
+AI를 통해 더 다양한 방식으로 글을 쓰고, 더 많은 것을 나눌 수 있다고 생각합니다.
 
-- [Gatsby - 카테고리 구현하기](https://jgjgill-blog.netlify.app/post/adding-category-to-gatsby/)
-- [Gatsby - 검색 기능 구현하기](https://jgjgill-blog.netlify.app/post/adding-search-to-gatsby/)
-- [Gatsby - 검색엔진 최적화(SEO)하기](https://jgjgill-blog.netlify.app/post/increase-seo-in-gatsby/)
-- [Gatsby - TOC 기능 구현하기 (Gastby 프레임워크에 기여한 경험)](https://jgjgill-blog.netlify.app/post/adding-toc-to-gatsby/)
-- [Gatsby - PWA A2HS 기능 구현하기](https://jgjgill-blog.netlify.app/post/pwa-add-to-home-screen-to-gatsby/)
+## 이 블로그에서 다루는 것들
 
-## 회고
+- 개발하면서 직접 부딪히고 해결한 경험
+- 기술을 넘어 일하는 방식, 성장에 대한 생각
+- 누군가의 문제를 조금이라도 덜어줄 수 있는 내용
 
-- [몰입 일기 - 위대한 개츠비 (나만의 블로그 만들기)](https://jgjgill-blog.netlify.app/post/the-great-gatsby/)
+## 프론트엔드 개발자입니다.
+
+- **문제를 해결하는 사람** — 적절하게 접근하여 유연하게 해결하는 것을 중요하게 여깁니다.
+- **조직의 생산성** — 코드 작성부터 커뮤니케이션까지 비효율을 없애려고 합니다.
+- **소프트웨어 장인, 정원사** — 가치 있는 서비스를 만들되, 품질과 지속 가능성을 놓치고 싶지 않습니다.
+- **개발자에 의존하지 않은 환경** — 자동화, 프로세스 개선에 관심이 많습니다.
+- **실패 내성** — 원인을 파악하여 재발하지 않는 것에 집중합니다.
+- **1일 1배포** — 작은 성취와 빠른 피드백을 통한 지속적인 개선을 추구합니다.
+- **잘 읽히는 코드가 좋은 코드** — 일관된 구조, 직관적인 네이밍, 친절한 주석을 좋아합니다.
+- **오픈소스 활동** — 좋은 코드를 많이 읽고 성장하고자 합니다.
+
+## 커피챗
+
+개발뿐만 아니라 저와 이야기 나누고 싶으신 분들은 언제든지 환영합니다. 편하게 연락 주세요.
+
+### Links
+
+- [GitHub](https://github.com/jgjgill)
+- [LinkedIn](https://www.linkedin.com/in/%EC%A2%85%EA%B8%B8-%EC%9D%B4-bb9b0b241/)
