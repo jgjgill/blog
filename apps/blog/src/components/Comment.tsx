@@ -9,9 +9,9 @@ export default function Comment({ lang = "ko" }: Props) {
     <div className="min-h-25 mt-12">
       <Giscus
         repo="jgjgill/blog"
-        repoId="R_kgDOJDC4vw"
+        repoId="R_kgDOJH4dKA"
         category="Comments"
-        categoryId="DIC_kwDOJDC4v84CkpXY"
+        categoryId="DIC_kwDOJH4dKM4CU19g"
         mapping="pathname"
         strict="1"
         reactionsEnabled="1"
