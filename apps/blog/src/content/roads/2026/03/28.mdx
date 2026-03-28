@@ -1,0 +1,120 @@
+---
+title: "처음 본 ElastiCache에서 월 $232짜리 문제를 발견해 개선하기"
+date: "2026-03-28"
+---
+
+## 배경
+
+업무에서 서버리스 관련 프로젝트에 이슈가 생겨 AWS 인프라를 들여다보게 됐다.
+그 과정에서 ElastiCache를 처음 접했고, 개념을 파악하는 과정에서 비용 문제를 발견했다.
+
+2월부터 비용이 갑자기 급증해 있었다.
+
+![ElastiCache 월별 비용 그래프 — 2월부터 급증](/images/roads/elasticache-cost-monthly.webp)
+
+일별로 보면 2월 1일을 기점으로 확실하게 상승한 지점이 보인다.
+
+![일별 비용 상세 — 2월 1일부터 ExtendedSupport 항목 추가](/images/roads/elasticache-cost-daily.webp)
+
+기존 **$2.82/일에서 $11.44/일로, 약 4배** 가까이 올라 있었다.
+
+해당 이슈를 알아보면서 알게 된 개념을 정리하고 원인을 파악하여 팀에 공유한 과정을 기록한다.
+
+---
+
+## ElastiCache란?
+
+AWS에서 제공하는 완전 관리형 인메모리 캐싱 서비스다.
+DB 앞단에 캐시 레이어를 두어 응답 속도를 높인다.
+
+```
+[일반적인 흐름]
+사용자 → 서버 → DB 조회 (느림) → 응답
+
+[ElastiCache 적용 후]
+사용자 → 서버 → 캐시 히트 (빠름) → 응답
+                  ↓ 캐시 미스 시
+                  DB 조회 → 캐시 저장 → 응답
+```
+
+DB는 디스크 기반이라 느리지만, ElastiCache는 메모리(RAM) 기반이라 수 밀리초 이내 응답이 가능하다.
+
+### 지원 엔진
+
+| 엔진          | 특징                                       |
+| ------------- | ------------------------------------------ |
+| **Valkey**    | 오픈소스, Redis OSS 대비 20~33% 저렴, 권장 |
+| **Redis OSS** | 오랜 안정성, 7.1이 최신 버전               |
+| **Memcached** | 단순 캐싱 전용, 영속성 없음                |
+
+---
+
+## Redis OSS vs Valkey
+
+2024년 Redis가 오픈소스 라이선스를 변경했다.
+AWS, Google 등 주요 기업들이 반발했고, Redis 7.2.4를 fork해서 **Valkey**를 만들었다.
+Linux Foundation이 주도하며 BSD 라이선스로 완전한 오픈소스 형태로 유지되고 있다.
+
+| 항목                    | Redis OSS          | Valkey                   |
+| ----------------------- | ------------------ | ------------------------ |
+| 라이선스                | AGPLv3 (제한적)    | BSD (완전 오픈소스) ✅   |
+| API 호환성              | —                  | Redis와 100% 호환 ✅     |
+| 멀티스레딩              | 제한적             | 향상된 I/O 멀티스레딩 ✅ |
+| ElastiCache 가격        | 기준               | 노드 기반 20% 저렴 ✅    |
+| ElastiCache Serverless  | 기준               | 33% 저렴 ✅              |
+| 최신 버전 (ElastiCache) | 7.1 (더 이상 없음) | 8.x                      |
+
+---
+
+## 비용이 급증한 이유: Extended Support
+
+ElastiCache는 표준 지원이 종료된 버전을 계속 사용할 경우 **추가 요금**(Extended Support)이 자동으로 붙는다.
+([ElastiCache 요금 공식 문서](https://aws.amazon.com/ko/elasticache/pricing/))
+
+![Extended Support 버전별 지원 일정](/images/roads/elasticache-extended-support-schedule.webp)
+
+우리 팀은 Redis OSS v5.0.6 클러스터가 8개 운영 중이었다.
+v5의 표준 지원은 **2026년 1월 31일**에 종료가 되었고 2월 1일부터 Extended Support 요금이 자동 적용된 것이다.
+
+![Redis OSS 캐시 클러스터 목록 — 대부분 5.0.6](/images/roads/elasticache-redis-oss-list.webp)
+
+```
+cache.t4g.medium 기준:
+  온디맨드:                    $0.094/시간
+  Extended Support 1~2년차:   $0.0752/시간 추가
+  합계:                        $0.1692/시간 (+80%)
+```
+
+Cost Explorer에서 사용량 유형 필터로 확인하면 NodeUsage와 ExtendedSupport 항목이 명확하게 분리되어 보인다.
+
+![ExtendedSupportYr1_Yr2 항목이 별도로 집계된 Cost Explorer](/images/roads/elasticache-cost-breakdown.webp)
+
+해결책은 명확했다. **Valkey로 업그레이드하면 Extended Support 요금이 사라진다.**
+
+```
+현재:           $11.44/일  ($319.85/월)
+업그레이드 후:   $2.82/일   ($87.42/월)
+
+월 절감:   약 $232
+```
+
+---
+
+## 팀 공유
+
+ElastiCache는 다른 팀에서 관리하는 서비스였다.
+내용을 정리해서 스크럼에서 먼저 공유하고, 이후 해당 팀에 전달했다.
+
+- 비용 급증 원인 (Extended Support 자동 적용)
+- Redis OSS → Valkey 업그레이드 시 변경되는 것 / 변경되지 않는 것
+- 업그레이드 방법 및 권장 순서
+
+---
+
+## 마무리
+
+개념을 공부하다가 비용 구조를 들여다보게 됐고, 그 과정에서 팀 내에 새고 있는 구멍을 발견했다.
+
+ElastiCache 개념에 대해 새롭게 알게 된 점도 좋았는데 인프라 비용도 꼼꼼하게 확인하면 개선할 여지가 많을 것 같다.
+
+당연하게 운영되고 있는 것들을 한 번씩 들여다보는 습관이 중요하게 느껴졌다.
