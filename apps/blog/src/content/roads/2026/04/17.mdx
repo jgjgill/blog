@@ -1,0 +1,100 @@
+---
+title: "연결은 미리, 요청은 나중에 — preconnect와 dns-prefetch"
+date: "2026-04-17"
+---
+
+## 배경
+
+애드센스 광고 최적화 작업을 하면서 `preconnect`라는 개념을 처음 접했다.
+적용 후 리뷰 과정에서는 `dns-prefetch`도 새롭게 알게 되었다.
+두 개념이 비슷한데 다르게 동작해서 한 번 정리하면 좋을 것 같았다.
+
+## 브라우저가 외부 서버에 연결하는 과정
+
+브라우저가 외부 도메인(예: `googleads.g.doubleclick.net`)에 요청 하나를 보내려면 실제 요청 전에 세 단계의 준비가 필요하다.
+
+1. **DNS 조회** — 도메인 이름을 IP 주소로 변환
+2. **TCP 연결** — 해당 IP와 통신 채널 수립
+3. **TLS 핸드셰이크** — HTTPS 암호화 키 교환 (HTTP면 생략)
+
+모바일 환경에서는 이 세 단계가 합쳐 **100~500ms** 정도 걸린다.
+사용자 입장에서는 "페이지가 느리다"고 체감되는 시간이다.
+
+`preconnect`와 `dns-prefetch`는 이 준비 작업을 나중에 쓸 도메인에 대해 미리 해두라고 브라우저에 알려주는 리소스 힌트(Resource Hint)다.
+
+## preconnect
+
+`preconnect`는 DNS 조회 + TCP 연결까지 미리 처리하고, HTTPS 도메인이면 **TLS 핸드셰이크까지 포함**해서 세 단계를 전부 수행한다.
+
+```html
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" />
+```
+
+실제 요청이 발생하는 순간 이미 연결이 맺어져 있으므로 바로 응답을 받을 수 있다.
+
+### 주의 사항
+
+- 브라우저는 **10초 이내에 사용되지 않는 preconnect 연결을 닫는다**. 곧 사용할 도메인에만 걸어야 한다.
+- 많이 걸면 연결 리소스와 대역폭을 낭비해 **오히려 성능이 저하**될 수 있다. (4~6개 이내 권장)
+- 같은 출처(same-origin)는 이미 연결이 맺혀 있으므로 효과가 없다.
+
+---
+
+## dns-prefetch
+
+`dns-prefetch`는 위 세 단계 중 **DNS 조회만** 미리 수행한다.
+
+```html
+<link rel="dns-prefetch" href="https://example.com" />
+```
+
+DNS 쿼리 한 번만 날리는 수준이라 비용이 거의 0에 가깝고, 브라우저 지원도 `preconnect`보다 광범위하다.
+지원하지 않는 브라우저는 단순히 무시하기 때문에 부작용도 없다.
+
+### 언제 쓰나
+
+- 스크롤해야 나오는 이미지 CDN
+- 가끔 호출되는 외부 API
+- 페이지에서 확실히 쓸지 애매한 도메인
+
+비용이 거의 없으니 **많이 걸어도 괜찮다**는 점이 `preconnect`와의 큰 차이다.
+
+## 비유로 이해하기
+
+- **dns-prefetch** = "저 손님 어디 사시지?" 주소만 미리 확인해둠
+- **preconnect** = 주소 확인 + 택시 부르기 + 손님 모셔와서 문 앞에 대기시키기
+
+손님(실제 요청)이 왔을 때:
+
+- dns-prefetch만 해둔 경우: 주소는 알지만 택시 부르고 모셔오는 시간이 여전히 필요
+- preconnect까지 해둔 경우: 이미 문 앞에 있으니 바로 식당 안으로 입장
+
+## 관련 개념 비교
+
+| 기법         | 역할                             | 절약 시간 | 부담             | 브라우저 지원 |
+| ------------ | -------------------------------- | --------- | ---------------- | ------------- |
+| dns-prefetch | DNS 조회만                       | 20~100ms  | 거의 0           | 매우 넓음     |
+| preconnect   | DNS 조회+TCP 연결+TLS 핸드셰이크 | 100~500ms | 적음 (연결 유지) | 넓음          |
+
+### 둘을 같이 쓸 수 있을까
+
+- **같은 도메인에 둘 다 걸기**: 보통 불필요. `preconnect`가 이미 DNS 조회를 포함하므로 중복이다. 아주 오래된 브라우저 fallback이 필요할 때만 의미가 있다. ([브라우저 지원 현황](https://caniuse.com/?search=preconnect))
+- **다른 도메인에 각각 걸기**: 매우 일반적. 중요한 도메인은 `preconnect`, 덜 중요한 도메인은 `dns-prefetch`로 역할을 분담한다.
+
+> ⚠️ 같은 `<link>` 태그 하나에 두 개를 함께 지정하면 **Safari에서 preconnect가 취소되는 버그**가 있다. 반드시 별도 태그로 작성한다.
+
+## 적용 예시
+
+페이지 로드 직후 반드시 호출되는 구글 도메인에 `preconnect`를 적용했다.
+
+```html
+<link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+<link rel="preconnect" href="https://googleads.g.doubleclick.net" />
+<link rel="preconnect" href="https://tpc.googlesyndication.com" />
+```
+
+## 참고 문서
+
+- [preconnect 및 dns-prefetch — web.dev](https://web.dev/articles/preconnect-and-dns-prefetch?hl=ko)
+- [dns-prefetch — MDN Web Performance Guides](https://developer.mozilla.org/en-US/docs/Web/Performance/Guides/dns-prefetch)
+- [rel="preconnect" — MDN HTML Reference](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Attributes/rel/preconnect)
