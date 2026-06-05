@@ -1,7 +1,11 @@
 ---
+interface Props {
+  desktopSlot: string;
+  mobileSlot: string;
+}
+
 const publisherId = 'ca-pub-2173037699636228';
-const desktopSlot = '6154008098';
-const mobileSlot = '8557857579';
+const { desktopSlot, mobileSlot } = Astro.props;
 ---
 
 {import.meta.env.PROD && (
