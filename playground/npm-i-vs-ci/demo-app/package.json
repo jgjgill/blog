@@ -1,0 +1,14 @@
+{
+  "name": "demo-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "npm i vs npm ci 동작을 관찰하기 위한 실험용 앱",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "is-odd": "^3.0.0",
+    "semver": "~7.5.0"
+  }
+}

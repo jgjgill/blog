@@ -1,0 +1,9 @@
+# 실험 과정에서 생성/삭제를 반복하는 결과물들
+node_modules/
+
+# 실험 중 만들어지는 lock 백업 파일 (스크립트가 생성)
+*.lock.bak
+package-lock.json.bak
+
+# 실험 로그
+*.log
