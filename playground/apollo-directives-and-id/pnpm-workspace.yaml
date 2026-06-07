@@ -1,0 +1,14 @@
+# 이 파일은 "격리" 목적입니다.
+#
+# 저장소 루트의 pnpm-workspace.yaml 은 `playground/*` 를 workspace 패키지로
+# 포함합니다. 그러면 이 디렉토리도 루트 workspace 의 일부로 끌려가서
+# 의존성 설치가 꼬일 수 있습니다.
+#
+# pnpm 은 가장 가까운(=하위) pnpm-workspace.yaml 을 workspace 루트로 인식합니다.
+# 여기에 server / client 두 패키지를 명시해 두면, 이 디렉토리는 루트
+# workspace 로부터 분리된 "독립 workspace" 가 됩니다.
+#
+# 설치:  (이 디렉토리에서)  pnpm install
+packages:
+  - 'server'
+  - 'client'
