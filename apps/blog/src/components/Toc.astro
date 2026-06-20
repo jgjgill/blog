@@ -22,7 +22,7 @@ const filtered = headings.filter((h) => h.depth <= 3);
       <button
         id="toc-toggle"
         class="w-full flex items-center justify-between px-4 py-3 text-left hover:bg-border/30 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-border"
-        aria-expanded="true"
+        aria-expanded="false"
         aria-controls="toc-list"
       >
         <span class="font-semibold text-xs uppercase tracking-wide text-muted">
@@ -44,6 +44,7 @@ const filtered = headings.filter((h) => h.depth <= 3);
           stroke-linecap="round"
           stroke-linejoin="round"
           class="shrink-0 ml-2 transition-transform duration-200"
+          style="transform: rotate(180deg)"
         >
           <path d="m18 15-6-6-6 6" />
         </svg>
@@ -103,6 +104,7 @@ const filtered = headings.filter((h) => h.depth <= 3);
       toggleEl.setAttribute("aria-expanded", String(open));
     }
 
+    setOpen(false);
     toggleEl.addEventListener("click", () => setOpen(!isOpen));
 
     // smooth scroll
