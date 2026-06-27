@@ -2,19 +2,32 @@
 interface Props {
   desktopSlot: string;
   mobileSlot: string;
+  /**
+   * View Transitions 중에 광고 노드를 유지할지 여부.
+   * 같은 persistKey를 가진 페이지끼리 이동하면 광고가 재호출되지 않는다.
+   * (예: POST 목록 ↔ 카테고리)
+   */
+  persistKey?: string;
 }
 
 const publisherId = 'ca-pub-2173037699636228';
-const { desktopSlot, mobileSlot } = Astro.props;
+const { desktopSlot, mobileSlot, persistKey } = Astro.props;
 ---
 
 {import.meta.env.PROD && (
   <!-- 광고 크기를 미리 확보하여 CLS 방지: 모바일 50px / 데스크탑(sm 이상) 90px -->
-  <div id="adsense-container" class="my-4 flex justify-center h-12.5 sm:h-22.5"></div>
+  <div
+    id="adsense-container"
+    class="my-4 flex justify-center h-12.5 sm:h-22.5"
+    transition:persist={persistKey ? persistKey : false}
+    data-persisted={persistKey ? 'true' : 'false'}
+  ></div>
   <script is:inline define:vars={{ publisherId, desktopSlot, mobileSlot }}>
     function mountAd() {
       const container = document.getElementById('adsense-container');
-      if (!container || container.querySelector('ins')) return;
+      if (!container) return;
+      // 이미 광고가 들어있으면(또는 persist로 유지된 경우) 다시 push 하지 않는다.
+      if (container.querySelector('ins')) return;
 
       const isDesktop = window.matchMedia('(min-width: 640px)').matches;
       const slot = isDesktop ? desktopSlot : mobileSlot;
