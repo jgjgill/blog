@@ -37,14 +37,14 @@ function getSlug(id: string) {
 ---
 
 <BaseLayout title={`${t.post.category[category]} | 글`}>
-  <AdSense
-    desktopSlot="3931169437"
-    mobileSlot="3168023427"
-    persistKey="post-ad"
-  />
-
   <section>
     <h1 class="text-2xl font-bold mb-8">{t.nav.post}</h1>
+
+    <AdSense
+      desktopSlot="3931169437"
+      mobileSlot="3168023427"
+      persistKey="post-ad"
+    />
 
     <div class="flex flex-wrap gap-2 mb-8">
       {
