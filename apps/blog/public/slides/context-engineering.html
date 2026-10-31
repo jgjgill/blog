@@ -1,0 +1,797 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI는 무엇을 잊는가 · 발표 자료</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+html,body{margin:0;height:100%;background:#0b0f14;color:#c3cdd7;font-family:'IBM Plex Sans KR',sans-serif;overflow:hidden}
+.deck{height:100%;display:flex;flex-direction:column}
+.frame{position:relative;flex:1;min-height:0;overflow:hidden;cursor:pointer}
+.stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform:translate(-50%,-50%) scale(var(--k,.5))}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;box-sizing:border-box;opacity:0;visibility:hidden;transition:opacity .25s,visibility .25s}
+.slide[data-active]{opacity:1;visibility:visible}
+.slide *{margin:0;box-sizing:border-box}
+x-shape{display:block}
+.bar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#11161c;border-top:1px solid #26303c;font-size:13px}
+.bar button{font:inherit;color:#c3cdd7;background:#1b232d;border:1px solid #26303c;border-radius:6px;padding:4px 10px;cursor:pointer}
+.bar button:hover{border-color:#5cc8c2}
+.count{font-family:'JetBrains Mono',monospace;min-width:64px;text-align:center}
+.spacer{flex:1}
+</style></head><body>
+<div class="deck">
+<div class="frame" title="클릭하면 다음 장"><div class="stage">
+<section class="slide" data-index="0" data-active id="cover" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:4px;color:#5CC8C2">CONTEXT ENGINEERING · 입문</p>
+<h1 style="font-size:112px;font-weight:700;line-height:1.15;letter-spacing:-2px">AI는 무엇을 기억하고<br>무엇을 잊는가</h1>
+<p style="font-size:32px;line-height:1.5;color:#9AA8B6">모델은 아무것도 기억하지 않는다. 기억은 다시 실리는 것이다.</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">이종길 · 26.10.28</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:3%;background:#5CC8C2"></div>
+<div style="width:97%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">3%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">01 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="1" id="q-open" data-transition="fade" style="background:#161D25;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">01 · 질문</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">AI는 어제 대화를 기억할까?</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 1</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">새 세션</h3>
+<p style="font-size:32px;line-height:1.4;color:#C3CDD7">어제 정한 결정을 모른다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 2</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">같은 세션</h3>
+<p style="font-size:32px;line-height:1.4;color:#C3CDD7">30턴 전 이야기도 기억한다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:40px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 3</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">아주 긴 세션</h3>
+<p style="font-size:32px;line-height:1.4;color:#C3CDD7">처음 한 지시를 다시 잊는다</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<p style="font-size:32px;line-height:1.4;font-style:italic;color:#E8EDF2">“Claude may start ‘forgetting’ earlier instructions or making more mistakes.”</p>
+<p style="font-size:24px;color:#8796A5">Claude Code 문서, Best practices</p>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:8%;background:#5CC8C2"></div>
+<div style="width:92%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">8%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">02 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="2" id="stateless" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">02 · 원리</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">모델은 기억하지 않는다</h2>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:32px">
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">세션</h3>
+<p style="font-size:24px;line-height:1.4;color:#9AA8B6">일어난 모든 일의 기록. 디스크에 계속 쌓인다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:32px">
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">하네스</h3>
+<p style="font-size:24px;line-height:1.4;color:#9AA8B6">이번 요청에 보낼 것을 조립한다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#163033;border:2px solid #5CC8C2;border-radius:16px;padding:32px">
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">컨텍스트</h3>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">요청 한 번에 모델이 받는 전부</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:32px">
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">모델</h3>
+<p style="font-size:24px;line-height:1.4;color:#9AA8B6">읽고 답할 뿐. 요청 사이에 저장하지 않는다</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:44px;font-weight:500;line-height:1.35">대화가 이어지는 것처럼 보이는 건, 하네스가 매번 지난 대화 전체를 <span style="color:#5CC8C2">다시 보내기</span> 때문이다.</p>
+<p style="font-size:24px;color:#8796A5">응답은 다시 세션에 쌓이고, 다음 요청에 또 실린다 · Anthropic, Scaling Managed Agents (2026-04)</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:14%;background:#5CC8C2"></div>
+<div style="width:86%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">14%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">03 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="3" id="turns" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">02 · 원리</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">메시지는 한 번, 요청은 여러 번</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">턴 1 · “README 요약해줘” 한 번 보냄</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5;width:120px">요청 1</p>
+<div style="display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:240px;background:#3A4654;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">system · tools</p></div>
+<div style="width:160px;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">내 메시지</p></div>
+</div>
+<x-shape kind="arrow-right" style="width:40px;height:20px;background:#8796A5"></x-shape>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#E8EDF2;background:#245A7A;padding:12px 20px;border-radius:8px">출력: Read 호출 후 멈춤</p>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5;width:120px">요청 2</p>
+<div style="display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:240px;background:#3A4654;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">system · tools</p></div>
+<div style="width:160px;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">내 메시지</p></div>
+<div style="width:160px;background:#245A7A;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">Read 호출</p></div>
+<div style="width:240px;background:#8A5A30;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">README 내용</p></div>
+</div>
+<x-shape kind="arrow-right" style="width:40px;height:20px;background:#8796A5"></x-shape>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#11161C;background:#5CC8C2;padding:12px 20px;border-radius:8px">출력: 요약 답변</p>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2;padding:12px 0px 0px 0px">턴 2 · 다음 메시지를 보냄</p>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5;width:120px">요청 3</p>
+<div style="display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:240px;background:#3A4654;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">system · tools</p></div>
+<div style="width:160px;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">내 메시지</p></div>
+<div style="width:160px;background:#245A7A;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">Read 호출</p></div>
+<div style="width:240px;background:#8A5A30;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">README 내용</p></div>
+<div style="width:140px;background:#245A7A;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">답변</p></div>
+<div style="width:200px;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">다음 메시지</p></div>
+</div>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:2px solid #5CC8C2;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">모델은 도구를 직접 못 쓴다</h3>
+<p style="font-size:24px;line-height:1.5;color:#9AA8B6">“Read 실행해 줘”라고 출력하고 멈춘다. 하네스가 실행하고, 결과를 붙여 처음부터 다시 보낸다.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:2px solid #F0A35E;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">도구 결과가 가장 빨리 찬다</h3>
+<p style="font-size:24px;line-height:1.5;color:#9AA8B6">한 번 읽은 README 내용은 이후 모든 요청에 다시 실린다.</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:20%;background:#5CC8C2"></div>
+<div style="width:80%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">20%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">04 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="4" id="session-vs-context" data-transition="fade" style="background:#161D25;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">02 · 원리</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">세션은 컨텍스트 창이 아니다</h2>
+</div>
+<table style="font-size:32px;color:#E8EDF2;border:1px solid #2A3542">
+<tr style="background:#1C2530"><th style="width:20%;color:#8796A5">&#160;</th><th style="width:40%;color:#C3CDD7">세션</th><th style="width:40%;color:#5CC8C2">컨텍스트</th></tr>
+<tr><td style="color:#9AA8B6">무엇</td><td>일어난 모든 일의 기록</td><td>이번 요청 한 번에 보내는 것</td></tr>
+<tr style="background:#1A222C"><td style="color:#9AA8B6">크기</td><td>계속 늘어난다</td><td>창 한도 안 (최신 모델 다수 1M, 출력 포함)</td></tr>
+<tr><td style="color:#9AA8B6">요약 뒤</td><td>원래 메시지가 그대로 남는다</td><td>앞부분이 요약 한 덩어리가 된다</td></tr>
+<tr style="background:#1A222C"><td style="color:#9AA8B6">모델이</td><td>직접 보지 못한다</td><td>이것만 본다</td></tr>
+</table>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">“The session is not Claude’s context window.” · Anthropic, Scaling Managed Agents (2026-04)</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:26%;background:#5CC8C2"></div>
+<div style="width:74%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">26%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">05 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="5" id="whats-in" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">03 · 구성</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">모델이 보는 건 요청 하나 전부</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:row;height:112px;gap:4px">
+<div style="width:15%;background:#3A4654;border-radius:10px 0px 0px 10px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">tools</p></div>
+<div style="width:13%;background:#4A5868;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">system</p></div>
+<div style="width:57%;background:#2C6F6B;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">messages</p></div>
+<div style="width:15%;background:#8A5A30;border-radius:0px 10px 10px 0px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">출력</p></div>
+</div>
+<div style="display:flex;flex-direction:row;gap:4px">
+<p style="width:28%;font-size:24px;line-height:1.4;color:#9AA8B6">도구 정의와 하네스의 규칙 · 잘 안 바뀐다</p>
+<p style="width:57%;font-size:24px;line-height:1.4;color:#9AA8B6">CLAUDE.md · 메모리 · 대화 · 도구 결과 · 내가 친 한 줄은 맨 끝</p>
+<p style="width:15%;font-size:24px;line-height:1.4;color:#9AA8B6">thinking 포함</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">출력도 같은 공간을 쓴다</h3>
+<p style="font-size:24px;line-height:1.5;color:#9AA8B6">입력이 창을 거의 채우면 답을 쓰다 한도에서 멈춘다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">캐시된 토큰도 포함된다</h3>
+<p style="font-size:24px;line-height:1.5;color:#9AA8B6">캐시는 값을 바꿀 뿐, 공간은 그대로 차지한다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">최신 모델 다수 1M 토큰</h3>
+<p style="font-size:24px;line-height:1.5;color:#9AA8B6">넓어졌지만, 넓다고 다 쓰지는 않는다</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:32%;background:#5CC8C2"></div>
+<div style="width:68%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">32%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">06 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="6" id="slash-context" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">03 · 구성</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">/context로 직접 보기</h2>
+</div>
+<div style="flex:1;display:flex;flex-direction:row;gap:48px">
+<div style="width:760px;display:flex;flex-direction:column;gap:16px;background:#1A1D22;border:1px solid #2A3542;border-radius:16px;padding:28px 32px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#C3CDD7">Context usage · 365.7k / 1.0M (37%)</p>
+<div style="display:flex;flex-direction:row;height:14px;border-radius:7px;overflow:hidden">
+<div style="width:0.3%;background:#C98A3A"></div>
+<div style="width:1.3%;background:#5B8DEF"></div>
+<div style="width:0.2%;background:#D9B98A"></div>
+<div style="width:0.2%;background:#A788D8"></div>
+<div style="width:1%;background:#E08A7A"></div>
+<div style="width:33.4%;background:#4FA3C8"></div>
+<div style="width:3.3%;background:#D5D8DC"></div>
+<div style="width:60.3%;background:#2A3038"></div>
+</div>
+<table style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#C3CDD7">
+<tr><td style="width:64%;color:#E0A35A">System prompt</td><td style="width:36%;text-align:right">3.4k</td></tr>
+<tr><td style="color:#7FA6F2">System tools</td><td style="text-align:right">13.4k</td></tr>
+<tr><td style="color:#9BD49A">MCP server instructions</td><td style="text-align:right">717</td></tr>
+<tr><td style="color:#D9B98A">Custom agents</td><td style="text-align:right">1.5k</td></tr>
+<tr><td style="color:#B9A0E0">Memory files</td><td style="text-align:right">2.3k</td></tr>
+<tr><td style="color:#E8A091">Skills</td><td style="text-align:right">9.9k</td></tr>
+<tr style="background:#1F2A33"><td style="color:#6FB8D8">Messages</td><td style="text-align:right;color:#E8EDF2">334.5k</td></tr>
+<tr><td style="color:#D5D8DC">Autocompact buffer</td><td style="text-align:right">33.0k</td></tr>
+<tr><td style="color:#8796A5">Free space</td><td style="text-align:right">601.3k</td></tr>
+</table>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">세션 시작 · 거의 고정 · 약 30k</p>
+<p style="font-size:32px;line-height:1.4">System prompt · System tools · Custom agents · Memory files · Skills(설명)</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">MCP · 717</p>
+<p style="font-size:32px;line-height:1.4">서버 지침만 실림. 도구 정의는 쓸 때 불러온다</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">매 턴 늘어남 · 334.5k</p>
+<p style="font-size:32px;line-height:1.4">Messages: 대화, 도구 결과, 호출된 스킬 본문. 지금 사용량의 91%</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;line-height:1.5;color:#8796A5">발표 준비 세션의 실제 /context (claude-opus-5-5, 2026-10-25)</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:38%;background:#5CC8C2"></div>
+<div style="width:62%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">38%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">07 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="7" id="problem" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">04 · 푸는 문제</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">컨텍스트 엔지니어링은 무엇을 푸는가</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:720px;display:flex;flex-direction:column;gap:4px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:28px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">제약 1</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">모델은 기억하지 않는다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<p style="flex:1;font-size:32px;line-height:1.4;color:#C3CDD7">무엇을 매번 다시 실을까? 무엇을 창 밖에 남겨 둘까?</p>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:720px;display:flex;flex-direction:column;gap:4px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:28px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">제약 2</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">창은 유한하고, 출력도 같이 쓴다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<p style="flex:1;font-size:32px;line-height:1.4;color:#C3CDD7">무엇을 빼고, 무엇을 줄일까?</p>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px">
+<div style="width:720px;display:flex;flex-direction:column;gap:4px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:28px 36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">제약 3</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">길어질수록 흐려진다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<p style="flex:1;font-size:32px;line-height:1.4;color:#C3CDD7">무엇을 넣지 말아야 할까? 어디에 둘까?</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:44px;font-weight:500;line-height:1.35">세 제약 안에서 <span style="color:#5CC8C2">“이번 단계에 무엇을 보여줄까”</span>를 정하는 일</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:44%;background:#5CC8C2"></div>
+<div style="width:56%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">44%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">08 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="8" id="definition" data-transition="fade" style="background:#5CC8C2;color:#11161C;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:48px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#11161C">04 · 목표 · Anthropic, 2025-09</p>
+<p style="font-size:72px;font-weight:600;line-height:1.3;letter-spacing:-1px">원하는 결과의 가능성을 최대화하는<br>가장 작은 고신호 토큰 집합을 찾는 것</p>
+<p style="font-size:32px;line-height:1.5;color:#1E3A3C">많이 넣는 것이 아니라, 필요한 것만 정확히. LLM이 CPU라면 컨텍스트 창은 RAM이다. · Andrej Karpathy</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#11161C;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#3E9B96;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:50%;background:#11161C"></div>
+<div style="width:50%;background:#3E9B96"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#11161C;width:80px;text-align:right">50%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#11161C;white-space:nowrap">09 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="9" id="wide-window" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">05 · 무엇을 담을까</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">넓은 창에 무엇을 담을까</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#163033;border:2px solid #5CC8C2;border-radius:16px;padding:44px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:112px;font-weight:500;line-height:1.1;color:#5CC8C2">~300</p>
+<p style="font-size:32px;line-height:1.4">관련 부분만 준 입력 (토큰)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">훨씬 잘 맞혔다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:44px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:112px;font-weight:500;line-height:1.1;color:#9AA8B6">~113K</p>
+<p style="font-size:32px;line-height:1.4">전체 대화를 다 준 입력 (토큰)</p>
+<p style="font-size:24px;line-height:1.4;color:#9AA8B6">같은 질문, 정답 정보도 들어 있었다</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<p style="flex:1;font-size:24px;line-height:1.5;color:#C3CDD7;border-top:2px solid #F0A35E;padding:20px 0px 0px 0px">관련은 있지만 답이 아닌 방해물 하나만 있어도 정확도가 떨어진다 · Chroma, 모델 18개</p>
+<p style="flex:1;font-size:24px;line-height:1.5;color:#C3CDD7;border-top:2px solid #F0A35E;padding:20px 0px 0px 0px">정보가 중간에 있으면 처음이나 끝에 있을 때보다 덜 쓴다 · Lost in the Middle</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">“curating what’s in context just as important as how much space is available” · Claude 문서 · Chroma, Context Rot (2025-07, LongMemEval)</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:57%;background:#5CC8C2"></div>
+<div style="width:43%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">57%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">10 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="10" id="forget4" data-transition="fade" style="background:#161D25;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">06 · 잊는 방식</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">AI가 잊는 네 가지 방식</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">A · 없어서 못 봄</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">세션이 끝나서</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">새 세션은 어제 정한 결정을 모른다. 밖에 적어 두지 않았다.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">B · 없어서 못 봄</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">요약되면서</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">창이 차서 요약된 뒤 세부 지시가 사라졌다. 요약은 무엇을 버릴지 고르는 일이다.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">C · 있는데 못 씀</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">보고 있으면서도</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">CLAUDE.md 규칙이 실려 있는데 지키지 않는다. 길고, 관련 없는 내용에 묻혔다.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">D · 있는데 못 씀</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">잘못 기억해서</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">틀린 정보나 실패한 시도가 남아 계속 근거로 쓰인다.</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">AI가 규칙을 어기면 먼저 묻는다: 지금 실려 있나? 최신인가? · 분류는 이 발표의 정리</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:64%;background:#5CC8C2"></div>
+<div style="width:36%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">64%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">11 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="11" id="failures" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">06 · 잊는 방식</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">흔한 실패 장면</h2>
+</div>
+<table style="font-size:32px;color:#E8EDF2;border:1px solid #2A3542">
+<tr style="background:#1C2530"><th style="width:24%;color:#9AA8B6">장면</th><th style="width:44%;color:#9AA8B6">무슨 일이 생기나</th><th style="width:32%;color:#5CC8C2">처방</th></tr>
+<tr><td>주제 섞기</td><td>관련 없는 내용이 창을 채운다</td><td>/clear</td></tr>
+<tr style="background:#1A222C"><td>정정 반복</td><td>실패한 시도가 컨텍스트를 오염시킨다</td><td>두 번 넘으면 /clear 후 새로</td></tr>
+<tr><td>긴 CLAUDE.md</td><td>중요한 규칙이 묻힌다</td><td>줄이고, 꼭 지킬 건 hook</td></tr>
+</table>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">긴 컨텍스트가 망가지는 네 방식 · Drew Breunig</p>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#1C2530;border:1px solid #2A3542;border-radius:12px;padding:24px 28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">poisoning</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">환각이 들어가 남는다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#1C2530;border:1px solid #2A3542;border-radius:12px;padding:24px 28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">distraction</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">긴 기록이 판단을 압도한다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#1C2530;border:1px solid #2A3542;border-radius:12px;padding:24px 28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">confusion</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">불필요한 내용이 답을 비튼다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:6px;background:#1C2530;border:1px solid #2A3542;border-radius:12px;padding:24px 28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E">clash</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7">컨텍스트끼리 모순된다</p>
+</div>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:71%;background:#5CC8C2"></div>
+<div style="width:29%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">71%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">12 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="12" id="strategies" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">07 · 해결</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">적고, 고르고, 줄이고, 나눈다</h2>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">WRITE</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">밖에 적기</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">CLAUDE.md · 메모리 · plan 파일 · 커밋</p>
+<hr style="border-top:1px solid #2A3542;width:100%">
+<p style="font-size:24px;line-height:1.5;color:#F0A35E">대가: 틀리게 적으면 다음 세션에도 실린다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">SELECT</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">골라 들이기</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">스킬 · @파일 참조 · grep · 필요할 때 가져오기</p>
+<hr style="border-top:1px solid #2A3542;width:100%">
+<p style="font-size:24px;line-height:1.5;color:#F0A35E">대가: 설명이 부실하면 안 불러온다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">COMPRESS</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">안을 줄이기</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">자동 요약 · /compact · /rewind 요약</p>
+<hr style="border-top:1px solid #2A3542;width:100%">
+<p style="font-size:24px;line-height:1.5;color:#F0A35E">대가: 요약은 세부를 버릴 수 있다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:36px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">ISOLATE</p>
+<h3 style="font-size:44px;font-weight:600;line-height:1.2">나눠 담기</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">서브에이전트가 따로 읽고 요약만 돌려준다</p>
+<hr style="border-top:1px solid #2A3542;width:100%">
+<p style="font-size:24px;line-height:1.5;color:#F0A35E">대가: 조사 과정이 메인에 보이지 않는다</p>
+</div>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">프레임: LangChain, Context Engineering for Agents (2025-07) · 기법: Anthropic (2025-09) · Claude Code 문서</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:79%;background:#5CC8C2"></div>
+<div style="width:21%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">79%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">13 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="13" id="write-select" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">07 · 해결 · Write + Select</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">적어 둔 것이 기억이 되려면</h2>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:20px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">오늘</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">교정을 받는다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#163033;border:2px solid #5CC8C2;border-radius:16px;padding:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">WRITE</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">메모 파일에 적고 목록에 한 줄</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#1C2530;border:1px solid #2A3542;border-radius:16px;padding:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">다음 세션</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">목록이 자동으로 실린다</p>
+</div>
+<x-shape kind="arrow-right" style="width:56px;height:28px;background:#5CC8C2"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#163033;border:2px solid #5CC8C2;border-radius:16px;padding:28px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2">SELECT</p>
+<p style="font-size:32px;font-weight:600;line-height:1.3">필요할 때 그 파일을 읽는다</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<p style="flex:1;font-size:24px;line-height:1.5;color:#C3CDD7;border-top:2px solid #F0A35E;padding:20px 0px 0px 0px">Write만 있으면: 목록에서 빠진 파일은 있어도 모른다. 서랍 속 일기장이다.</p>
+<p style="flex:1;font-size:24px;line-height:1.5;color:#C3CDD7;border-top:2px solid #F0A35E;padding:20px 0px 0px 0px">Select만 있으면: 적어 둔 게 없으니 꺼낼 것도 없다. 오늘 교정은 세션과 함께 사라진다.</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:44px;font-weight:500;line-height:1.35">장기 기억 = <span style="color:#5CC8C2">Write</span> + <span style="color:#5CC8C2">Select</span>. 기억은 모델 안이 아니라 파일에 있다.</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:88%;background:#5CC8C2"></div>
+<div style="width:12%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:80px;text-align:right">88%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">14 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="14" id="compaction" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#F0A35E">07 · 해결 · Compress</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">창이 차면, 앞부분을 요약한다</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5;width:140px">요약 전</p>
+<div style="flex:1;display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:14%;background:#3A4654;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">고정</p></div>
+<div style="width:34%;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">대화</p></div>
+<div style="width:48%;background:#245A7A;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">도구 결과</p></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#F0A35E;width:140px">요약 후</p>
+<div style="flex:1;display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:14%;background:#3A4654;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">고정</p></div>
+<div style="width:10%;background:#C27A3C;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">요약</p></div>
+<div style="width:8%;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">최근</p></div>
+</div>
+</div>
+</div>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #5CC8C2;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">다시 실리는 것</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">system prompt · 루트 CLAUDE.md · auto memory · 최근 읽은 파일 최대 5개</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #F0A35E;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">요약되는 것</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">대화 기록 · 하위 폴더 CLAUDE.md와 path rules (필요할 때 다시 로드)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #8796A5;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">세션에는</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">원래 메시지가 그대로 남는다. 줄어드는 건 컨텍스트뿐</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:12%;background:#F0A35E"></div>
+<div style="width:18%;background:#5CC8C2"></div>
+<div style="width:70%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:300px;text-align:right;white-space:nowrap"><span style="color:#F0A35E">요약 12%</span> · 전체 30%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">15 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="15" id="cache" data-transition="fade" style="background:#161D25;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">08 · 비용과 속도 · 선택</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">캐시: 같은 앞부분은 다시 계산하지 않는다</h2>
+</div>
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5;width:200px">캐시 없음</p>
+<div style="flex:1;display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:90%;background:#8A5A30;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">앞부분 전체를 다시 계산</p></div>
+<div style="width:8%;background:#8A5A30;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">새 턴</p></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#5CC8C2;width:200px">캐시 있음</p>
+<div style="flex:1;display:flex;flex-direction:row;height:64px;gap:4px">
+<div style="width:90%;background:#2C6F6B;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">지난번 계산 재사용</p></div>
+<div style="width:8%;background:#8A5A30;border-radius:8px;display:flex;align-items:center;justify-content:center"><p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px">새 턴</p></div>
+</div>
+</div>
+</div>
+<p style="font-size:24px;line-height:1.5;color:#8796A5">두 막대의 길이는 같다. 보내는 토큰 수도, 창에서 차지하는 공간도 같다. 달라지는 건 색, 즉 다시 계산하느냐뿐이다.</p>
+<div style="flex:1"></div>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #8796A5;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">창 공간: 그대로</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">캐시된 토큰도 1M 한도에 그대로 포함된다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #5CC8C2;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">비용·속도: 줄어든다</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">캐시에서 읽은 토큰은 기본 입력 가격의 0.1배. 다시 계산하지 않아 빠르다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;border-top:2px solid #F0A35E;padding:24px 0px 0px 0px">
+<h3 style="font-size:32px;font-weight:600;line-height:1.3">기억: 아니다</h3>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">매번 다시 보내야 맞는다. 앞부분이 하나라도 바뀌면 그 뒤는 다시 계산</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:12%;background:#F0A35E"></div>
+<div style="width:24%;background:#5CC8C2"></div>
+<div style="width:64%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:300px;text-align:right;white-space:nowrap"><span style="color:#F0A35E">요약 12%</span> · 전체 36%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">16 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="16" id="tomorrow" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">09 · 적용</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">내일부터 할 수 있는 것</h2>
+</div>
+<table style="font-size:32px;color:#E8EDF2;border:1px solid #2A3542">
+<tr style="background:#1C2530"><th style="width:42%;color:#9AA8B6">이럴 때</th><th style="width:58%;color:#5CC8C2">이렇게</th></tr>
+<tr><td>CLAUDE.md를 쓸 때</td><td>줄마다 “지우면 실수할까?” 묻고, 아니면 지운다</td></tr>
+<tr style="background:#1A222C"><td>예외 없이 지킬 규칙</td><td>지시문 대신 hook으로 막는다</td></tr>
+<tr><td>다른 작업으로 넘어갈 때</td><td>/clear</td></tr>
+<tr style="background:#1A222C"><td>같은 정정을 두 번 넘게</td><td>/clear 후 더 나은 첫 프롬프트로</td></tr>
+<tr><td>넓게 조사해야 할 때</td><td>서브에이전트에게 맡긴다</td></tr>
+<tr style="background:#1A222C"><td>잘못 간 방향</td><td>/rewind로 되돌린다</td></tr>
+</table>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">Claude Code 문서, Best practices · Checkpointing</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:12%;background:#F0A35E"></div>
+<div style="width:31%;background:#5CC8C2"></div>
+<div style="width:57%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:300px;text-align:right;white-space:nowrap"><span style="color:#F0A35E">요약 12%</span> · 전체 43%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">17 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="17" id="closing" data-transition="fade" style="background:#161D25;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;justify-content:center;gap:56px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">10 · 마무리</p>
+<h1 style="font-size:112px;font-weight:700;line-height:1.15;letter-spacing:-2px">기억은<br><span style="color:#5CC8C2">다시 실리는 것</span>이다</h1>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:2px solid #2A3542;padding:20px 0px 0px 0px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 1 · 새 세션</p>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">아무도 다시 보내지 않아서 모른다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:2px solid #2A3542;padding:20px 0px 0px 0px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 2 · 같은 세션</p>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">하네스가 다시 보내서 기억한다</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;border-top:2px solid #2A3542;padding:20px 0px 0px 0px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;color:#8796A5">장면 3 · 아주 긴 세션</p>
+<p style="font-size:24px;line-height:1.5;color:#C3CDD7">실려 있어도 묻히거나, 요약되어 잊는다</p>
+</div>
+</div>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:12%;background:#F0A35E"></div>
+<div style="width:36%;background:#5CC8C2"></div>
+<div style="width:52%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:300px;text-align:right;white-space:nowrap"><span style="color:#F0A35E">요약 12%</span> · 전체 48%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">18 / 19</p>
+</div>
+
+</section>
+<section class="slide" data-index="18" id="refs" data-transition="fade" style="background:#11161C;color:#E8EDF2;font-family:'IBM Plex Sans KR', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;letter-spacing:2px;color:#5CC8C2">참고</p>
+<h2 style="font-size:72px;font-weight:600;line-height:1.15">레퍼런스</h2>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px 48px">
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Anthropic</b> · Effective context engineering for AI agents (2025-09)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Anthropic</b> · Scaling Managed Agents (2026-04)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>LangChain</b> · Context Engineering for Agents (2025-07)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Simon Willison</b> · Context engineering (2025-06)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Chroma</b> · Context Rot (2025-07)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Liu et al.</b> · Lost in the Middle (2023)</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Claude 문서</b> · Context windows · Prompt caching</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Claude Code 문서</b> · Explore the context window</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Claude Code 문서</b> · Best practices · Checkpointing</p>
+<p style="font-size:24px;line-height:1.4;color:#C3CDD7"><b>Drew Breunig</b> · How Long Contexts Fail (2025-06)</p>
+</div>
+<div style="flex:1"></div>
+<p style="font-size:24px;color:#8796A5">근거 확인일 2026-10-25 · Claude Code 문서는 최신 버전 기준</p>
+<div style="position:absolute;left:128px;bottom:64px;width:1664px;height:32px;display:flex;flex-direction:row;align-items:center;gap:24px">
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">context</p>
+<div style="flex:1;height:12px;background:#26303C;border-radius:6px;overflow:hidden;display:flex;flex-direction:row">
+<div style="width:12%;background:#F0A35E"></div>
+<div style="width:40%;background:#5CC8C2"></div>
+<div style="width:48%;background:#26303C"></div>
+</div>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;width:300px;text-align:right;white-space:nowrap"><span style="color:#F0A35E">요약 12%</span> · 전체 52%</p>
+<p style="font-family:'JetBrains Mono', 'Courier New', monospace;font-size:24px;line-height:1.2;color:#8796A5;white-space:nowrap">19 / 19</p>
+</div>
+
+</section>
+</div></div>
+<div class="bar">
+<button data-go="-1" aria-label="이전 장">←</button>
+<span class="count"></span>
+<button data-go="1" aria-label="다음 장">→</button>
+<span class="spacer"></span>
+<button data-full>전체 화면</button>
+</div>
+</div>
+<script>
+const slides = [...document.querySelectorAll('.slide')];
+const count = document.querySelector('.count');
+let i = 0;
+function show(n) {
+  i = Math.max(0, Math.min(slides.length - 1, n));
+  slides.forEach((s, k) => s.toggleAttribute('data-active', k === i));
+  count.textContent = `${i + 1} / ${slides.length}`;
+  history.replaceState(null, '', '#' + (i + 1));
+}
+document.querySelectorAll('[data-go]').forEach(b => b.onclick = () => show(i + Number(b.dataset.go)));
+document.querySelector('.frame').onclick = e => show(i + (e.clientX < innerWidth / 3 ? -1 : 1));
+document.querySelector('[data-full]').onclick = () =>
+  document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+addEventListener('keydown', e => {
+  if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); show(i + 1); }
+  else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); show(i - 1); }
+  else if (e.key === 'Home') show(0);
+  else if (e.key === 'End') show(slides.length - 1);
+  else if (e.key === 'f') document.querySelector('[data-full]').click();
+});
+const frame = document.querySelector('.frame');
+const fit = () => frame.style.setProperty('--k', Math.min(frame.clientWidth / 1920, frame.clientHeight / 1080));
+new ResizeObserver(fit).observe(frame);
+fit();
+show((parseInt(location.hash.slice(1)) || 1) - 1);
+</script>
+</body></html>
