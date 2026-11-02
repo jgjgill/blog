@@ -59,6 +59,10 @@ const fullTitle = title === 'jgjgill' ? title : `${title} | jgjgill`;
     {import.meta.env.PROD && (
       <script is:inline>
         if ('serviceWorker' in navigator) {
+          // 기존 SW가 있을 때만 새 SW로 교체되면 새로고침 (첫 설치 시 불필요한 새로고침 방지)
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.addEventListener('controllerchange', () => location.reload(), { once: true });
+          }
           window.addEventListener('load', () => {
             navigator.serviceWorker.register('/sw.js');
           });

@@ -80,7 +80,8 @@ export default defineConfig({
       workbox: {
         navigateFallback: null,
         globPatterns: ['**/*.{html,css,js}'],
-        globIgnores: ['**/_astro/giscus-*.js'],
+        // public/의 단일 html 파일은 precache URL이 잘못 변환되어(slides/ → 404) 설치가 실패한다
+        globIgnores: ['**/_astro/giscus-*.js', 'slides/**'],
         runtimeCaching: [
           {
             urlPattern: /^https:\/\/cdn\.jsdelivr\.net\/.*/i,
