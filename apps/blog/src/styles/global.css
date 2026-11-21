@@ -27,6 +27,12 @@
     margin-top: 1.25em;
     margin-bottom: 1.25em;
   }
+
+  /* 표 안의 긴 코드 값이 모바일 화면 너비를 넘기지 않게 한다.
+     넘치면 페이지 폭이 바뀌어 뷰 전환 애니메이션이 취소된다 */
+  .prose :where(td, th) {
+    overflow-wrap: anywhere;
+  }
 }
 
 @layer base {
